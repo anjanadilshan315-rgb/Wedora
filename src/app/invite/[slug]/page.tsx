@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState, useEffect, Suspense } from "react";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams, useSearchParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Calendar, MapPin, Camera, Utensils, Music, GlassWater, PartyPopper, Heart } from "lucide-react";
+import { Calendar, MapPin, Camera, Utensils, Music, GlassWater, PartyPopper, Heart, ArrowLeft } from "lucide-react";
 
 /* ─────────────────────────────────────────── */
 /*  SAGE & GOLD MODERN TEMPLATE                */
@@ -769,17 +769,27 @@ function InvitePageContent() {
 
 export default function InvitePage() {
   const params = useParams();
+  const router = useRouter();
   const slug = params.slug as string;
   const isKandyan = slug === 'template2' || slug === 'demo-kandyan';
 
   return (
-    <Suspense fallback={
-      <div className={`min-h-screen flex items-center justify-center ${isKandyan ? 'bg-[#FDFBF7]' : 'bg-[#F8F5EE]'}`}>
-        <div className="w-8 h-8 rounded-full border-2 border-[#C59B48] animate-ping" />
-      </div>
-    }>
-      <InvitePageContent />
-    </Suspense>
+    <>
+      <button 
+        onClick={() => router.back()} 
+        className="fixed top-4 left-4 z-[999] bg-white/80 backdrop-blur-md text-[#2D241A] rounded-full p-2.5 shadow-md border border-[#EADBCA] hover:bg-white hover:scale-105 transition-all"
+        title="Go Back"
+      >
+        <ArrowLeft className="w-5 h-5" />
+      </button>
+      <Suspense fallback={
+        <div className={`min-h-screen flex items-center justify-center ${isKandyan ? 'bg-[#FDFBF7]' : 'bg-[#F8F5EE]'}`}>
+          <div className="w-8 h-8 rounded-full border-2 border-[#C59B48] animate-ping" />
+        </div>
+      }>
+        <InvitePageContent />
+      </Suspense>
+    </>
   );
 }
 

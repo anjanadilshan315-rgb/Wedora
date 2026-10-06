@@ -34,8 +34,9 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${cormorant.variable} ${greatVibes.variable} ${montserrat.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
-      <body className="min-h-full font-sans bg-[#FBF8F4] text-[#2C231E]">
+      <body className="min-h-full font-sans bg-[#FBF8F4] text-[#2C231E]" suppressHydrationWarning>
         {children}
       </body>
     </html>

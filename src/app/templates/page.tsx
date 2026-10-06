@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Heart, Search, User, Menu, X, SlidersHorizontal, MessageCircle, LayoutDashboard, LogOut } from "lucide-react";
+import Footer from "@/components/Footer";
 
 /* ─────────────────────────────────────────── */
 /*  ADMIN WHATSAPP NUMBER                      */
@@ -15,7 +16,7 @@ const ADMIN_WHATSAPP = "+94757115645"; // e.g. "94771234567"
 
 function buildWhatsAppLink(templateName: string) {
   const msg = encodeURIComponent(
-    `Hi! I visited Open Invitation and I'm interested in the "${templateName}" template. Could you please provide more details?`
+    `Hi! I visited Wedora and I'm interested in the "${templateName}" template. Could you please provide more details?`
   );
   return `https://wa.me/${ADMIN_WHATSAPP}?text=${msg}`;
 }
@@ -81,10 +82,10 @@ function TemplatesContent() {
 
             <Link href="/" className="flex items-center space-x-2.5 shrink-0">
               <div className="relative w-10 h-10 rounded-full overflow-hidden ring-2 ring-[#C59B48]/40">
-                <Image src="/assets/logo.jpg" alt="Logo" fill className="object-cover" />
+                <Image src="/assets/logo.svg" alt="Logo" fill className="object-cover" />
               </div>
               <div className="leading-none">
-                <p className="font-serif-luxury text-[17px] font-bold text-[#28211B] tracking-tight">Open Invitation</p>
+                <p className="font-serif-luxury text-[17px] font-bold text-[#28211B] tracking-tight">Wedora</p>
                 <p className="text-[9px] text-[#B88737] tracking-[0.15em] uppercase font-medium">by ApexRow Solutions</p>
               </div>
             </Link>
@@ -141,6 +142,57 @@ function TemplatesContent() {
             </button>
           </div>
         </div>
+        
+        {/* Mobile menu dropdown */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className="lg:hidden overflow-hidden bg-white border-t border-[#F0E8DC] px-4 pb-4"
+            >
+              <nav className="flex flex-col space-y-1 pt-3">
+                {navLinks.map((link, i) => (
+                  <Link
+                    key={link}
+                    href={link === "Home" ? "/" : `/${link.toLowerCase()}`}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`px-4 py-2.5 text-sm font-medium rounded-xl transition-colors ${
+                      link === "Templates" ? "text-[#B88737] bg-[#FBF3E4]" : "text-[#4A3F37] hover:bg-[#FBF3E4]"
+                    }`}
+                  >
+                    {link}
+                  </Link>
+                ))}
+                <div className="flex gap-2 pt-2">
+                  {isLoggedIn ? (
+                    <>
+                      <Link href="/dashboard" className="flex-1">
+                        <button className="w-full py-2.5 rounded-xl border border-[#C59B48] text-[#9A6F24] text-sm font-semibold flex items-center justify-center gap-2">
+                          <LayoutDashboard className="w-4 h-4" /> Dashboard
+                        </button>
+                      </Link>
+                      <button 
+                        onClick={() => { localStorage.removeItem("user"); window.location.reload(); }}
+                        className="flex-1 py-2.5 rounded-xl bg-red-50 text-red-600 text-sm font-semibold flex items-center justify-center gap-2 hover:bg-red-100 transition-colors"
+                      >
+                        <LogOut className="w-4 h-4" /> Logout
+                      </button>
+                    </>
+                  ) : (
+                    <Link href="/login" className="flex-1">
+                      <button className="w-full py-2.5 rounded-xl border border-[#C59B48] text-[#9A6F24] text-sm font-semibold flex items-center justify-center gap-2">
+                        <User className="w-4 h-4" /> Login
+                      </button>
+                    </Link>
+                  )}
+                </div>
+              </nav>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
 
       {/* ══════════════════════════════════════ */}
@@ -148,6 +200,11 @@ function TemplatesContent() {
       {/* ══════════════════════════════════════ */}
       <section className="py-12 px-4 text-center">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+          <div className="flex flex-col items-center justify-center mb-6">
+            <Link href="/" className="inline-flex items-center gap-1 text-[#A69B90] hover:text-[#C59B48] text-xs font-semibold uppercase tracking-wider transition-colors">
+              <Heart className="w-3.5 h-3.5 opacity-50" /> Back to Home
+            </Link>
+          </div>
           <div className="flex items-center justify-center space-x-3 mb-3">
             <span className="h-px w-12 bg-gradient-to-r from-transparent to-[#C59B48]" />
             <Heart className="w-3.5 h-3.5 fill-[#C59B48] text-[#C59B48]" />
@@ -259,15 +316,7 @@ function TemplatesContent() {
       </section>
 
       {/* FOOTER */}
-      <footer className="bg-white border-t border-[#EDE3D6] py-6 mt-8">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-[#A69B90]">
-          <p>© {new Date().getFullYear()} Open Invitation — ApexRow Solutions (Pvt) Ltd.</p>
-          <div className="flex items-center space-x-1">
-            <Heart className="w-3 h-3 fill-[#C59B48] text-[#C59B48]" />
-            <span>Made with love</span>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

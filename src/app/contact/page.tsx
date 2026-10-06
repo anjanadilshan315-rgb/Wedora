@@ -1,15 +1,21 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { User, Menu, X, Heart, Mail, Phone, MapPin, Send, MessageCircle } from "lucide-react";
+import { User, Menu, X, Heart, Mail, Phone, MapPin, Send, MessageCircle, LayoutDashboard, LogOut } from "lucide-react";
+import Footer from "@/components/Footer";
 
 const navLinks = ["Home", "Templates", "About", "Contact"];
 
 export default function ContactPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    if (localStorage.getItem("user")) setIsLoggedIn(true);
+  }, []);
   
   // Dummy form state
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
@@ -31,10 +37,10 @@ export default function ContactPage() {
           <div className="flex items-center justify-between h-16 lg:h-[70px]">
             <Link href="/" className="flex items-center space-x-2.5 shrink-0">
               <div className="relative w-10 h-10 rounded-full overflow-hidden ring-2 ring-[#C59B48]/40">
-                <Image src="/assets/logo.jpg" alt="Logo" fill className="object-cover" />
+                <Image src="/assets/logo.svg" alt="Logo" fill className="object-cover" />
               </div>
               <div className="leading-none">
-                <p className="font-serif-luxury text-[17px] font-bold text-[#28211B] tracking-tight">Open Invitation</p>
+                <p className="font-serif-luxury text-[17px] font-bold text-[#28211B] tracking-tight">Wedora</p>
                 <p className="text-[9px] text-[#B88737] tracking-[0.15em] uppercase font-medium">by ApexRow Solutions</p>
               </div>
             </Link>
@@ -55,12 +61,34 @@ export default function ContactPage() {
               ))}
             </nav>
 
-            <div className="hidden lg:flex items-center">
-              <Link href="/login">
-                <button className="flex items-center space-x-1.5 px-5 py-2 rounded-full border border-[#C59B48] text-[#9A6F24] text-sm font-semibold hover:bg-[#FBF3E4] transition-colors">
-                  <User className="w-3.5 h-3.5" /><span>Login</span>
-                </button>
-              </Link>
+            <div className="hidden lg:flex items-center space-x-3">
+              {isLoggedIn ? (
+                <div className="flex items-center space-x-4">
+                  <Link href="/dashboard">
+                    <button className="flex items-center space-x-1.5 px-4 py-2 rounded-full border border-[#C59B48] text-[#9A6F24] text-sm font-semibold hover:bg-[#FBF3E4] transition-colors">
+                      <LayoutDashboard className="w-3.5 h-3.5" />
+                      <span>Dashboard</span>
+                    </button>
+                  </Link>
+                  <div className="flex items-center gap-3 border-l border-[#EADBCA] pl-4">
+                    <div className="text-right">
+                      <p className="text-sm font-semibold text-[#28211B]">Sasanka P.</p>
+                    </div>
+                    <div className="w-9 h-9 rounded-full bg-[#EADBCA] flex items-center justify-center text-[#9A6F24] font-bold font-serif-luxury text-lg">
+                      S
+                    </div>
+                    <button onClick={() => { localStorage.removeItem("user"); window.location.reload(); }} className="p-2 text-[#A69B90] hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors ml-1" title="Logout">
+                      <LogOut className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <Link href="/login">
+                  <button className="flex items-center space-x-1.5 px-5 py-2 rounded-full border border-[#C59B48] text-[#9A6F24] text-sm font-semibold hover:bg-[#FBF3E4] transition-colors">
+                    <User className="w-3.5 h-3.5" /><span>Login</span>
+                  </button>
+                </Link>
+              )}
             </div>
 
             <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="lg:hidden w-9 h-9 flex items-center justify-center rounded-lg text-[#4A3F37]">
@@ -93,11 +121,27 @@ export default function ContactPage() {
                   </Link>
                 ))}
                 <div className="pt-2">
-                  <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
-                    <button className="w-full py-2.5 rounded-xl border border-[#C59B48] text-[#9A6F24] text-sm font-semibold">
-                      Login
-                    </button>
-                  </Link>
+                  {isLoggedIn ? (
+                    <div className="flex gap-2">
+                      <Link href="/dashboard" className="flex-1">
+                        <button className="w-full py-2.5 rounded-xl border border-[#C59B48] text-[#9A6F24] text-sm font-semibold flex items-center justify-center gap-2">
+                          <LayoutDashboard className="w-4 h-4" /> Dashboard
+                        </button>
+                      </Link>
+                      <button 
+                        onClick={() => { localStorage.removeItem("user"); window.location.reload(); }}
+                        className="flex-1 py-2.5 rounded-xl bg-red-50 text-red-600 text-sm font-semibold flex items-center justify-center gap-2 hover:bg-red-100 transition-colors"
+                      >
+                        <LogOut className="w-4 h-4" /> Logout
+                      </button>
+                    </div>
+                  ) : (
+                    <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
+                      <button className="w-full py-2.5 rounded-xl border border-[#C59B48] text-[#9A6F24] text-sm font-semibold flex items-center justify-center gap-2">
+                        <User className="w-4 h-4" /> Login
+                      </button>
+                    </Link>
+                  )}
                 </div>
               </nav>
             </motion.div>
@@ -154,7 +198,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <p className="text-[10px] uppercase tracking-wider text-[#A69B90] font-semibold mb-1">Email</p>
-                    <p className="text-sm font-semibold text-[#29221D]">hello@openinvitation.lk</p>
+                    <p className="text-sm font-semibold text-[#29221D]">hello@wedora.lk</p>
                   </div>
                 </div>
 
@@ -257,17 +301,7 @@ export default function ContactPage() {
       {/* ══════════════════════════════════════ */}
       {/* FOOTER                                 */}
       {/* ══════════════════════════════════════ */}
-      <footer className="bg-white border-t border-[#EDE3D6] py-6 mt-auto">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-[#A69B90]">
-          <p>© {new Date().getFullYear()} Open Invitation. All rights reserved.</p>
-          <div className="flex items-center space-x-1">
-            <span>Designed with</span>
-            <Heart className="w-3 h-3 text-[#C59B48] fill-[#C59B48]" />
-            <span>by</span>
-            <a href="#" className="font-semibold text-[#8F6626] hover:underline">ApexRow Solutions</a>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

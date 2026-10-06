@@ -2,12 +2,14 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  LayoutDashboard, Users, Settings, LogOut, Search, Plus, 
-  MessageCircle, Copy, Check, CheckCircle2, Menu, X, Clock, XCircle, Home
+  LayoutDashboard, Users, Settings, LogOut, Search, Plus,
+  MessageCircle, Copy, Check, CheckCircle2, Menu, X, Clock, XCircle, Home, Trash2
 } from "lucide-react";
+import Footer from "@/components/Footer";
 
 // Dummy data for initial state
 const initialGuests = [
@@ -22,11 +24,21 @@ export default function GuestsPage() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [newGuest, setNewGuest] = useState({ name: "", phone: "+94 " });
   const [copiedId, setCopiedId] = useState<number | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleRemoveGuest = (id: number) => {
+    setGuests(guests.filter(g => g.id !== id));
+  };
+
+  const filteredGuests = guests.filter(g => 
+    g.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    g.phone.includes(searchQuery)
+  );
 
   // Constants that would normally come from the backend/context
   const slug = "kamal-nadeesha";
   const rsvpDeadline = "Nov 20, 2026";
-  const baseUrl = "https://openinvitation.lk/invite";
+  const baseUrl = "https://wedora.lk/invite";
 
   const handleAddGuest = (e: React.FormEvent) => {
     e.preventDefault();
@@ -89,11 +101,16 @@ export default function GuestsPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 lg:h-[70px]">
             <Link href="/" className="flex items-center space-x-2.5 shrink-0">
-              <div className="w-10 h-10 rounded-full overflow-hidden ring-2 ring-[#C59B48]/40 bg-[#FBF3E4] flex items-center justify-center">
-                <span className="font-serif-luxury font-bold text-[#C59B48]">OI</span>
+              <div className="relative w-10 h-10 rounded-full overflow-hidden ring-2 ring-[#C59B48]/40 bg-[#FBF3E4] flex items-center justify-center shrink-0">
+                <Image src="/assets/logo.svg" alt="Logo" fill className="object-cover" />
               </div>
-              <div className="leading-none hidden sm:block">
-                <p className="font-serif-luxury text-[17px] font-bold text-[#28211B] tracking-tight">Open Invitation</p>
+              <div className="leading-none">
+                <p className="font-serif-luxury text-[17px] font-bold text-[#28211B] tracking-tight">
+                  Wedora
+                </p>
+                <p className="text-[9px] text-[#B88737] tracking-[0.15em] uppercase font-medium">
+                  by ApexRow Solutions
+                </p>
               </div>
             </Link>
 
@@ -131,6 +148,42 @@ export default function GuestsPage() {
             </button>
           </div>
         </div>
+
+        {/* Mobile menu dropdown */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className="lg:hidden overflow-hidden bg-white border-t border-[#F0E8DC] px-4 pb-4"
+            >
+              <nav className="flex flex-col space-y-1 pt-3">
+                <Link href="/" onClick={() => setMobileMenuOpen(false)} className="px-4 py-2.5 text-sm font-medium rounded-xl text-[#4A3F37] hover:bg-[#FBF3E4] flex items-center gap-2">
+                  <Home className="w-4 h-4" /> Home
+                </Link>
+                <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)} className="px-4 py-2.5 text-sm font-medium rounded-xl text-[#4A3F37] hover:bg-[#FBF3E4] flex items-center gap-2">
+                  <LayoutDashboard className="w-4 h-4" /> Dashboard
+                </Link>
+                <Link href="/dashboard/guests" onClick={() => setMobileMenuOpen(false)} className="px-4 py-2.5 text-sm font-semibold rounded-xl text-[#B88737] bg-[#FBF3E4] flex items-center gap-2">
+                  <Users className="w-4 h-4" /> Guests & RSVP
+                </Link>
+                <Link href="/dashboard/settings" onClick={() => setMobileMenuOpen(false)} className="px-4 py-2.5 text-sm font-medium rounded-xl text-[#4A3F37] hover:bg-[#FBF3E4] flex items-center gap-2">
+                  <Settings className="w-4 h-4" /> Settings
+                </Link>
+                <div className="pt-2 mt-2 border-t border-[#F0E8DC]">
+                  <button 
+                    onClick={handleLogout}
+                    className="w-full py-2.5 rounded-xl bg-red-50 text-red-600 text-sm font-semibold flex items-center justify-center gap-2 hover:bg-red-100 transition-colors"
+                  >
+                    <LogOut className="w-4 h-4" /> Logout
+                  </button>
+                </div>
+              </nav>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-10">
@@ -138,16 +191,31 @@ export default function GuestsPage() {
         {/* Header Section */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
           <div>
+            <Link href="/dashboard" className="inline-flex items-center gap-1 text-[#A69B90] hover:text-[#C59B48] text-xs font-semibold uppercase tracking-wider mb-2 transition-colors">
+              <Home className="w-3.5 h-3.5" /> Back to Dashboard
+            </Link>
             <h1 className="font-serif-luxury text-3xl sm:text-4xl font-bold text-[#29221D]">Guest List & RSVP</h1>
             <p className="text-sm text-[#7D736A] mt-1">Manage your receivers, generate unique links, and send invitations via WhatsApp.</p>
           </div>
-          <button 
-            onClick={() => setShowAddForm(!showAddForm)}
-            className="flex items-center justify-center gap-2 bg-gradient-to-r from-[#C79848] to-[#9A6F24] text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-md hover:shadow-lg transition-all"
-          >
-            {showAddForm ? <X className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
-            {showAddForm ? "Cancel" : "Add Receiver"}
-          </button>
+          <div className="flex flex-col sm:flex-row items-center gap-3">
+            <div className="relative w-full sm:w-56">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#A69B90]" />
+              <input
+                type="text"
+                placeholder="Search receivers..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-8 pr-4 py-2 rounded-xl border border-[#E0D8CC] bg-white text-xs text-[#29221D] placeholder:text-[#A69B90] focus:outline-none focus:ring-2 focus:ring-[#C59B48]/40 focus:border-[#C59B48]"
+              />
+            </div>
+            <button 
+              onClick={() => setShowAddForm(!showAddForm)}
+              className="w-full sm:w-auto flex items-center justify-center gap-2 bg-gradient-to-r from-[#C79848] to-[#9A6F24] text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-md hover:shadow-lg transition-all whitespace-nowrap"
+            >
+              {showAddForm ? <X className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+              {showAddForm ? "Cancel" : "Add Receiver"}
+            </button>
+          </div>
         </div>
 
         {/* Add Guest Form (Admin / Client Entry) */}
@@ -197,6 +265,7 @@ export default function GuestsPage() {
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-[#FCFAF7] border-b border-[#F0E8DC]">
+                  <th className="px-6 py-4 text-xs font-semibold text-[#7D736A] uppercase tracking-wider text-center w-12">#</th>
                   <th className="px-6 py-4 text-xs font-semibold text-[#7D736A] uppercase tracking-wider">Receiver Name</th>
                   <th className="px-6 py-4 text-xs font-semibold text-[#7D736A] uppercase tracking-wider">WhatsApp Number</th>
                   <th className="px-6 py-4 text-xs font-semibold text-[#7D736A] uppercase tracking-wider text-center">RSVP Status</th>
@@ -206,8 +275,9 @@ export default function GuestsPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#F0E8DC]">
-                {guests.map((guest) => (
+                {filteredGuests.map((guest, index) => (
                   <tr key={guest.id} className="hover:bg-[#FCFAF7]/50 transition-colors">
+                    <td className="px-6 py-4 text-center font-medium text-[#A69B90]">{index + 1}</td>
                     <td className="px-6 py-4">
                       <p className="font-semibold text-[#29221D]">{guest.name}</p>
                       {guest.wish && <p className="text-[11px] text-[#A69B90] mt-1 italic">"{guest.wish}"</p>}
@@ -250,15 +320,22 @@ export default function GuestsPage() {
                           <MessageCircle className="w-3.5 h-3.5" /> 
                           {guest.sent ? "Send Again" : "Send"}
                         </button>
+                        <button 
+                          onClick={() => handleRemoveGuest(guest.id)}
+                          className="p-1.5 text-[#A69B90] hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors ml-1" 
+                          title="Remove Receiver"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
                       </div>
                     </td>
                   </tr>
                 ))}
                 
-                {guests.length === 0 && (
+                {filteredGuests.length === 0 && (
                   <tr>
-                    <td colSpan={6} className="px-6 py-12 text-center text-[#7D736A]">
-                      No receivers added yet. Click "Add Receiver" to build your guest list.
+                    <td colSpan={7} className="px-6 py-12 text-center text-[#7D736A]">
+                      No receivers found. Try a different search or add a new receiver.
                     </td>
                   </tr>
                 )}
@@ -268,20 +345,32 @@ export default function GuestsPage() {
 
           {/* Mobile Card View */}
           <div className="md:hidden flex flex-col divide-y divide-[#F0E8DC]">
-            {guests.map((guest) => (
+            {filteredGuests.map((guest, index) => (
               <div key={guest.id} className="p-4 bg-[#FCFAF7] flex flex-col gap-3">
                 <div className="flex justify-between items-start gap-2">
-                  <div>
-                    <h3 className="font-bold text-[#29221D] text-base">{guest.name}</h3>
-                    <p className="text-xs text-[#7D736A] mt-0.5">{guest.phone}</p>
+                  <div className="flex items-start gap-2">
+                    <span className="text-xs font-bold text-[#A69B90] mt-0.5">#{index + 1}</span>
+                    <div>
+                      <h3 className="font-bold text-[#29221D] text-base leading-none">{guest.name}</h3>
+                      <p className="text-xs text-[#7D736A] mt-1">{guest.phone}</p>
+                    </div>
                   </div>
-                  <button 
-                    onClick={() => handleSendWhatsApp(guest.id, guest)}
-                    className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white transition-all active:scale-[0.98] ${guest.sent ? 'bg-[#25D366]/80' : 'bg-[#25D366]'}`}
-                  >
-                    <MessageCircle className="w-4 h-4" /> 
-                    {guest.sent ? "Resend" : "WhatsApp"}
-                  </button>
+                  <div className="flex items-center gap-1">
+                    <button 
+                      onClick={() => handleRemoveGuest(guest.id)}
+                      className="p-2 text-[#A69B90] hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors" 
+                      title="Remove Receiver"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                    <button 
+                      onClick={() => handleSendWhatsApp(guest.id, guest)}
+                      className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white transition-all active:scale-[0.98] ${guest.sent ? 'bg-[#25D366]/80' : 'bg-[#25D366]'}`}
+                    >
+                      <MessageCircle className="w-4 h-4" /> 
+                      {guest.sent ? "Resend" : "WhatsApp"}
+                    </button>
+                  </div>
                 </div>
 
                 {guest.wish && (
@@ -321,6 +410,8 @@ export default function GuestsPage() {
           </div>
         </div>
       </main>
+      
+      <Footer />
     </div>
   );
 }

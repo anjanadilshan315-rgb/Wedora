@@ -107,7 +107,7 @@ export default function LoginPage() {
             <div className="relative 
             w-full h-full rounded-full overflow-hidden bg-[#FBF8F4] border-[2px] border-[#FFF8E7]">
               <Image
-                src="/assets/logo.jpg"
+                src="/assets/logo.svg"
                 alt="Wedding Invitation Website Logo"
                 fill
                 priority
@@ -189,7 +189,7 @@ export default function LoginPage() {
             }}
           >
             <div className="relative w-full h-full rounded-full overflow-hidden border-[2px] border-[#FFF8E7]">
-              <Image src="/assets/logo.jpg" alt="Logo" fill className="object-cover scale-105" />
+              <Image src="/assets/logo.svg" alt="Logo" fill className="object-cover scale-105" />
             </div>
           </div>
         </div>
@@ -368,7 +368,7 @@ export default function LoginPage() {
                 <div className="w-full border-t border-[#EADBCA]" />
               </div>
               <span className="relative px-3 bg-white text-[11px] text-[#827870]">
-                New to Open Invitation?
+                New to Wedora?
               </span>
             </div>
 

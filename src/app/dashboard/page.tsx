@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   LogOut,
   Settings,
@@ -22,6 +22,7 @@ import {
   Eye,
   Home
 } from "lucide-react";
+import Footer from "@/components/Footer";
 
 /* ─────────────────────────────────────────── */
 /*  DASHBOARD PAGE                             */
@@ -30,7 +31,7 @@ export default function DashboardPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const inviteLink = "openinvitation.lk/kamal-nadeesha";
+  const inviteLink = "wedora.lk/kamal-nadeesha";
 
   const handleCopy = () => {
     navigator.clipboard.writeText(inviteLink);
@@ -55,11 +56,16 @@ export default function DashboardPage() {
             
             {/* Logo */}
             <Link href="/" className="flex items-center space-x-2.5 shrink-0">
-              <div className="relative w-10 h-10 rounded-full overflow-hidden ring-2 ring-[#C59B48]/40">
-                <Image src="/assets/logo.jpg" alt="Logo" fill className="object-cover" />
+              <div className="relative w-10 h-10 rounded-full overflow-hidden ring-2 ring-[#C59B48]/40 shrink-0">
+                <Image src="/assets/logo.svg" alt="Logo" fill className="object-cover" />
               </div>
-              <div className="leading-none hidden sm:block">
-                <p className="font-serif-luxury text-[17px] font-bold text-[#28211B] tracking-tight">Open Invitation</p>
+              <div className="leading-none">
+                <p className="font-serif-luxury text-[17px] font-bold text-[#28211B] tracking-tight">
+                  Wedora
+                </p>
+                <p className="text-[9px] text-[#B88737] tracking-[0.15em] uppercase font-medium">
+                  by ApexRow Solutions
+                </p>
               </div>
             </Link>
 
@@ -100,6 +106,42 @@ export default function DashboardPage() {
             </button>
           </div>
         </div>
+        
+        {/* Mobile menu dropdown */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className="lg:hidden overflow-hidden bg-white border-t border-[#F0E8DC] px-4 pb-4"
+            >
+              <nav className="flex flex-col space-y-1 pt-3">
+                <Link href="/" onClick={() => setMobileMenuOpen(false)} className="px-4 py-2.5 text-sm font-medium rounded-xl text-[#4A3F37] hover:bg-[#FBF3E4] flex items-center gap-2">
+                  <Home className="w-4 h-4" /> Home
+                </Link>
+                <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)} className="px-4 py-2.5 text-sm font-semibold rounded-xl text-[#B88737] bg-[#FBF3E4] flex items-center gap-2">
+                  <LayoutDashboard className="w-4 h-4" /> Dashboard
+                </Link>
+                <Link href="/dashboard/guests" onClick={() => setMobileMenuOpen(false)} className="px-4 py-2.5 text-sm font-medium rounded-xl text-[#4A3F37] hover:bg-[#FBF3E4] flex items-center gap-2">
+                  <Users className="w-4 h-4" /> Guests & RSVP
+                </Link>
+                <Link href="/dashboard/settings" onClick={() => setMobileMenuOpen(false)} className="px-4 py-2.5 text-sm font-medium rounded-xl text-[#4A3F37] hover:bg-[#FBF3E4] flex items-center gap-2">
+                  <Settings className="w-4 h-4" /> Settings
+                </Link>
+                <div className="pt-2 mt-2 border-t border-[#F0E8DC]">
+                  <button 
+                    onClick={handleLogout}
+                    className="w-full py-2.5 rounded-xl bg-red-50 text-red-600 text-sm font-semibold flex items-center justify-center gap-2 hover:bg-red-100 transition-colors"
+                  >
+                    <LogOut className="w-4 h-4" /> Logout
+                  </button>
+                </div>
+              </nav>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-10">
@@ -265,6 +307,7 @@ export default function DashboardPage() {
         </div>
       </main>
 
+      <Footer />
     </div>
   );
 }

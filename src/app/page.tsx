@@ -18,8 +18,10 @@ import {
   X,
   ArrowRight,
   LayoutDashboard,
+  Eye,
   LogOut
 } from "lucide-react";
+import Footer from "@/components/Footer";
 
 /* ─────────────────────────────────────────── */
 /*  HERO SLIDES DATA                           */
@@ -171,6 +173,12 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-[#FAF7F2] font-sans">
+      {/* Preload hero images */}
+      <div className="hidden">
+        {heroSlides.map((slide) => (
+          <Image key={slide.image} src={slide.image} alt="" fill priority />
+        ))}
+      </div>
 
       {/* ══════════════════════════════════════ */}
       {/* NAVBAR                                 */}
@@ -186,11 +194,11 @@ export default function HomePage() {
             {/* Logo */}
             <Link href="/" className="flex items-center space-x-2.5 shrink-0">
               <div className="relative w-10 h-10 rounded-full overflow-hidden ring-2 ring-[#C59B48]/40">
-                <Image src="/assets/logo.jpg" alt="Open Invitation Logo" fill className="object-cover" />
+                <Image src="/assets/logo.svg" alt="Wedora Logo" fill className="object-cover" />
               </div>
               <div className="leading-none">
                 <p className="font-serif-luxury text-[17px] font-bold text-[#28211B] tracking-tight">
-                  Open Invitation
+                  Wedora
                 </p>
                 <p className="text-[9px] text-[#B88737] tracking-[0.15em] uppercase font-medium">
                   by ApexRow Solutions
@@ -297,31 +305,41 @@ export default function HomePage() {
                 ))}
                 <div className="flex gap-2 pt-2">
                   {isLoggedIn ? (
-                    <Link href="/dashboard" className="flex-1">
-                      <button className="w-full py-2.5 rounded-xl border border-[#C59B48] text-[#9A6F24] text-sm font-semibold flex items-center justify-center gap-2">
-                        <LayoutDashboard className="w-4 h-4" /> Dashboard
+                    <>
+                      <Link href="/dashboard" className="flex-1">
+                        <button className="w-full py-2.5 rounded-xl border border-[#C59B48] text-[#9A6F24] text-sm font-semibold flex items-center justify-center gap-2">
+                          <LayoutDashboard className="w-4 h-4" /> Dashboard
+                        </button>
+                      </Link>
+                      <button 
+                        onClick={() => { localStorage.removeItem("user"); window.location.reload(); }}
+                        className="flex-1 py-2.5 rounded-xl bg-red-50 text-red-600 text-sm font-semibold flex items-center justify-center gap-2 hover:bg-red-100 transition-colors"
+                      >
+                        <LogOut className="w-4 h-4" /> Logout
                       </button>
-                    </Link>
+                    </>
                   ) : (
-                    <Link href="/login" className="flex-1">
-                      <button className="w-full py-2.5 rounded-xl border border-[#C59B48] text-[#9A6F24] text-sm font-semibold flex items-center justify-center gap-2">
-                        <User className="w-4 h-4" /> Login
-                      </button>
-                    </Link>
+                    <>
+                      <Link href="/login" className="flex-1">
+                        <button className="w-full py-2.5 rounded-xl border border-[#C59B48] text-[#9A6F24] text-sm font-semibold flex items-center justify-center gap-2">
+                          <User className="w-4 h-4" /> Login
+                        </button>
+                      </Link>
+                      <a
+                        href="https://wa.me/94XXXXXXXXX?text=Hi!+I%27d+like+to+create+a+wedding+invitation."
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1"
+                      >
+                        <button
+                          className="w-full py-2.5 rounded-xl text-white text-sm font-semibold shadow-sm"
+                          style={{ background: "linear-gradient(90deg,#C79848,#A87428)" }}
+                        >
+                          Get Started
+                        </button>
+                      </a>
+                    </>
                   )}
-                  <a
-                    href="https://wa.me/94XXXXXXXXX?text=Hi!+I%27d+like+to+create+a+wedding+invitation."
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1"
-                  >
-                    <button
-                      className="w-full py-2.5 rounded-xl text-white text-sm font-semibold shadow-sm"
-                      style={{ background: "linear-gradient(90deg,#C79848,#A87428)" }}
-                    >
-                      Get Started
-                    </button>
-                  </a>
                 </div>
               </nav>
             </motion.div>
@@ -542,15 +560,7 @@ export default function HomePage() {
       {/* ══════════════════════════════════════ */}
       {/* FOOTER                                 */}
       {/* ══════════════════════════════════════ */}
-      <footer className="bg-white border-t border-[#EDE3D6] py-6">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-[#A69B90]">
-          <p>© {new Date().getFullYear()} Open Invitation — ApexRow Solutions (Pvt) Ltd. All rights reserved.</p>
-          <div className="flex items-center space-x-1">
-            <Heart className="w-3 h-3 fill-[#C59B48] text-[#C59B48]" />
-            <span>Made with love</span>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
