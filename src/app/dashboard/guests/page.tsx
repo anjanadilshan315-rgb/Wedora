@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -11,57 +11,93 @@ import {
 } from "lucide-react";
 import Footer from "@/components/Footer";
 
-// Dummy data for initial state
-const initialGuests = [
-  { id: 1, name: "Nimal Perera", phone: "94771234567", sent: false, rsvp: "pending", headcount: 0, wish: "" },
-  { id: 2, name: "Saman Kumara", phone: "94779876543", sent: true, rsvp: "attending", headcount: 4, wish: "Congratulations on your big day!" },
-  { id: 3, name: "Amali Silva", phone: "94712345678", sent: true, rsvp: "declined", headcount: 0, wish: "So sorry we can't make it, wishing you both the best." },
-];
-
 export default function GuestsPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [guests, setGuests] = useState(initialGuests);
+  const [guests, setGuests] = useState<any[]>([]);
   const [showAddForm, setShowAddForm] = useState(false);
   const [newGuest, setNewGuest] = useState({ name: "", phone: "+94 " });
   const [copiedId, setCopiedId] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [userSlug, setUserSlug] = useState("");
+  const [userId, setUserId] = useState<number>(0);
+  const [whatsappCustomText, setWhatsappCustomText] = useState("You are cordially invited to our wedding!");
+  const [rsvpDeadline, setRsvpDeadline] = useState("Nov 20, 2026");
 
-  const handleRemoveGuest = (id: number) => {
-    setGuests(guests.filter(g => g.id !== id));
+  useEffect(() => {
+    const fetchGuestsAndSettings = async () => {
+      try {
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+          const parsed = JSON.parse(storedUser);
+          const uid = parsed.id;
+          setUserId(uid);
+          if (parsed.inviteSlug) setUserSlug(parsed.inviteSlug);
+          else if (parsed.invite_slug) setUserSlug(parsed.invite_slug);
+
+          // Fetch event details to get RSVP deadline and whatsapp greeting
+          const evtRes = await fetch(`http://localhost:3001/api/event?userId=${uid}`);
+          const evtJson = await evtRes.json();
+          if (evtJson.success && evtJson.data) {
+             if (evtJson.data.whatsapp_greeting) setWhatsappCustomText(evtJson.data.whatsapp_greeting);
+             if (evtJson.data.rsvp_deadline) {
+                setRsvpDeadline(new Date(evtJson.data.rsvp_deadline).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }));
+             }
+          }
+
+          // Fetch guests
+          const res = await fetch(`http://localhost:3001/api/guests?userId=${uid}`);
+          const json = await res.json();
+          if (json.success) {
+            setGuests(json.data);
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch data", err);
+      }
+    };
+    fetchGuestsAndSettings();
+  }, []);
+
+  const handleRemoveGuest = async (id: number) => {
+    if (!confirm('Are you sure you want to remove this receiver?')) return;
+    try {
+      await fetch(`http://localhost:3001/api/guests/${id}`, { method: 'DELETE' });
+      setGuests(guests.filter(g => g.id !== id));
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const filteredGuests = guests.filter(g => 
     g.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    g.phone.includes(searchQuery)
+    (g.phone && g.phone.includes(searchQuery))
   );
 
-  // Constants that would normally come from the backend/context
-  const slug = "kamal-nadeesha";
-  const rsvpDeadline = "Nov 20, 2026";
   const baseUrl = "https://wedora.lk/invite";
 
-  const handleAddGuest = (e: React.FormEvent) => {
+  const handleAddGuest = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newGuest.name || !newGuest.phone) return;
+    if (!newGuest.name || !userId) return;
     
-    setGuests([
-      { 
-        id: Date.now(), 
-        name: newGuest.name, 
-        phone: newGuest.phone, 
-        sent: false, 
-        rsvp: "pending",
-        headcount: 0,
-        wish: ""
-      },
-      ...guests
-    ]);
-    setNewGuest({ name: "", phone: "+94 " });
-    setShowAddForm(false);
+    try {
+      const res = await fetch('http://localhost:3001/api/guests', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, name: newGuest.name, phone: newGuest.phone })
+      });
+      const json = await res.json();
+      if (json.success) {
+        setGuests([json.data, ...guests]);
+        setNewGuest({ name: "", phone: "+94 " });
+        setShowAddForm(false);
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const getGuestLink = (guestName: string) => {
-    return `${baseUrl}/${slug}?guest=${encodeURIComponent(guestName)}`;
+    return `${baseUrl}/${userSlug || 'demo'}?guest=${encodeURIComponent(guestName)}`;
   };
 
   const handleCopy = (id: number, guestName: string) => {
@@ -70,19 +106,25 @@ export default function GuestsPage() {
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  // Normally this custom text comes from backend/context saved in Settings
-  const whatsappCustomText = "You are cordially invited to our wedding!";
-
-  const handleSendWhatsApp = (id: number, guest: typeof guests[0]) => {
-    // Mark as sent in UI
-    setGuests(guests.map(g => g.id === id ? { ...g, sent: true } : g));
+  const handleSendWhatsApp = async (id: number, guest: typeof guests[0]) => {
+    // Mark as sent in backend
+    try {
+      await fetch(`http://localhost:3001/api/guests/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sent: true })
+      });
+      setGuests(guests.map(g => g.id === id ? { ...g, sent: true } : g));
+    } catch (err) {
+      console.error(err);
+    }
     
     // Generate message combining fixed structure and custom text
     const link = getGuestLink(guest.name);
     const message = `Dear ${guest.name},\n\n${whatsappCustomText}\n\nPlease view your personalized invitation and RSVP before ${rsvpDeadline}.\n\nView Invitation: ${link}`;
     
     // Open WhatsApp
-    const cleanPhone = guest.phone.replace(/[^0-9]/g, "");
+    const cleanPhone = (guest.phone || '').replace(/[^0-9]/g, "");
     window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`, "_blank");
   };
 
@@ -132,10 +174,10 @@ export default function GuestsPage() {
             <div className="hidden lg:flex items-center space-x-4">
               <div className="flex items-center gap-3 border-l border-[#EADBCA] pl-4">
                 <div className="text-right">
-                  <p className="text-sm font-semibold text-[#28211B]">Sasanka P.</p>
+                  <p className="text-sm font-semibold text-[#28211B]">My Profile</p>
                 </div>
                 <div className="w-9 h-9 rounded-full bg-[#EADBCA] flex items-center justify-center text-[#9A6F24] font-bold font-serif-luxury text-lg">
-                  S
+                  U
                 </div>
                 <button onClick={handleLogout} className="p-2 text-[#A69B90] hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors ml-1" title="Logout">
                   <LogOut className="w-4 h-4" />

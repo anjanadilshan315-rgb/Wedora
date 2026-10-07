@@ -235,10 +235,10 @@ export default function HomePage() {
                   </Link>
                   <div className="flex items-center gap-3 border-l border-[#EADBCA] pl-4">
                     <div className="text-right">
-                      <p className="text-sm font-semibold text-[#28211B]">Sasanka P.</p>
+                      <p className="text-sm font-semibold text-[#28211B]">My Profile</p>
                     </div>
                     <div className="w-9 h-9 rounded-full bg-[#EADBCA] flex items-center justify-center text-[#9A6F24] font-bold font-serif-luxury text-lg">
-                      S
+                      U
                     </div>
                     <button onClick={() => { localStorage.removeItem("user"); window.location.reload(); }} className="p-2 text-[#A69B90] hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors ml-1" title="Logout">
                       <LogOut className="w-4 h-4" />
@@ -564,3 +564,4 @@ export default function HomePage() {
     </div>
   );
 }
+

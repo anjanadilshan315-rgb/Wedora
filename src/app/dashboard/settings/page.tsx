@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -9,28 +9,71 @@ import {
 } from "lucide-react";
 
 export default function SettingsPage() {
+  const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
   const [passwordForm, setPasswordForm] = useState({ current: "", new: "", confirm: "" });
 
   // Form State
   const [form, setForm] = useState({
-    brideName: "Nadeesha Silva",
-    groomName: "Kamal Perera",
-    bridePhone: "077 111 2222",
-    groomPhone: "077 333 4444",
-    date: "2026-12-12",
-    rsvpDeadline: "2026-11-20",
-    venueName: "Shangri-La Hotel",
-    venueLocation: "1 Galle Face, Colombo",
-    whatsappCustomText: "You are cordially invited to our wedding!",
+    brideName: "",
+    groomName: "",
+    bridePhone: "",
+    groomPhone: "",
+    date: "",
+    rsvpDeadline: "",
+    venueName: "",
+    venueLocation: "",
+    whatsappCustomText: "",
   });
 
-  // Dynamic Events
-  const [events, setEvents] = useState([
-    { id: 1, name: "Poruwa Ceremony", time: "09:00" },
-    { id: 2, name: "Reception", time: "12:30" },
-  ]);
+  // Dynamic Events & Photos
+  const [events, setEvents] = useState<{id: number, name: string, time: string}[]>([]);
+  const [photos, setPhotos] = useState<(string | null)[]>([null, null, null, null, null]);
+
+  useEffect(() => {
+    const fetchDetails = async () => {
+      try {
+        const storedUser = localStorage.getItem("user");
+        let userId = 1; // fallback
+        if (storedUser) {
+          try {
+            userId = JSON.parse(storedUser).id;
+          } catch (e) {}
+        }
+        
+        const response = await fetch(`http://localhost:3001/api/event?userId=${userId}`);
+        const json = await response.json();
+        if (json.success && json.data) {
+          const d = json.data;
+          setForm({
+            brideName: d.bride_name || "",
+            groomName: d.groom_name || "",
+            bridePhone: d.bride_phone || "",
+            groomPhone: d.groom_phone || "",
+            date: d.wedding_date ? d.wedding_date.split('T')[0] : "",
+            rsvpDeadline: d.rsvp_deadline ? d.rsvp_deadline.split('T')[0] : "",
+            venueName: d.venue_name || "",
+            venueLocation: d.venue_address || "",
+            whatsappCustomText: d.whatsapp_greeting || "",
+          });
+          if (Array.isArray(d.events_schedule)) {
+            setEvents(d.events_schedule);
+          }
+          if (Array.isArray(d.photo_gallery)) {
+            const paddedPhotos = [...d.photo_gallery];
+            while (paddedPhotos.length < 5) paddedPhotos.push(null);
+            setPhotos(paddedPhotos.slice(0, 5));
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch event details", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchDetails();
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -48,28 +91,108 @@ export default function SettingsPage() {
     setEvents(events.map(ev => ev.id === id ? { ...ev, [field]: value } : ev));
   };
 
-  const handleSave = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSaving(true);
-    // Simulate API call to save settings
-    setTimeout(() => {
-      setIsSaving(false);
-      alert("Wedding details saved successfully!");
-    }, 1000);
+  const handlePhotoUpload = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        if (event.target?.result) {
+          const newPhotos = [...photos];
+          newPhotos[index] = event.target.result as string;
+          setPhotos(newPhotos);
+        }
+      };
+      reader.readAsDataURL(e.target.files[0]);
+    }
   };
 
-  const handlePasswordUpdate = (e: React.FormEvent) => {
+  const handleRemovePhoto = (index: number) => {
+    const newPhotos = [...photos];
+    newPhotos[index] = null;
+    setPhotos(newPhotos);
+  };
+
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSaving(true);
+    
+    try {
+      const storedUser = localStorage.getItem("user");
+      let userId = 1;
+      if (storedUser) {
+        try { userId = JSON.parse(storedUser).id; } catch(e) {}
+      }
+
+      const response = await fetch("http://localhost:3001/api/event", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: userId,
+          brideName: form.brideName,
+          groomName: form.groomName,
+          bridePhone: form.bridePhone,
+          groomPhone: form.groomPhone,
+          weddingDate: form.date,
+          rsvpDeadline: form.rsvpDeadline,
+          venueName: form.venueName,
+          venueAddress: form.venueLocation,
+          whatsappGreeting: form.whatsappCustomText,
+          eventsSchedule: events,
+          photoGallery: photos.filter(p => p !== null),
+        })
+      });
+      
+      const json = await response.json();
+      if (json.success) {
+        alert("Wedding details saved successfully!");
+      } else {
+        alert("Failed to save: " + json.message);
+      }
+    } catch (err) {
+      console.error("Failed to save event details", err);
+      alert("Error saving details. Please try again.");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handlePasswordUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (passwordForm.new !== passwordForm.confirm) {
       alert("New passwords do not match!");
       return;
     }
+    
     setIsUpdatingPassword(true);
-    setTimeout(() => {
+    
+    try {
+      const storedUser = localStorage.getItem("user");
+      if (!storedUser) return;
+      const userObj = JSON.parse(storedUser);
+      
+      const res = await fetch(`http://localhost:3001/api/users/${userObj.id}/password`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          currentPassword: passwordForm.current,
+          newPassword: passwordForm.new,
+          isAdmin: false
+        })
+      });
+      
+      const data = await res.json();
+      
+      if (data.success) {
+        alert("Password updated successfully!");
+        setPasswordForm({ current: "", new: "", confirm: "" });
+      } else {
+        alert(data.message || "Failed to update password");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Network error. Please try again.");
+    } finally {
       setIsUpdatingPassword(false);
-      alert("Password updated successfully!");
-      setPasswordForm({ current: "", new: "", confirm: "" });
-    }, 1000);
+    }
   };
 
   return (
@@ -252,10 +375,22 @@ export default function SettingsPage() {
               <p className="text-xs text-[#7D736A] mb-4">Upload up to 5 photos of the couple to be displayed in the template's gallery section.</p>
 
               <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
-                {[1, 2, 3, 4, 5].map((num) => (
-                  <div key={num} className="aspect-square bg-[#FCFAF7] border-2 border-dashed border-[#DFD3C3] rounded-2xl flex flex-col items-center justify-center text-center p-2 cursor-pointer hover:border-[#C59B48] hover:bg-[#FBF3E4] transition-all group">
-                    <ImagePlus className="w-6 h-6 text-[#A69B90] group-hover:text-[#C59B48] mb-2" />
-                    <span className="text-[10px] font-semibold text-[#A69B90] group-hover:text-[#9A6F24]">Upload Photo {num}</span>
+                {[0, 1, 2, 3, 4].map((index) => (
+                  <div key={index} className="relative aspect-square bg-[#FCFAF7] border-2 border-dashed border-[#DFD3C3] rounded-2xl flex flex-col items-center justify-center text-center p-2 hover:border-[#C59B48] hover:bg-[#FBF3E4] transition-all group overflow-hidden">
+                    {photos[index] ? (
+                      <>
+                        <img src={photos[index]!} alt={`Gallery ${index + 1}`} className="absolute inset-0 w-full h-full object-cover" />
+                        <button type="button" onClick={() => handleRemovePhoto(index)} className="absolute top-1 right-1 bg-white/80 p-1.5 rounded-full text-red-500 hover:bg-red-50 hover:text-red-600 transition-colors shadow-sm">
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </>
+                    ) : (
+                      <label className="cursor-pointer flex flex-col items-center justify-center w-full h-full">
+                        <ImagePlus className="w-6 h-6 text-[#A69B90] group-hover:text-[#C59B48] mb-2" />
+                        <span className="text-[10px] font-semibold text-[#A69B90] group-hover:text-[#9A6F24]">Upload Photo {index + 1}</span>
+                        <input type="file" accept="image/*" className="hidden" onChange={(e) => handlePhotoUpload(index, e)} />
+                      </label>
+                    )}
                   </div>
                 ))}
               </div>

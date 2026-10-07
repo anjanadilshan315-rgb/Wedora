@@ -26,43 +26,25 @@ export default function LoginPage() {
     setErrorMsg("");
 
     try {
-      // ==============================================================
-      // ⚠️ DUMMY LOGIN LOGIC (For Frontend UI Testing)
-      // ==============================================================
-      // Simulating a network request delay
-      await new Promise((resolve) => setTimeout(resolve, 800));
-
-      if (email && password) {
-        // Force a successful login with any credentials
-        localStorage.setItem("user", JSON.stringify({ email, role: "client" }));
-        router.push("/dashboard"); // Redirect to the dashboard
-      } else {
-        setErrorMsg("Please enter email and password");
-      }
-
-      /* 
-      // ==============================================================
-      // REAL PHP BACKEND LOGIC (Uncomment when backend is ready)
-      // ==============================================================
-      const response = await fetch(`${API_BASE_URL}/login.php`, {
+      const response = await fetch("http://localhost:3001/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, rememberMe }),
+        body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
 
-      if (data.status === "success") {
-        // localStorage.setItem("user", JSON.stringify(data.user));
-        router.push("/dashboard");
+      if (data.success) {
+        // Save actual user details to localStorage
+        localStorage.setItem("user", JSON.stringify(data.user));
+        router.push("/dashboard"); // Redirect to the dashboard
       } else {
         setErrorMsg(data.message || "Invalid email or password");
       }
-      */
       
     } catch (error) {
       console.error("Login error:", error);
-      setErrorMsg("Could not connect to server. Is XAMPP running?");
+      setErrorMsg("Could not connect to server. Is the backend running?");
     } finally {
       setIsLoading(false);
     }

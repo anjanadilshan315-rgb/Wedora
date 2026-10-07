@@ -47,10 +47,12 @@ interface TemplateProps {
   weddingTime: string;
   venue: string;
   mapUrl: string;
+  photoGallery?: string[];
+  eventsSchedule?: { id?: number; name: string; time: string }[];
 }
 
 function SageTemplate({ 
-  receiverName, groomName, brideName, weddingDate, weddingDateLong, weddingTime, venue, mapUrl 
+  receiverName, groomName, brideName, weddingDate, weddingDateLong, weddingTime, venue, mapUrl, photoGallery = [], eventsSchedule = []
 }: TemplateProps) {
   
   // -- State --
@@ -99,13 +101,31 @@ function SageTemplate({
   };
 
   // -- Timeline Data --
-  const timeline = [
-    { time: "04:00 PM", event: "Welcome Drinks & Guest Arrival", icon: <GlassWater className="w-3.5 h-3.5" /> },
-    { time: "04:30 PM", event: "Wedding Ceremony", icon: <Heart className="w-3.5 h-3.5" /> },
-    { time: "05:30 PM", event: "Cocktails & Photos", icon: <Camera className="w-3.5 h-3.5" /> },
-    { time: "07:00 PM", event: "Dinner & Reception", icon: <Utensils className="w-3.5 h-3.5" /> },
-    { time: "08:30 PM", event: "After Party & Dancing", icon: <Music className="w-3.5 h-3.5" /> },
-  ];
+  const formatTime = (timeStr: string) => {
+    if (!timeStr) return "";
+    if (timeStr.includes("AM") || timeStr.includes("PM")) return timeStr;
+    const [hours, minutes] = timeStr.split(":");
+    if (!hours || !minutes) return timeStr;
+    const h = parseInt(hours, 10);
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    const h12 = h % 12 || 12;
+    return `${h12.toString().padStart(2, '0')}:${minutes} ${ampm}`;
+  };
+
+  const defaultIcons = [<GlassWater className="w-3.5 h-3.5" />, <Heart className="w-3.5 h-3.5" />, <Camera className="w-3.5 h-3.5" />, <Utensils className="w-3.5 h-3.5" />, <Music className="w-3.5 h-3.5" />];
+  const timeline = eventsSchedule.length > 0 
+    ? eventsSchedule.map((item, i) => ({
+        time: formatTime(item.time),
+        event: item.name,
+        icon: defaultIcons[i % defaultIcons.length]
+      }))
+    : [
+        { time: "04:00 PM", event: "Welcome Drinks & Guest Arrival", icon: <GlassWater className="w-3.5 h-3.5" /> },
+        { time: "04:30 PM", event: "Wedding Ceremony", icon: <Heart className="w-3.5 h-3.5" /> },
+        { time: "05:30 PM", event: "Cocktails & Photos", icon: <Camera className="w-3.5 h-3.5" /> },
+        { time: "07:00 PM", event: "Dinner & Reception", icon: <Utensils className="w-3.5 h-3.5" /> },
+        { time: "08:30 PM", event: "After Party & Dancing", icon: <Music className="w-3.5 h-3.5" /> },
+      ];
 
   // Colors
   const SAGE = "#8FA08D";
@@ -247,30 +267,36 @@ function SageTemplate({
         {/* ════════════════════════════════════════════════════ */}
         {/* 5. OUR JOURNEY (PHOTO GALLERY)                       */}
         {/* ════════════════════════════════════════════════════ */}
-        <section className="bg-[#F8F5EE] py-10 text-center relative border-t border-[#8FA08D]/20">
+        <section id="gallery" className="bg-[#F8F5EE] py-10 text-center relative border-t border-[#8FA08D]/20">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
             <h2 className="font-serif-luxury text-[2rem] text-[#4A433E] mb-6">Our Journey</h2>
             
             <div className="grid grid-cols-3 gap-1.5 px-6 max-w-sm mx-auto">
               <div className="col-span-1 aspect-square bg-[#8FA08D]/20 overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&q=80" alt="Journey" className="w-full h-full object-cover" />
+                <img src={photoGallery[0] || "https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&q=80"} alt="Journey" className="w-full h-full object-cover" />
               </div>
               <div className="col-span-1 aspect-square bg-[#8FA08D]/20 overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80" alt="Journey" className="w-full h-full object-cover" />
+                <img src={photoGallery[1] || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80"} alt="Journey" className="w-full h-full object-cover" />
               </div>
               <div className="col-span-1 aspect-square bg-[#8FA08D]/20 overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80" alt="Journey" className="w-full h-full object-cover" />
+                <img src={photoGallery[2] || "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80"} alt="Journey" className="w-full h-full object-cover" />
               </div>
               
               <div className="col-span-2 aspect-[4/3] bg-[#8FA08D]/20 overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&q=80" alt="Journey" className="w-full h-full object-cover" />
+                <img src={photoGallery[3] || "https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&q=80"} alt="Journey" className="w-full h-full object-cover" />
               </div>
               <div className="col-span-1 aspect-[2/3] bg-[#8FA08D]/20 overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1583939000148-73599b533d3c?auto=format&fit=crop&q=80" alt="Journey" className="w-full h-full object-cover" />
+                <img src={photoGallery[4] || "https://images.unsplash.com/photo-1583939000148-73599b533d3c?auto=format&fit=crop&q=80"} alt="Journey" className="w-full h-full object-cover" />
               </div>
             </div>
 
-            <button className="mt-8 border border-[#C59B48] text-[#C59B48] text-[10px] font-bold px-8 py-2 rounded-full tracking-widest uppercase hover:bg-[#C59B48] hover:text-white transition-colors">
+            <button 
+              onClick={() => {
+                 const el = document.getElementById("gallery");
+                 if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="mt-8 border border-[#C59B48] text-[#C59B48] text-[10px] font-bold px-8 py-2 rounded-full tracking-widest uppercase hover:bg-[#C59B48] hover:text-white transition-colors"
+            >
               View More
             </button>
           </motion.div>
@@ -390,7 +416,7 @@ function SageTemplate({
 /*  KANDYAN & GOLD TRADITIONAL TEMPLATE        */
 /* ─────────────────────────────────────────── */
 function KandyanTemplate({ 
-  receiverName, groomName, brideName, weddingDate, weddingDateLong, weddingTime, venue, mapUrl 
+  receiverName, groomName, brideName, weddingDate, weddingDateLong, weddingTime, venue, mapUrl, photoGallery = [], eventsSchedule = []
 }: TemplateProps) {
   
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
@@ -428,14 +454,27 @@ function KandyanTemplate({
     setRsvpSubmitted(true);
   };
 
-  const timeline = [
-    { time: "09:15 AM", event: "Welcome of Guest with Magul Bera & Kandyan Dancers" },
-    { time: "09:45 AM", event: "Arrival of the Bride & Groom" },
-    { time: "10:18 AM", event: "Auspicious 'Poruwa' Ceremony (Nekatha)" },
-    { time: "11:30 AM", event: "Traditional Oil Lamp & Cake Cutting" },
-    { time: "12:30 PM", event: "Royal Feast & Lunch" },
-    { time: "02:30 PM", event: "'Going Out' Procession" },
-  ];
+  const formatTime = (timeStr: string) => {
+    if (!timeStr) return "";
+    if (timeStr.includes("AM") || timeStr.includes("PM")) return timeStr;
+    const [hours, minutes] = timeStr.split(":");
+    if (!hours || !minutes) return timeStr;
+    const h = parseInt(hours, 10);
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    const h12 = h % 12 || 12;
+    return `${h12.toString().padStart(2, '0')}:${minutes} ${ampm}`;
+  };
+
+  const timeline = eventsSchedule.length > 0
+    ? eventsSchedule.map(item => ({ time: formatTime(item.time), event: item.name }))
+    : [
+        { time: "09:15 AM", event: "Welcome of Guest with Magul Bera & Kandyan Dancers" },
+        { time: "09:45 AM", event: "Arrival of the Bride & Groom" },
+        { time: "10:18 AM", event: "Auspicious 'Poruwa' Ceremony (Nekatha)" },
+        { time: "11:30 AM", event: "Traditional Oil Lamp & Cake Cutting" },
+        { time: "12:30 PM", event: "Royal Feast & Lunch" },
+        { time: "02:30 PM", event: "'Going Out' Procession" },
+      ];
 
   const fadeUp = {
     hidden: { opacity: 0, y: 20 },
@@ -587,26 +626,26 @@ function KandyanTemplate({
         {/* ════════════════════════════════════════════════════ */}
         {/* 5. OUR STORY (GALLERY)                               */}
         {/* ════════════════════════════════════════════════════ */}
-        <section className="py-12 text-center bg-[#FDFBF7]">
+        <section id="gallery" className="py-12 text-center bg-[#FDFBF7]">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
             <h2 className="font-serif-luxury text-2xl text-[#2D241A] font-bold mb-6">Our Story</h2>
             
             <div className="grid grid-cols-3 gap-1.5 px-6 max-w-sm mx-auto">
               <div className="col-span-1 aspect-square bg-[#A67C00]/10 overflow-hidden rounded-sm">
-                <img src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&q=80" alt="Journey" className="w-full h-full object-cover" />
+                <img src={photoGallery[0] || "https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&q=80"} alt="Journey" className="w-full h-full object-cover" />
               </div>
               <div className="col-span-1 aspect-square bg-[#A67C00]/10 overflow-hidden rounded-sm">
-                <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80" alt="Journey" className="w-full h-full object-cover" />
+                <img src={photoGallery[1] || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80"} alt="Journey" className="w-full h-full object-cover" />
               </div>
               <div className="col-span-1 aspect-square bg-[#A67C00]/10 overflow-hidden rounded-sm">
-                <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80" alt="Journey" className="w-full h-full object-cover" />
+                <img src={photoGallery[2] || "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80"} alt="Journey" className="w-full h-full object-cover" />
               </div>
               
               <div className="col-span-1 aspect-[3/4] bg-[#A67C00]/10 overflow-hidden rounded-sm">
-                <img src="https://images.unsplash.com/photo-1583939000148-73599b533d3c?auto=format&fit=crop&q=80" alt="Journey" className="w-full h-full object-cover" />
+                <img src={photoGallery[4] || "https://images.unsplash.com/photo-1583939000148-73599b533d3c?auto=format&fit=crop&q=80"} alt="Journey" className="w-full h-full object-cover" />
               </div>
               <div className="col-span-2 aspect-[3/2] bg-[#A67C00]/10 overflow-hidden rounded-sm">
-                <img src="https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&q=80" alt="Journey" className="w-full h-full object-cover" />
+                <img src={photoGallery[3] || "https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&q=80"} alt="Journey" className="w-full h-full object-cover" />
               </div>
             </div>
           </motion.div>
@@ -726,45 +765,75 @@ function InvitePageContent() {
   const guestName = searchParams.get("guest") ?? "Guest Name";
   const slug = params.slug as string;
   
-  const mockWeddingData = {
-    groomName: "Kaveen",
-    brideName: "Ishara",
-    weddingDate: "28TH NOVEMBER 2026",
-    weddingDateLong: "Saturday, November 28th, 2026",
-    weddingTime: "4:30 PM",
-    venue: "The Grand Ballroom, Kingsbury Hotel, Colombo",
-    mapUrl: "https://maps.google.com/?q=Kingsbury+Hotel+Colombo"
-  };
+  const [loading, setLoading] = useState(true);
+  const [inviteData, setInviteData] = useState<any>(null);
 
-  // If slug contains 'kandyan' or 'template2', render the traditional template
-  if (slug === 'template2' || slug === 'demo-kandyan') {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch(`http://localhost:3001/api/invite/${slug}`);
+        const json = await res.json();
+        if (json.success) {
+          setInviteData(json.data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch invite", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [slug]);
+
+  if (loading) {
     return (
-      <KandyanTemplate 
-        receiverName={guestName}
-        groomName={mockWeddingData.groomName}
-        brideName={mockWeddingData.brideName}
-        weddingDate={mockWeddingData.weddingDate}
-        weddingDateLong={mockWeddingData.weddingDateLong}
-        weddingTime={mockWeddingData.weddingTime}
-        venue={mockWeddingData.venue}
-        mapUrl={mockWeddingData.mapUrl}
-      />
+      <div className="min-h-screen flex items-center justify-center bg-[#F8F5EE]">
+        <div className="w-8 h-8 rounded-full border-2 border-[#C59B48] animate-ping" />
+      </div>
     );
   }
 
-  // Default to Sage Template
-  return (
-    <SageTemplate 
-      receiverName={guestName}
-      groomName={mockWeddingData.groomName}
-      brideName={mockWeddingData.brideName}
-      weddingDate={mockWeddingData.weddingDate}
-      weddingDateLong={mockWeddingData.weddingDateLong}
-      weddingTime={mockWeddingData.weddingTime}
-      venue={mockWeddingData.venue}
-      mapUrl={mockWeddingData.mapUrl}
-    />
-  );
+  // Fallbacks
+  const event = inviteData?.event || {};
+  const groomName = event.groom_name || "Groom Name";
+  const brideName = event.bride_name || "Bride Name";
+  
+  let venueStr = "Venue Name";
+  if (event.venue_name) {
+    venueStr = event.venue_name;
+    if (event.venue_address) venueStr += `, ${event.venue_address}`;
+  }
+  
+  let weddingDate = "28TH NOVEMBER 2026";
+  let weddingDateLong = "Saturday, November 28th, 2026";
+  let weddingTime = "4:30 PM";
+  
+  if (event.wedding_date) {
+    const d = new Date(event.wedding_date);
+    weddingDate = d.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' }).toUpperCase();
+    weddingDateLong = d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+  }
+
+  const props: TemplateProps = {
+    receiverName: guestName,
+    groomName,
+    brideName,
+    weddingDate,
+    weddingDateLong,
+    weddingTime,
+    venue: venueStr,
+    mapUrl: "https://maps.google.com/?q=" + encodeURIComponent(venueStr),
+    photoGallery: Array.isArray(event.photo_gallery) ? event.photo_gallery : [],
+    eventsSchedule: Array.isArray(event.events_schedule) ? event.events_schedule : []
+  };
+
+  const templateId = inviteData?.template_id || 'tpl_classic';
+  
+  if (templateId === 'tpl_royal' || slug === 'template2' || slug === 'demo-kandyan') {
+    return <KandyanTemplate {...props} />;
+  }
+
+  return <SageTemplate {...props} />;
 }
 
 export default function InvitePage() {

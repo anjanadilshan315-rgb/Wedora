@@ -20,11 +20,30 @@ export default function ContactPage() {
   // Dummy form state
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
-    // Real implementation would send to a PHP endpoint
+    setIsSubmitting(true);
+    setErrorMsg("");
+    try {
+      const res = await fetch("http://localhost:3001/api/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSubmitted(true);
+      } else {
+        setErrorMsg(data.message || "Failed to send message.");
+      }
+    } catch (err) {
+      setErrorMsg("Network error. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -72,10 +91,10 @@ export default function ContactPage() {
                   </Link>
                   <div className="flex items-center gap-3 border-l border-[#EADBCA] pl-4">
                     <div className="text-right">
-                      <p className="text-sm font-semibold text-[#28211B]">Sasanka P.</p>
+                      <p className="text-sm font-semibold text-[#28211B]">My Profile</p>
                     </div>
                     <div className="w-9 h-9 rounded-full bg-[#EADBCA] flex items-center justify-center text-[#9A6F24] font-bold font-serif-luxury text-lg">
-                      S
+                      U
                     </div>
                     <button onClick={() => { localStorage.removeItem("user"); window.location.reload(); }} className="p-2 text-[#A69B90] hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors ml-1" title="Logout">
                       <LogOut className="w-4 h-4" />
@@ -283,12 +302,19 @@ export default function ContactPage() {
                     />
                   </div>
 
+                  {errorMsg && (
+                    <div className="p-3 bg-red-50 text-red-600 rounded-xl text-sm font-semibold">
+                      {errorMsg}
+                    </div>
+                  )}
+
                   <button
                     type="submit"
-                    className="w-full sm:w-auto px-8 py-3 rounded-xl text-white text-sm font-semibold shadow-md transition-all hover:scale-[1.02] flex items-center justify-center gap-2"
+                    disabled={isSubmitting}
+                    className="w-full sm:w-auto px-8 py-3 rounded-xl text-white text-sm font-semibold shadow-md transition-all hover:scale-[1.02] flex items-center justify-center gap-2 disabled:opacity-70 disabled:hover:scale-100"
                     style={{ background: "linear-gradient(90deg,#C79848,#9A6F24)" }}
                   >
-                    Send Message <Send className="w-3.5 h-3.5" />
+                    {isSubmitting ? "Sending..." : "Send Message"} <Send className="w-3.5 h-3.5" />
                   </button>
                 </form>
               )}
@@ -305,3 +331,4 @@ export default function ContactPage() {
     </div>
   );
 }
+

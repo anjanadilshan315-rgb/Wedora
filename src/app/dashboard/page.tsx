@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -30,8 +30,69 @@ import Footer from "@/components/Footer";
 export default function DashboardPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  
+  // Data State
+  const [eventDetails, setEventDetails] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [userSlug, setUserSlug] = useState<string>("");
 
-  const inviteLink = "wedora.lk/kamal-nadeesha";
+  const [guests, setGuests] = useState<any[]>([]);
+
+  const [userFirstName, setUserFirstName] = useState("User");
+  const [templateName, setTemplateName] = useState("Assigned Template");
+
+  useEffect(() => {
+    const fetchDetails = async () => {
+      try {
+        const storedUser = localStorage.getItem("user");
+        let userId = 1; // fallback
+        let userTemplateId = "";
+        
+        if (storedUser) {
+          try {
+            const parsed = JSON.parse(storedUser);
+            userId = parsed.id;
+            if (parsed.firstName) setUserFirstName(parsed.firstName);
+            if (parsed.templateId) userTemplateId = parsed.templateId;
+            else if (parsed.template_id) userTemplateId = parsed.template_id;
+            
+            if (parsed.inviteSlug) setUserSlug(parsed.inviteSlug);
+            else if (parsed.invite_slug) setUserSlug(parsed.invite_slug); // fallback
+          } catch (e) {}
+        }
+        
+        const response = await fetch(`http://localhost:3001/api/event?userId=${userId}`);
+        const json = await response.json();
+        if (json.success && json.data) {
+          setEventDetails(json.data);
+        }
+
+        const guestsRes = await fetch(`http://localhost:3001/api/guests?userId=${userId}`);
+        const guestsJson = await guestsRes.json();
+        if (guestsJson.success) {
+          setGuests(guestsJson.data);
+        }
+
+        // Fetch template name
+        if (userTemplateId) {
+          const tplRes = await fetch(`http://localhost:3001/api/templates`);
+          const tplJson = await tplRes.json();
+          if (tplJson.success) {
+            const template = tplJson.data.find((t: any) => t.template_id === userTemplateId);
+            if (template) setTemplateName(template.name);
+          }
+        }
+
+      } catch (err) {
+        console.error("Failed to fetch event details", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchDetails();
+  }, []);
+
+  const inviteLink = "wedora.lk/invite";
 
   const handleCopy = () => {
     navigator.clipboard.writeText(inviteLink);
@@ -43,6 +104,15 @@ export default function DashboardPage() {
     localStorage.removeItem("user");
     window.location.href = "/";
   };
+
+  const groomFirst = eventDetails?.groom_name?.split(' ')[0] || "Groom";
+  const brideFirst = eventDetails?.bride_name?.split(' ')[0] || "Bride";
+  const dateFormatted = eventDetails?.wedding_date 
+    ? new Date(eventDetails.wedding_date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' })
+    : "TBD";
+  const timeFormatted = eventDetails?.events_schedule?.length > 0 
+    ? `Starts at ${eventDetails.events_schedule[0].time}`
+    : "Time TBD";
 
   return (
     <div className="min-h-screen bg-[#FAF7F2] font-sans">
@@ -89,10 +159,10 @@ export default function DashboardPage() {
             <div className="hidden lg:flex items-center space-x-4">
               <div className="flex items-center gap-3 border-l border-[#EADBCA] pl-4">
                 <div className="text-right">
-                  <p className="text-sm font-semibold text-[#28211B]">Sasanka P.</p>
+                  <p className="text-sm font-semibold text-[#28211B]">{userFirstName}</p>
                 </div>
-                <div className="w-9 h-9 rounded-full bg-[#EADBCA] flex items-center justify-center text-[#9A6F24] font-bold font-serif-luxury text-lg">
-                  S
+                <div className="w-9 h-9 rounded-full bg-[#EADBCA] flex items-center justify-center text-[#9A6F24] font-bold font-serif-luxury text-lg uppercase">
+                  {userFirstName.charAt(0) || "U"}
                 </div>
                 <button onClick={handleLogout} className="p-2 text-[#A69B90] hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors ml-1" title="Logout">
                   <LogOut className="w-4 h-4" />
@@ -156,7 +226,7 @@ export default function DashboardPage() {
           className="mb-8"
         >
           <h1 className="font-serif-luxury text-3xl sm:text-4xl font-bold text-[#29221D]">
-            Welcome back, Sasanka!
+            Welcome back!
           </h1>
           <p className="text-sm text-[#7D736A] mt-1">Here is the overview of your wedding invitation.</p>
         </motion.div>
@@ -179,12 +249,14 @@ export default function DashboardPage() {
               <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="flex items-center gap-1 text-[11px] text-green-600 font-medium">
-                      <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" /> Live
+                    <span className="flex items-center gap-1 text-[11px] text-[#A69B90] font-medium">
+                      Setup in progress
                     </span>
                   </div>
-                  <h2 className="text-xl sm:text-2xl font-serif-luxury font-bold text-[#29221D]">Kamal & Nadeesha's Wedding</h2>
-                  <p className="text-xs text-[#A69B90] mt-1">Template: Blush Romance</p>
+                  <h2 className="text-xl sm:text-2xl font-serif-luxury font-bold text-[#29221D]">
+                    {groomFirst} & {brideFirst}'s Wedding
+                  </h2>
+                  <p className="text-xs text-[#A69B90] mt-1">Template: {templateName}</p>
                 </div>
               </div>
             </motion.div>
@@ -195,11 +267,11 @@ export default function DashboardPage() {
               className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3"
             >
               {[
-                { label: "Invited", value: "115", color: "text-[#4A3F37]", bg: "bg-[#F8F5F0]" },
-                { label: "Accepted", value: "82", color: "text-green-600", bg: "bg-green-50" },
-                { label: "Declined", value: "12", color: "text-red-500", bg: "bg-red-50" },
-                { label: "Pending", value: "21", color: "text-[#B88737]", bg: "bg-[#FBF3E4]" },
-                { label: "Total Heads", value: "245", color: "text-[#29221D]", bg: "bg-[#F0E8DC]/50" },
+                { label: "Invited", value: guests.length.toString(), color: "text-[#4A3F37]", bg: "bg-[#F8F5F0]" },
+                { label: "Accepted", value: guests.filter(g => g.rsvp === 'attending').length.toString(), color: "text-green-600", bg: "bg-green-50" },
+                { label: "Declined", value: guests.filter(g => g.rsvp === 'declined').length.toString(), color: "text-red-500", bg: "bg-red-50" },
+                { label: "Pending", value: guests.filter(g => g.rsvp === 'pending').length.toString(), color: "text-[#B88737]", bg: "bg-[#FBF3E4]" },
+                { label: "Total Heads", value: guests.reduce((sum, g) => sum + (parseInt(g.headcount) || 0), 0).toString(), color: "text-[#29221D]", bg: "bg-[#F0E8DC]/50" },
               ].map((stat, i) => (
                 <div key={i} className={`${stat.bg} border border-black/5 rounded-2xl p-4 flex flex-col items-center justify-center text-center`}>
                   <p className={`text-2xl sm:text-3xl font-serif-luxury font-bold ${stat.color}`}>{stat.value}</p>
@@ -226,8 +298,8 @@ export default function DashboardPage() {
                   </div>
                   <div>
                     <p className="text-[11px] text-[#A69B90] font-semibold uppercase tracking-wider">The Couple</p>
-                    <p className="text-sm font-medium text-[#29221D] mt-0.5">Kamal Perera</p>
-                    <p className="text-sm font-medium text-[#29221D]">Nadeesha Silva</p>
+                    <p className="text-sm font-medium text-[#29221D] mt-0.5">{eventDetails?.groom_name || "Groom Name"}</p>
+                    <p className="text-sm font-medium text-[#29221D]">{eventDetails?.bride_name || "Bride Name"}</p>
                   </div>
                 </div>
                 
@@ -237,8 +309,8 @@ export default function DashboardPage() {
                   </div>
                   <div>
                     <p className="text-[11px] text-[#A69B90] font-semibold uppercase tracking-wider">Date & Time</p>
-                    <p className="text-sm font-medium text-[#29221D] mt-0.5">Saturday, Dec 12, 2026</p>
-                    <p className="text-sm font-medium text-[#7D736A]">Starts at 4:00 PM</p>
+                    <p className="text-sm font-medium text-[#29221D] mt-0.5">{dateFormatted}</p>
+                    <p className="text-sm font-medium text-[#7D736A]">{timeFormatted}</p>
                   </div>
                 </div>
 
@@ -248,8 +320,8 @@ export default function DashboardPage() {
                   </div>
                   <div>
                     <p className="text-[11px] text-[#A69B90] font-semibold uppercase tracking-wider">Venue</p>
-                    <p className="text-sm font-medium text-[#29221D] mt-0.5">Shangri-La Hotel, Colombo</p>
-                    <p className="text-sm font-medium text-[#7D736A]">1 Galle Face, Colombo 00200</p>
+                    <p className="text-sm font-medium text-[#29221D] mt-0.5">{eventDetails?.venue_name || "Venue Name TBD"}</p>
+                    <p className="text-sm font-medium text-[#7D736A]">{eventDetails?.venue_address || "Venue Address TBD"}</p>
                   </div>
                 </div>
               </div>
@@ -267,13 +339,23 @@ export default function DashboardPage() {
               initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.5 }}
               className="bg-white rounded-3xl border border-[#EADBCA] p-6 shadow-sm flex flex-col items-center text-center"
             >
-              <div className="w-full aspect-[4/5] bg-gradient-to-br from-[#F9EDF0] to-[#F0D6DF] rounded-2xl border border-white/60 shadow-inner flex flex-col items-center justify-center p-4 relative mb-5">
-                <Heart className="w-6 h-6 text-[#C59B48] mb-3" />
-                <p className="font-serif-luxury text-xl font-bold text-[#C59B48]">Kamal & Nadeesha</p>
-                <p className="text-xs text-[#C59B48]/70 mt-1">12 . 12 . 2026</p>
+              <div className="w-full aspect-[4/5] bg-gray-50 rounded-2xl border border-[#EADBCA] shadow-inner overflow-hidden relative mb-5">
+                {userSlug ? (
+                  <iframe 
+                    src={`/invite/${userSlug}`} 
+                    className="absolute top-0 left-0 pointer-events-none" 
+                    style={{ width: '400%', height: '400%', transform: 'scale(0.25)', transformOrigin: 'top left', border: 'none' }}
+                    title="Template Preview"
+                  />
+                ) : (
+                  <div className="w-full h-full flex flex-col items-center justify-center p-4 text-center bg-gradient-to-br from-[#F9EDF0] to-[#F0D6DF]">
+                    <Heart className="w-6 h-6 text-[#C59B48] mb-3" />
+                    <p className="font-serif-luxury text-xl font-bold text-[#C59B48]">Setup Pending</p>
+                  </div>
+                )}
               </div>
               
-              <Link href="/invite/kamal-nadeesha" target="_blank" className="w-full py-2.5 rounded-xl text-white text-sm font-semibold shadow-md flex items-center justify-center gap-2 transition-transform hover:scale-[1.02]" style={{ background: "linear-gradient(90deg,#C79848,#B88737)" }}>
+              <Link href={userSlug ? `/invite/${userSlug}` : "#"} onClick={(e) => { if (!userSlug) { e.preventDefault(); alert("Preview not available: Invite slug missing."); } }} target="_blank" className="w-full py-2.5 rounded-xl text-white text-sm font-semibold shadow-md flex items-center justify-center gap-2 transition-transform hover:scale-[1.02]" style={{ background: "linear-gradient(90deg,#C79848,#B88737)" }}>
                 <Eye className="w-4 h-4" /> Preview Invitation
               </Link>
             </motion.div>
