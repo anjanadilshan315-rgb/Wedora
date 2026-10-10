@@ -1,143 +1,17 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
-import { User, Menu, X, Heart, Sparkles, Gem, ShieldCheck, LayoutDashboard, LogOut } from "lucide-react";
+import { motion } from "framer-motion";
+import { Heart, Sparkles, Gem, ShieldCheck } from "lucide-react";
 import Footer from "@/components/Footer";
-
-const navLinks = ["Home", "Templates", "About", "Contact"];
+import SiteHeader from "@/components/SiteHeader";
 
 export default function AboutPage() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    if (localStorage.getItem("user")) setIsLoggedIn(true);
-  }, []);
 
   return (
     <div className="min-h-screen bg-[#FAF7F2] font-sans flex flex-col">
-      {/* ══════════════════════════════════════ */}
-      {/* NAVBAR                                 */}
-      {/* ══════════════════════════════════════ */}
-      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-[0_2px_20px_rgba(180,140,80,0.10)]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 lg:h-[70px]">
-            <Link href="/" className="flex items-center space-x-2.5 shrink-0">
-              <div className="relative w-10 h-10 rounded-full overflow-hidden ring-2 ring-[#C59B48]/40">
-                <Image src="/assets/logo.svg" alt="Logo" fill className="object-cover" />
-              </div>
-              <div className="leading-none">
-                <p className="font-serif-luxury text-[17px] font-bold text-[#28211B] tracking-tight">Wedora</p>
-                <p className="text-[9px] text-[#B88737] tracking-[0.15em] uppercase font-medium">by ApexRow Solutions</p>
-              </div>
-            </Link>
-
-            <nav className="hidden lg:flex items-center space-x-1">
-              {navLinks.map((link) => (
-                <Link
-                  key={link}
-                  href={link === "Home" ? "/" : `/${link.toLowerCase()}`}
-                  className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-                    link === "About"
-                      ? "text-[#B88737] bg-[#FBF3E4]"
-                      : "text-[#4A3F37] hover:text-[#B88737] hover:bg-[#FBF3E4]"
-                  }`}
-                >
-                  {link}
-                </Link>
-              ))}
-            </nav>
-
-            <div className="hidden lg:flex items-center space-x-3">
-              {isLoggedIn ? (
-                <div className="flex items-center space-x-4">
-                  <Link href="/dashboard">
-                    <button className="flex items-center space-x-1.5 px-4 py-2 rounded-full border border-[#C59B48] text-[#9A6F24] text-sm font-semibold hover:bg-[#FBF3E4] transition-colors">
-                      <LayoutDashboard className="w-3.5 h-3.5" />
-                      <span>Dashboard</span>
-                    </button>
-                  </Link>
-                  <div className="flex items-center gap-3 border-l border-[#EADBCA] pl-4">
-                    <div className="text-right">
-                      <p className="text-sm font-semibold text-[#28211B]">My Profile</p>
-                    </div>
-                    <div className="w-9 h-9 rounded-full bg-[#EADBCA] flex items-center justify-center text-[#9A6F24] font-bold font-serif-luxury text-lg">
-                      U
-                    </div>
-                    <button onClick={() => { localStorage.removeItem("user"); window.location.reload(); }} className="p-2 text-[#A69B90] hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors ml-1" title="Logout">
-                      <LogOut className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <Link href="/login">
-                  <button className="flex items-center space-x-1.5 px-5 py-2 rounded-full border border-[#C59B48] text-[#9A6F24] text-sm font-semibold hover:bg-[#FBF3E4] transition-colors">
-                    <User className="w-3.5 h-3.5" /><span>Login</span>
-                  </button>
-                </Link>
-              )}
-            </div>
-
-            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="lg:hidden w-9 h-9 flex items-center justify-center rounded-lg text-[#4A3F37]">
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile menu dropdown */}
-        <AnimatePresence>
-          {mobileMenuOpen && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.25 }}
-              className="lg:hidden overflow-hidden bg-white border-t border-[#F0E8DC] px-4 pb-4"
-            >
-              <nav className="flex flex-col space-y-1 pt-3">
-                {navLinks.map((link, i) => (
-                  <Link
-                    key={link}
-                    href={link === "Home" ? "/" : `/${link.toLowerCase()}`}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className={`px-4 py-2.5 text-sm font-medium rounded-xl transition-colors ${
-                      link === "About" ? "text-[#B88737] bg-[#FBF3E4]" : "text-[#4A3F37] hover:bg-[#FBF3E4]"
-                    }`}
-                  >
-                    {link}
-                  </Link>
-                ))}
-                <div className="pt-2">
-                  {isLoggedIn ? (
-                    <div className="flex gap-2">
-                      <Link href="/dashboard" className="flex-1">
-                        <button className="w-full py-2.5 rounded-xl border border-[#C59B48] text-[#9A6F24] text-sm font-semibold flex items-center justify-center gap-2">
-                          <LayoutDashboard className="w-4 h-4" /> Dashboard
-                        </button>
-                      </Link>
-                      <button 
-                        onClick={() => { localStorage.removeItem("user"); window.location.reload(); }}
-                        className="flex-1 py-2.5 rounded-xl bg-red-50 text-red-600 text-sm font-semibold flex items-center justify-center gap-2 hover:bg-red-100 transition-colors"
-                      >
-                        <LogOut className="w-4 h-4" /> Logout
-                      </button>
-                    </div>
-                  ) : (
-                    <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
-                      <button className="w-full py-2.5 rounded-xl border border-[#C59B48] text-[#9A6F24] text-sm font-semibold flex items-center justify-center gap-2">
-                        <User className="w-4 h-4" /> Login
-                      </button>
-                    </Link>
-                  )}
-                </div>
-              </nav>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </header>
+      <SiteHeader active="About" />
 
       {/* ══════════════════════════════════════ */}
       {/* PAGE HEADER                            */}
@@ -175,7 +49,7 @@ export default function AboutPage() {
             <div>
               <h3 className="font-serif-luxury text-2xl font-bold text-[#29221D] mb-4">Crafting Beautiful Digital Experiences</h3>
               <p className="text-sm text-[#7D736A] leading-relaxed mb-4">
-                Founded by ApexRow Solutions, Wedora was born from a desire to modernize how we share our most precious life events. Traditional paper invitations are beautiful, but they often lack the convenience, speed, and interactivity that today's couples need.
+                Founded by ApexRow Solutions, Wedora was born from a desire to modernize how we share our most precious life events. Traditional paper invitations are beautiful, but they often lack the convenience, speed, and interactivity that today&apos;s couples need.
               </p>
               <p className="text-sm text-[#7D736A] leading-relaxed">
                 We combine luxurious designs with cutting-edge web technology to give you a personalized website link for every guest, complete with automated RSVP tracking, location mapping, and easy WhatsApp integration.
@@ -217,7 +91,7 @@ export default function AboutPage() {
             </div>
             <h4 className="font-serif-luxury text-lg font-bold text-[#29221D] mb-2">Stress-Free RSVP</h4>
             <p className="text-xs text-[#7D736A] leading-relaxed">
-              Track who's coming and total headcounts instantly from your own dashboard. Let us handle the complicated logistics.
+              Track who&apos;s coming and total headcounts instantly from your own dashboard. Let us handle the complicated logistics.
             </p>
           </div>
         </div>

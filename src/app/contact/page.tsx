@@ -1,24 +1,15 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
-import { User, Menu, X, Heart, Mail, Phone, MapPin, Send, MessageCircle, LayoutDashboard, LogOut } from "lucide-react";
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { Heart, Mail, Phone, MapPin, Send, MessageCircle } from "lucide-react";
 import Footer from "@/components/Footer";
-
-const navLinks = ["Home", "Templates", "About", "Contact"];
+import SiteHeader from "@/components/SiteHeader";
+import { api, errorMessage } from "@/lib/api";
 
 export default function ContactPage() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    if (localStorage.getItem("user")) setIsLoggedIn(true);
-  }, []);
   
-  // Dummy form state
-  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
+  const [formData, setFormData] = useState({ name: "", email: "", phone: "", subject: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -28,19 +19,20 @@ export default function ContactPage() {
     setIsSubmitting(true);
     setErrorMsg("");
     try {
-      const res = await fetch("http://localhost:3001/api/messages", {
+      await api("/public/contact", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        auth: false,
+        body: {
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          subject: formData.subject,
+          message: formData.message,
+        },
       });
-      const data = await res.json();
-      if (data.success) {
-        setSubmitted(true);
-      } else {
-        setErrorMsg(data.message || "Failed to send message.");
-      }
-    } catch (err) {
-      setErrorMsg("Network error. Please try again.");
+      setSubmitted(true);
+    } catch (error) {
+      setErrorMsg(errorMessage(error, "Failed to send your message. Please try again."));
     } finally {
       setIsSubmitting(false);
     }
@@ -48,125 +40,7 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen bg-[#FAF7F2] font-sans flex flex-col">
-      {/* ══════════════════════════════════════ */}
-      {/* NAVBAR                                 */}
-      {/* ══════════════════════════════════════ */}
-      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-[0_2px_20px_rgba(180,140,80,0.10)]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 lg:h-[70px]">
-            <Link href="/" className="flex items-center space-x-2.5 shrink-0">
-              <div className="relative w-10 h-10 rounded-full overflow-hidden ring-2 ring-[#C59B48]/40">
-                <Image src="/assets/logo.svg" alt="Logo" fill className="object-cover" />
-              </div>
-              <div className="leading-none">
-                <p className="font-serif-luxury text-[17px] font-bold text-[#28211B] tracking-tight">Wedora</p>
-                <p className="text-[9px] text-[#B88737] tracking-[0.15em] uppercase font-medium">by ApexRow Solutions</p>
-              </div>
-            </Link>
-
-            <nav className="hidden lg:flex items-center space-x-1">
-              {navLinks.map((link) => (
-                <Link
-                  key={link}
-                  href={link === "Home" ? "/" : `/${link.toLowerCase()}`}
-                  className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-                    link === "Contact"
-                      ? "text-[#B88737] bg-[#FBF3E4]"
-                      : "text-[#4A3F37] hover:text-[#B88737] hover:bg-[#FBF3E4]"
-                  }`}
-                >
-                  {link}
-                </Link>
-              ))}
-            </nav>
-
-            <div className="hidden lg:flex items-center space-x-3">
-              {isLoggedIn ? (
-                <div className="flex items-center space-x-4">
-                  <Link href="/dashboard">
-                    <button className="flex items-center space-x-1.5 px-4 py-2 rounded-full border border-[#C59B48] text-[#9A6F24] text-sm font-semibold hover:bg-[#FBF3E4] transition-colors">
-                      <LayoutDashboard className="w-3.5 h-3.5" />
-                      <span>Dashboard</span>
-                    </button>
-                  </Link>
-                  <div className="flex items-center gap-3 border-l border-[#EADBCA] pl-4">
-                    <div className="text-right">
-                      <p className="text-sm font-semibold text-[#28211B]">My Profile</p>
-                    </div>
-                    <div className="w-9 h-9 rounded-full bg-[#EADBCA] flex items-center justify-center text-[#9A6F24] font-bold font-serif-luxury text-lg">
-                      U
-                    </div>
-                    <button onClick={() => { localStorage.removeItem("user"); window.location.reload(); }} className="p-2 text-[#A69B90] hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors ml-1" title="Logout">
-                      <LogOut className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <Link href="/login">
-                  <button className="flex items-center space-x-1.5 px-5 py-2 rounded-full border border-[#C59B48] text-[#9A6F24] text-sm font-semibold hover:bg-[#FBF3E4] transition-colors">
-                    <User className="w-3.5 h-3.5" /><span>Login</span>
-                  </button>
-                </Link>
-              )}
-            </div>
-
-            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="lg:hidden w-9 h-9 flex items-center justify-center rounded-lg text-[#4A3F37]">
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile menu dropdown */}
-        <AnimatePresence>
-          {mobileMenuOpen && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.25 }}
-              className="lg:hidden overflow-hidden bg-white border-t border-[#F0E8DC] px-4 pb-4"
-            >
-              <nav className="flex flex-col space-y-1 pt-3">
-                {navLinks.map((link, i) => (
-                  <Link
-                    key={link}
-                    href={link === "Home" ? "/" : `/${link.toLowerCase()}`}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className={`px-4 py-2.5 text-sm font-medium rounded-xl transition-colors ${
-                      link === "Contact" ? "text-[#B88737] bg-[#FBF3E4]" : "text-[#4A3F37] hover:bg-[#FBF3E4]"
-                    }`}
-                  >
-                    {link}
-                  </Link>
-                ))}
-                <div className="pt-2">
-                  {isLoggedIn ? (
-                    <div className="flex gap-2">
-                      <Link href="/dashboard" className="flex-1">
-                        <button className="w-full py-2.5 rounded-xl border border-[#C59B48] text-[#9A6F24] text-sm font-semibold flex items-center justify-center gap-2">
-                          <LayoutDashboard className="w-4 h-4" /> Dashboard
-                        </button>
-                      </Link>
-                      <button 
-                        onClick={() => { localStorage.removeItem("user"); window.location.reload(); }}
-                        className="flex-1 py-2.5 rounded-xl bg-red-50 text-red-600 text-sm font-semibold flex items-center justify-center gap-2 hover:bg-red-100 transition-colors"
-                      >
-                        <LogOut className="w-4 h-4" /> Logout
-                      </button>
-                    </div>
-                  ) : (
-                    <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
-                      <button className="w-full py-2.5 rounded-xl border border-[#C59B48] text-[#9A6F24] text-sm font-semibold flex items-center justify-center gap-2">
-                        <User className="w-4 h-4" /> Login
-                      </button>
-                    </Link>
-                  )}
-                </div>
-              </nav>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </header>
+      <SiteHeader active="Contact" />
 
       {/* ══════════════════════════════════════ */}
       {/* PAGE HEADER                            */}
@@ -285,6 +159,30 @@ export default function ContactPage() {
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         placeholder="you@example.com"
+                        className="w-full px-4 py-2.5 rounded-xl border border-[#DFD3C3] bg-[#FCFAF7] text-sm focus:outline-none focus:ring-2 focus:ring-[#C59B48]/50 focus:border-[#C59B48] transition-all"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-semibold text-[#483E36] tracking-wide">Phone (optional)</label>
+                      <input
+                        type="tel"
+                        value={formData.phone}
+                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                        placeholder="e.g. 077 123 4567"
+                        className="w-full px-4 py-2.5 rounded-xl border border-[#DFD3C3] bg-[#FCFAF7] text-sm focus:outline-none focus:ring-2 focus:ring-[#C59B48]/50 focus:border-[#C59B48] transition-all"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-semibold text-[#483E36] tracking-wide">Subject (optional)</label>
+                      <input
+                        type="text"
+                        maxLength={255}
+                        value={formData.subject}
+                        onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                        placeholder="e.g. Pricing"
                         className="w-full px-4 py-2.5 rounded-xl border border-[#DFD3C3] bg-[#FCFAF7] text-sm focus:outline-none focus:ring-2 focus:ring-[#C59B48]/50 focus:border-[#C59B48] transition-all"
                       />
                     </div>
