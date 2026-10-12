@@ -323,7 +323,7 @@ export default function HomePage() {
 
         {/* Template cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {TEMPLATE_DESIGNS.slice(0, 4).map((tpl, i) => (
+          {TEMPLATE_DESIGNS.filter((tpl, index) => index < 3 || tpl.code === "tpl_golden_hour").map((tpl, i) => (
             <Link key={tpl.code} href={`/invite/${tpl.demoSlug}`}>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}

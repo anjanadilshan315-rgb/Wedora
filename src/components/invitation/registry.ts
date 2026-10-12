@@ -5,6 +5,7 @@ import FloralTemplate from "./templates/FloralTemplate";
 import MinimalTemplate from "./templates/MinimalTemplate";
 import ModernTemplate from "./templates/ModernTemplate";
 import RoyalTemplate from "./templates/RoyalTemplate";
+import GoldenHourTemplate from "./templates/GoldenHourTemplate";
 import type { InvitationViewData, TemplateProps } from "./types";
 
 export interface TemplateDesign {
@@ -28,6 +29,7 @@ export const TEMPLATE_DESIGNS: TemplateDesign[] = [
   { code: "tpl_modern", name: "Modern Luxe", style: "Emerald & Amber", gradient: "from-[#E3EEE9] to-[#C9DDD3]", accent: "#1E4D3E", demoSlug: "demo-modern", component: ModernTemplate },
   { code: "tpl_floral", name: "Floral Garden", style: "Blush Watercolor", gradient: "from-[#FBEAF0] to-[#EFE6F7]", accent: "#B5577A", demoSlug: "demo-floral", component: FloralTemplate },
   { code: "tpl_minimal", name: "Minimal White", style: "Modern Editorial", gradient: "from-[#FFFFFF] to-[#EDEDED]", accent: "#262626", demoSlug: "demo-minimal", component: MinimalTemplate },
+  { code: "tpl_golden_hour", name: "Ruby Heart Romance", style: "Ruby, Blush & Gold Editorial", gradient: "from-[#64142D] to-[#F5DCE0]", accent: "#8C1D40", demoSlug: "demo-golden-hour", component: GoldenHourTemplate },
 ];
 
 export function designFor(code: string | null | undefined): TemplateDesign {

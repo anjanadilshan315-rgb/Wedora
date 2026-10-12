@@ -13,20 +13,27 @@ export const SAMPLE_GALLERY = [
 /** Shown on the template gallery previews (/invite/demo-…). */
 export function sampleInvitation(code: string, guestName: string | null): InvitationViewData {
   const traditional = code === "tpl_royal";
+  const goldenHour = code === "tpl_golden_hour";
   return {
     guestName: guestName ?? "Guest Name",
-    groomName: "Kaveen",
-    brideName: "Ishara",
+    groomName: goldenHour ? "Ravindu" : "Kaveen",
+    brideName: goldenHour ? "Sanduni" : "Ishara",
     groomParents: "Mr. & Mrs. Perera",
-    brideParents: "Mr. & Mrs. Silva",
-    weddingDate: "2026-11-28",
-    weddingTime: traditional ? "09:15" : "16:30",
-    rsvpDeadline: "2026-11-15",
-    venueName: traditional ? "Cinnamon Grand" : "The Kingsbury",
-    venueAddress: "Colombo 03, Sri Lanka",
+    brideParents: goldenHour ? "Mr. & Mrs. Fernando" : "Mr. & Mrs. Silva",
+    weddingDate: goldenHour ? "2026-12-12" : "2026-11-28",
+    weddingTime: goldenHour ? "10:30" : traditional ? "09:15" : "16:30",
+    rsvpDeadline: goldenHour ? "2026-12-01" : "2026-11-15",
+    venueName: goldenHour ? "Aralya Grand" : traditional ? "Cinnamon Grand" : "The Kingsbury",
+    venueAddress: goldenHour ? "Nuwara Eliya, Sri Lanka" : "Colombo 03, Sri Lanka",
     mapUrl: null,
-    greetingMessage: "Together with our families, we joyfully invite you to celebrate our wedding.",
-    eventsSchedule: traditional
+    greetingMessage: goldenHour ? "ඔබගේ පැමිණීමෙන් අපගේ සතුට දෙගුණ වේ. Together with our families, we joyfully invite you to celebrate the beginning of our forever." : "Together with our families, we joyfully invite you to celebrate our wedding.",
+    eventsSchedule: goldenHour
+      ? [
+          { name: "Registration", time: "09:00" },
+          { name: "Poruwa Ceremony", time: "10:30" },
+          { name: "Reception", time: "18:30" },
+        ]
+      : traditional
       ? [
           { name: "Welcome of Guests with Magul Bera & Kandyan Dancers", time: "09:15" },
           { name: "Arrival of the Bride & Groom", time: "09:45" },

@@ -50,19 +50,32 @@ export default function TemplatesPage() {
   /** Active templates from the API, styled with the local design registry. */
   const templates: TemplateCard[] = useMemo(() => {
     const source = apiTemplates
-      ? apiTemplates.filter((t) => TEMPLATE_DESIGNS.some((d) => d.code === t.code))
+      ? [
+          ...apiTemplates.filter((t) => TEMPLATE_DESIGNS.some((d) => d.code === t.code)),
+          ...TEMPLATE_DESIGNS
+            .filter((design) => !apiTemplates.some((template) => template.code === design.code))
+            .map((design) => ({
+              code: design.code,
+              name: design.name,
+              description: null,
+              price: null,
+              demoSlug: design.demoSlug,
+            })),
+        ]
       : TEMPLATE_DESIGNS.map((d) => ({ code: d.code, name: d.name, description: null, price: null, demoSlug: d.demoSlug }));
     return source.map((t) => {
       const design = TEMPLATE_DESIGNS.find((d) => d.code === t.code)!;
       return {
         code: t.code,
-        name: t.name,
+        name: t.code === "tpl_golden_hour" ? design.name : t.name,
         style: design.style,
-        description: t.description,
+        description: t.code === "tpl_golden_hour"
+          ? "A dramatic ruby-red wedding design with oversized falling hearts, a cinematic cover and warm gold accents."
+          : t.description,
         price: t.price,
         gradient: design.gradient,
         accent: design.accent,
-        previewUrl: `/invite/${t.demoSlug ?? design.demoSlug}`,
+        previewUrl: `/invite/${t.code === "tpl_golden_hour" ? design.demoSlug : t.demoSlug ?? design.demoSlug}`,
       };
     });
   }, [apiTemplates]);

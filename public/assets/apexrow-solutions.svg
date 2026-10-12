@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 500" role="img" aria-labelledby="title description">
+  <title id="title">ApexRow Solutions</title>
+  <desc id="description">Three green mountain peaks above the ApexRow Solutions wordmark.</desc>
+  <g fill="#2BC68B">
+    <path d="M48 245 111 137l62 100-48-43-29 23-20-16z"/>
+    <path d="m92 223 112-160 111 180-82-72-30 26-61-78-29 42z"/>
+    <path d="m191 178 73-154 122 203-81-78-44-37-31 43z"/>
+  </g>
+  <text x="260" y="345" fill="#F8F8F8" font-family="Arial, Helvetica, sans-serif" font-size="76" font-weight="400" letter-spacing="-2" text-anchor="middle">ApexRow</text>
+  <text x="260" y="405" fill="#F8F8F8" font-family="Arial, Helvetica, sans-serif" font-size="35" font-weight="600" letter-spacing="7" text-anchor="middle">SOLUTIONS</text>
+</svg>
