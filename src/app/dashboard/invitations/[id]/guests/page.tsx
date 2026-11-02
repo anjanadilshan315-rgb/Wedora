@@ -40,7 +40,7 @@ import {
   primaryButton,
   secondaryButton,
 } from "@/components/dashboard/ui";
-import { formatDateShort } from "@/components/invitation/format";
+import { guestWhatsAppLink } from "@/lib/whatsapp";
 import { api, ApiError, errorMessage, sampleGuestExcelUrl } from "@/lib/api";
 import type { EmailBatch, Guest, GuestEmailStatus, GuestStats, ImportResult, Invitation, RsvpStatus, Wish } from "@/lib/types";
 
@@ -227,13 +227,7 @@ export default function GuestsPage() {
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  const whatsappLink = (guest: Guest) => {
-    const phone = (guest.phone ?? "").replace(/[^0-9]/g, "").replace(/^0/, "94");
-    const message = `Dear ${guest.name},\n\n${invitation.greetingMessage ?? "You are cordially invited to our wedding!"}\n\n${
-      invitation.rsvpDeadline ? `Please RSVP before ${formatDateShort(invitation.rsvpDeadline)}.\n\n` : ""
-    }View your invitation: ${guest.inviteUrl ?? ""}`;
-    return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-  };
+  const whatsappLink = (guest: Guest) => guestWhatsAppLink(guest, invitation);
 
   // ---- guest add / edit
   const saveGuest = async (e: React.FormEvent) => {
@@ -363,7 +357,8 @@ export default function GuestsPage() {
             <ArrowLeft className="w-3.5 h-3.5" /> Back to Dashboard
           </Link>
           <h1 className="font-serif-luxury text-3xl sm:text-4xl font-bold text-[#29221D]">Guest List & RSVP</h1>
-          <p className="text-sm text-[#7D736A] mt-1">{couple} — import your guests and send the invitation by e-mail.</p>
+          <p className="text-sm text-[#7D736A] mt-1">{couple} — import your guests and share personal invitations by e-mail or WhatsApp.</p>
+          <p className="text-xs text-[#7D736A] mt-2">WhatsApp opens using the account signed in on your phone or browser. Review the personal message and press Send.</p>
         </div>
         {invitation.inviteUrl && (
           <div className="flex items-center gap-2">
@@ -639,10 +634,12 @@ export default function GuestsPage() {
                             <span className="hidden sm:inline">{copiedId === guest.id ? "Copied" : "Link"}</span>
                           </button>
                         )}
-                        {guest.phone && guest.inviteUrl && (
-                          <a href={whatsappLink(guest)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-bold text-white bg-[#25D366] hover:opacity-90" title="Send on WhatsApp">
-                            <MessageCircle className="w-3.5 h-3.5" />
+                        {whatsappLink(guest) ? (
+                          <a href={whatsappLink(guest)!} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-bold text-white bg-[#25D366] hover:opacity-90" aria-label={`Open WhatsApp invitation for ${guest.name}`} title="Open in your WhatsApp, then press Send">
+                            <MessageCircle className="w-3.5 h-3.5" /> WhatsApp
                           </a>
+                        ) : (
+                          <button disabled className="px-2.5 py-1.5 rounded-lg text-xs text-gray-400 bg-gray-100 cursor-not-allowed" title={guest.inviteUrl ? "Add a valid WhatsApp number with country code (for example +94 77 123 4567)" : "A personal invitation link is required"}>WhatsApp</button>
                         )}
                         {isPaid && (
                           <>
