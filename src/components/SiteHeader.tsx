@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
+import BrandLogo from "@/components/BrandLogo";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { LayoutDashboard, LogOut, Menu, Sparkles, User, X } from "lucide-react";
@@ -11,6 +11,7 @@ import { useSession } from "@/lib/use-session";
 const NAV_LINKS = [
   { label: "Home", href: "/" },
   { label: "Templates", href: "/templates" },
+  { label: "Packages", href: "/packages" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
 ] as const;
@@ -51,14 +52,8 @@ export default function SiteHeader({ active, fixed = false }: SiteHeaderProps) {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-[70px]">
-          <Link href="/" className="flex items-center space-x-2.5 shrink-0">
-            <div className="relative w-10 h-10 rounded-full overflow-hidden ring-2 ring-[#C59B48]/40">
-              <Image src="/assets/logo.svg" alt="Wedora Logo" fill className="object-cover" />
-            </div>
-            <div className="leading-none">
-              <p className="font-serif-luxury text-[17px] font-bold text-[#28211B] tracking-tight">Wedora</p>
-              <p className="text-[9px] text-[#B88737] tracking-[0.15em] uppercase font-medium">by ApexRow Solutions</p>
-            </div>
+          <Link href="/" aria-label="Forever home" className="flex items-center shrink-0">
+            <BrandLogo preload className="w-16 lg:w-[70px]" />
           </Link>
 
           <nav className="hidden lg:flex items-center space-x-1">

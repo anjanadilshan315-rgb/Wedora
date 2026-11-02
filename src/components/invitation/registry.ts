@@ -1,11 +1,17 @@
 import type { ComponentType } from "react";
 import type { InvitationContent, Photos } from "@/lib/types";
-import ClassicTemplate from "./templates/ClassicTemplate";
-import FloralTemplate from "./templates/FloralTemplate";
-import MinimalTemplate from "./templates/MinimalTemplate";
-import ModernTemplate from "./templates/ModernTemplate";
-import RoyalTemplate from "./templates/RoyalTemplate";
+import KeepsakeTemplate from "./templates/KeepsakeTemplate";
+import { keepsakeSettings } from "./keepsake";
 import GoldenHourTemplate from "./templates/GoldenHourTemplate";
+import HeirloomTemplate from "./templates/HeritageDoorTemplate";
+import FloralEnvelopeTemplate from "./templates/FloralEnvelopeTemplate";
+import { envelopeSettings } from "./envelope";
+import { heirloomSettings } from "./heirloom";
+import { rubySettings } from "./ruby";
+import SunsetJourneyTemplate from "./templates/SunsetJourneyTemplate";
+import { sunsetSettings } from "./sunset";
+import GildedCelebrationTemplate from "./templates/GildedCelebrationTemplate";
+import { gildedSettings } from "./gilded";
 import type { InvitationViewData, TemplateProps } from "./types";
 
 export interface TemplateDesign {
@@ -20,16 +26,16 @@ export interface TemplateDesign {
 }
 
 /**
- * The five static designs. `code` must match the `templates.code` column
+ * The available designs. `code` must match the `templates.code` column
  * seeded by backend/database/schema.sql.
  */
 export const TEMPLATE_DESIGNS: TemplateDesign[] = [
-  { code: "tpl_classic", name: "Classic Elegance", style: "Sage & Gold", gradient: "from-[#FBF3E4] to-[#EDE0CC]", accent: "#C59B48", demoSlug: "demo-template", component: ClassicTemplate },
-  { code: "tpl_royal", name: "Royal Kandyan", style: "Traditional & Gold", gradient: "from-[#FDFBF7] to-[#EBE5DA]", accent: "#A67C00", demoSlug: "demo-kandyan", component: RoyalTemplate },
-  { code: "tpl_modern", name: "Modern Luxe", style: "Emerald & Amber", gradient: "from-[#E3EEE9] to-[#C9DDD3]", accent: "#1E4D3E", demoSlug: "demo-modern", component: ModernTemplate },
-  { code: "tpl_floral", name: "Floral Garden", style: "Blush Watercolor", gradient: "from-[#FBEAF0] to-[#EFE6F7]", accent: "#B5577A", demoSlug: "demo-floral", component: FloralTemplate },
-  { code: "tpl_minimal", name: "Minimal White", style: "Modern Editorial", gradient: "from-[#FFFFFF] to-[#EDEDED]", accent: "#262626", demoSlug: "demo-minimal", component: MinimalTemplate },
+  { code: "tpl_classic", name: "The Golden Keepsake", style: "Luxury Gold & Ivory", gradient: "from-[#FFFFF0] to-[#F5EBDD]", accent: "#C6A667", demoSlug: "demo-keepsake", component: KeepsakeTemplate },
   { code: "tpl_golden_hour", name: "Ruby Heart Romance", style: "Ruby, Blush & Gold Editorial", gradient: "from-[#64142D] to-[#F5DCE0]", accent: "#8C1D40", demoSlug: "demo-golden-hour", component: GoldenHourTemplate },
+  { code: "tpl_grand_heirloom", name: "The Grand Heirloom", style: "Heritage Door · Sinhala & English", gradient: "from-[#7A4A28] to-[#1C3F8F]", accent: "#E6C58F", demoSlug: "demo-grand-heirloom", component: HeirloomTemplate },
+  { code: "tpl_heirloom_envelope", name: "Floral Envelope", style: "Burgundy & Gold · Sinhala & English", gradient: "from-[#F8EAE8] to-[#ECD0CC]", accent: "#7A1414", demoSlug: "demo-heirloom-envelope", component: FloralEnvelopeTemplate },
+  { code: "tpl_sunset_journey", name: "Sunset Journey", style: "Vintage Car · Sunset & Petals", gradient: "from-[#2f5a45] to-[#f08a24]", accent: "#c4a468", demoSlug: "demo-sunset-journey", component: SunsetJourneyTemplate },
+  { code: "tpl_gilded_celebration", name: "The Gilded Celebration", style: "Burgundy, Gold & Ivory", gradient: "from-[#faf7f0] to-[#efdfc8]", accent: "#781c32", demoSlug: "demo-gilded-celebration", component: GildedCelebrationTemplate },
 ];
 
 export function designFor(code: string | null | undefined): TemplateDesign {
@@ -37,8 +43,8 @@ export function designFor(code: string | null | undefined): TemplateDesign {
 }
 
 export function designForDemoSlug(slug: string): TemplateDesign | null {
-  // "template2" is an older preview link for the Kandyan design.
-  if (slug === "template2") return designFor("tpl_royal");
+  // Previously shared preview URLs now display the replacement invitation.
+  if (slug === "demo-template" || slug === "demo-minimal") return designFor("tpl_classic");
   return TEMPLATE_DESIGNS.find((t) => t.demoSlug === slug) ?? null;
 }
 
@@ -48,6 +54,14 @@ export function toViewData(
   guestName: string | null,
 ): InvitationViewData {
   return {
+    keepsake: keepsakeSettings(invitation.extraDetails?.keepsake),
+    heirloom: heirloomSettings(invitation.extraDetails?.heirloom),
+    floralEnvelope: envelopeSettings(invitation.extraDetails?.floralEnvelope),
+    ruby: rubySettings(invitation.extraDetails?.ruby),
+    sunset: sunsetSettings(invitation.extraDetails?.sunset),
+    gilded: gildedSettings(invitation.extraDetails?.gilded),
+    bridePhone: invitation.bridePhone,
+    groomPhone: invitation.groomPhone,
     guestName,
     groomName: invitation.groomName || "Groom",
     brideName: invitation.brideName || "Bride",

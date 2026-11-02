@@ -1,0 +1,37 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import type { InvitationRow } from '../src/modules/invitations/invitation.repository.js';
+
+const repository = vi.hoisted(() => ({
+  findByCode: vi.fn(), findById: vi.fn(), insert: vi.fn(), update: vi.fn(), recordRsvp: vi.fn(),
+}));
+vi.mock('../src/modules/guests/guest.repository.js', () => ({ guestRepository: repository }));
+import { guestService } from '../src/modules/guests/guest.service.js';
+
+const invitation = { id: 10 } as InvitationRow;
+const guest = { id: 20, name: 'Guest', invite_code: 'known-code' };
+
+describe('RSVP email storage', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    repository.findByCode.mockResolvedValue(guest);
+    repository.findById.mockResolvedValue(guest);
+    repository.insert.mockResolvedValue(20);
+    repository.update.mockResolvedValue(undefined);
+    repository.recordRsvp.mockResolvedValue(undefined);
+  });
+  it('stores email when a new public guest replies', async () => {
+    await guestService.rsvp(invitation, { name: 'Guest', email: 'guest@example.com', attending: true, headCount: 2 });
+    expect(repository.insert).toHaveBeenCalledWith(10, expect.objectContaining({ email: 'guest@example.com' }));
+    expect(repository.recordRsvp).toHaveBeenCalledWith(20, 'attending', 2);
+  });
+  it('updates email only for the guest matched by this invitation code', async () => {
+    await guestService.rsvp(invitation, { code: 'known-code', email: 'new@example.com', attending: false, headCount: 1 });
+    expect(repository.findByCode).toHaveBeenCalledWith(10, 'known-code');
+    expect(repository.update).toHaveBeenCalledWith(20, { email: 'new@example.com' });
+    expect(repository.recordRsvp).toHaveBeenCalledWith(20, 'declined', 0);
+  });
+  it('does not alter email for older templates that omit the field', async () => {
+    await guestService.rsvp(invitation, { code: 'known-code', attending: true, headCount: 1 });
+    expect(repository.update).not.toHaveBeenCalled();
+  });
+});

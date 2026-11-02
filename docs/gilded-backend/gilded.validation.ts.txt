@@ -1,0 +1,17 @@
+import { z } from 'zod';
+import { isoDate } from '../../common/utils/validators.js';
+
+const colour = z.string().regex(/^#[0-9a-f]{6}$/i);
+const mediaUrl = z.string().max(1000).regex(/^(https:\/\/|\/(?!\/))/).or(z.literal(''));
+const mapUrl = z.url().max(1000).regex(/^https:\/\//).or(z.literal(''));
+
+export const gildedSettingsSchema = z.object({
+  wine: colour, gold: colour, ivory: colour, ink: colour, muted: colour,
+  font: z.enum(['classic', 'script', 'modern']),
+  storyHeading: z.string().max(500),
+  storyText: z.string().max(4000),
+  quote: z.string().max(500),
+  musicUrl: mediaUrl,
+  eventDates: z.array(isoDate.or(z.literal(''))).max(20),
+  eventMaps: z.array(mapUrl).max(20),
+}).partial();

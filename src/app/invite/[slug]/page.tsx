@@ -40,7 +40,7 @@ function DemoInvitation({ slug }: { slug: string }) {
     <>
       <Link
         href="/templates"
-        className="fixed top-4 left-4 z-[999] bg-white/85 backdrop-blur-md text-[#2D241A] rounded-full pl-3 pr-4 py-2 shadow-md border border-[#EADBCA] hover:bg-white flex items-center gap-1.5 text-xs font-semibold"
+        className={`${design.code === "tpl_gilded_celebration" ? "fixed bottom-5 left-4" : design.code === "tpl_heirloom_envelope" ? "fixed bottom-28 left-4" : "fixed top-4 left-4"} z-[999] bg-white/85 backdrop-blur-md text-[#2D241A] rounded-full pl-3 pr-4 py-2 shadow-md border border-[#EADBCA] hover:bg-white flex items-center gap-1.5 text-xs font-semibold`}
       >
         <ArrowLeft className="w-4 h-4" /> Templates
       </Link>
@@ -140,13 +140,13 @@ function LiveInvitation({ slug }: { slug: string }) {
       });
       await loadWishes().catch(() => undefined);
     },
-    submitRsvp: async ({ attending, headCount, name }) => {
+    submitRsvp: async ({ attending, headCount, name, email }) => {
       const { data } = await api<{ name: string; rsvpStatus: RsvpStatus; headCount: number; inviteCode: string }>(
         `/public/invitations/${encodeURIComponent(slug)}/rsvp`,
         {
           method: "POST",
           auth: false,
-          body: code && invitation.guest ? { code, attending, headCount } : { name, attending, headCount },
+          body: { ...(code && invitation.guest ? { code, attending, headCount } : { name, attending, headCount }), ...(email ? { email } : {}) },
         },
       );
       if (!code || !invitation.guest) {
@@ -161,7 +161,7 @@ function LiveInvitation({ slug }: { slug: string }) {
     },
   };
 
-  return <Template key={invitation.guest?.name ?? "anonymous"} data={toViewData(invitation, guestName)} actions={actions} />;
+  return <Template key={design.code === "tpl_classic" ? `${slug}:${urlCode ?? "public"}` : invitation.guest?.name ?? "anonymous"} data={toViewData(invitation, guestName)} actions={actions} />;
 }
 
 function InviteContent() {

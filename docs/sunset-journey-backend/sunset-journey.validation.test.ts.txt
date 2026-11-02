@@ -1,0 +1,29 @@
+import { describe, expect, it } from 'vitest';
+import { updateInvitationSchema } from '../src/modules/invitations/invitation.validation.js';
+
+describe('Sunset Journey settings', () => {
+  it.each(['classic', 'script', 'modern'])('accepts the %s font without changing other designs', font => {
+    const extraDetails = {
+      heirloom: { palette: 'heritage-gold' },
+      floralEnvelope: { palette: 'burgundy' },
+      sunset: {
+        main: '#2f5a45', gold: '#c4a468', paper: '#f7f3ee', sky: '#f08a24', font,
+        story: 'Our story', familiesLine: 'Our families',
+        timeline: [{ year: '2026', title: 'Together', description: 'Our beginning' }],
+        eventDates: ['2027-12-11', '', '2027-12-12'],
+        musicUrl: '/audio/song.mp3', filmVideoUrl: 'https://example.com/intro.mp4',
+      },
+    };
+    expect(updateInvitationSchema.parse({ extraDetails }).extraDetails).toEqual(extraDetails);
+  });
+
+  it.each([
+    { main: 'invalid' }, { main: '#fff' }, { font: 'unknown' },
+    { musicUrl: 'javascript:alert(1)' }, { filmVideoUrl: '//example.com/intro.mp4' },
+    { musicUrl: 'http://example.com/song.mp3' }, { eventDates: ['2027-02-30'] },
+    { timeline: Array(11).fill({ year: '', title: '', description: '' }) },
+    { story: 'a'.repeat(2001) },
+  ])('rejects invalid settings: %j', invalid => {
+    expect(updateInvitationSchema.safeParse({ extraDetails: { sunset: invalid } }).success).toBe(false);
+  });
+});

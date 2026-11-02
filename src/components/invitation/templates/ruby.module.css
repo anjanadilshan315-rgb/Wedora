@@ -1,0 +1,27 @@
+.invitation :global(.font-serif-luxury) {
+  font-family: var(--ruby-heading-font);
+}
+
+.invitation :global(.font-script-romantic) {
+  font-family: var(--ruby-names-font);
+}
+
+.customizer {
+  position: fixed;
+  inset: auto 1rem 1rem auto;
+  width: min(440px, calc(100vw - 2rem));
+  max-height: calc(100svh - 2rem);
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 1px solid #eadbca;
+  border-radius: 1.25rem;
+  background: #fffbf5;
+  color: #4e2731;
+  box-shadow: 0 20px 70px #231d2040;
+}
+
+.customizer::backdrop {
+  background: #231d2033;
+}

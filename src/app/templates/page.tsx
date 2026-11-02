@@ -67,15 +67,23 @@ export default function TemplatesPage() {
       const design = TEMPLATE_DESIGNS.find((d) => d.code === t.code)!;
       return {
         code: t.code,
-        name: t.code === "tpl_golden_hour" ? design.name : t.name,
+        name: design.name,
         style: design.style,
-        description: t.code === "tpl_golden_hour"
+        description: t.code === "tpl_gilded_celebration"
+          ? "An elegant burgundy, gold and ivory celebration with an envelope opening, love story, gallery, event maps, RSVP and invitation sharing."
+          : t.code === "tpl_sunset_journey"
+          ? "A vintage car sunset intro with a bouquet toss, falling petals, illustrated memories, six colour themes, three fonts and a built-in melody."
+          : t.code === "tpl_heirloom_envelope"
+          ? "A floral wax-seal envelope with the original burgundy and gold artwork, nine colour themes, animated opening and gentle sound effects."
+          : t.code === "tpl_grand_heirloom"
+          ? "Carved heritage doors open into illustrated wedding scenes, with six colour themes, floating fireflies and Sinhala and English wording."
+          : t.code === "tpl_golden_hour"
           ? "A dramatic ruby-red wedding design with oversized falling hearts, a cinematic cover and warm gold accents."
-          : t.description,
+          : t.code === "tpl_classic" ? "A lotus and mandala invitation with a cracking wax seal, three colour themes and elegant Sinhala and English wording." : t.description,
         price: t.price,
         gradient: design.gradient,
         accent: design.accent,
-        previewUrl: `/invite/${t.code === "tpl_golden_hour" ? design.demoSlug : t.demoSlug ?? design.demoSlug}`,
+        previewUrl: `/invite/${design.demoSlug}`,
       };
     });
   }, [apiTemplates]);
@@ -199,7 +207,6 @@ export default function TemplatesPage() {
                   <div className="p-5 flex flex-col gap-3 bg-white">
                     <Link
                       href={tpl.previewUrl}
-                      target="_blank"
                       className="flex items-center justify-center w-full py-3 rounded-xl border border-[#C59B48] text-[#9A6F24] text-sm font-semibold hover:bg-[#FBF3E4] active:bg-[#F0E8DC] transition-colors"
                     >
                       View Live Preview
