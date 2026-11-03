@@ -11,6 +11,7 @@ import { useSession } from "@/lib/use-session";
 const NAV_LINKS = [
   { label: "Home", href: "/" },
   { label: "Templates", href: "/templates" },
+  { label: "Packages", href: "/packages" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
 ] as const;
