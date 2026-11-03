@@ -29,7 +29,7 @@ export default function AuthShell({ badge, children }: { badge: string; children
               style={{ background: "linear-gradient(135deg, #ECC880 0%, #FDF4D8 30%, #C99B4B 60%, #9B6F23 100%)" }}
             >
               <div className="relative w-full h-full rounded-full overflow-hidden bg-[#FBF8F4] border-[2px] border-[#FFF8E7]">
-                <Image src="/assets/logo.svg" alt="Wedora Logo" fill priority className="object-cover scale-105" />
+                <Image src="/assets/forever-wedding-logo.svg" alt="Forever Wedding Invitation logo" fill priority className="object-cover scale-105" />
               </div>
             </motion.div>
           </Link>
@@ -74,7 +74,7 @@ export default function AuthShell({ badge, children }: { badge: string; children
             style={{ background: "linear-gradient(135deg, #ECC880 0%, #FDF4D8 30%, #C99B4B 60%, #9B6F23 100%)" }}
           >
             <div className="relative w-full h-full rounded-full overflow-hidden border-[2px] border-[#FFF8E7]">
-              <Image src="/assets/logo.svg" alt="Logo" fill className="object-cover scale-105" />
+              <Image src="/assets/forever-wedding-logo.svg" alt="Forever Wedding Invitation logo" fill className="object-cover scale-105" />
             </div>
           </div>
         </Link>

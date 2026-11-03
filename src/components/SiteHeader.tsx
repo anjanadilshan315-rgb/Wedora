@@ -53,8 +53,8 @@ export default function SiteHeader({ active, fixed = false }: SiteHeaderProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-[70px]">
           <Link href="/" className="flex items-center space-x-2.5 shrink-0">
-            <div className="relative w-10 h-10 rounded-full overflow-hidden ring-2 ring-[#C59B48]/40">
-              <Image src="/assets/logo.svg" alt="Wedora Logo" fill className="object-cover" />
+            <div className="relative w-12 h-12 rounded-full overflow-hidden bg-[#FBF3E4] ring-2 ring-[#C59B48]/50 shadow-sm">
+              <Image src="/assets/forever-wedding-logo.svg" alt="Forever Wedding Invitation logo" fill className="object-cover" sizes="48px" />
             </div>
             <div className="leading-none">
               <p className="font-serif-luxury text-[17px] font-bold text-[#28211B] tracking-tight">Wedora</p>
