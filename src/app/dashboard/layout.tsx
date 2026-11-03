@@ -64,7 +64,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <Image src="/assets/forever-wedding-logo.svg" alt="Forever Wedding Invitation logo" fill className="object-cover" sizes="48px" />
               </div>
               <div className="leading-none">
-                <p className="font-serif-luxury text-[17px] font-bold text-[#28211B] tracking-tight">Wedora</p>
+                <p className="font-serif-luxury text-[17px] font-bold text-[#28211B] tracking-tight">Forever</p>
                 <p className="text-[9px] text-[#B88737] tracking-[0.15em] uppercase font-medium">by ApexRow Solutions</p>
               </div>
             </Link>

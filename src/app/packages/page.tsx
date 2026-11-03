@@ -14,9 +14,9 @@ import Footer from "@/components/Footer";
 import SiteHeader from "@/components/SiteHeader";
 
 export const metadata: Metadata = {
-  title: "Wedding Invitation Packages | Wedora",
+  title: "Wedding Invitation Packages | Forever",
   description:
-    "Compare Wedora Free, Basic, Standard and Premium digital wedding invitation packages.",
+    "Compare Forever Free, Basic, Standard and Premium digital wedding invitation packages.",
 };
 
 // Add each plan's own features here. Higher plans automatically include lower plans.
@@ -134,7 +134,7 @@ const packagePlans = [
 
 function getInquiryLink(packageName: string) {
   const message = encodeURIComponent(
-    `Hi Wedora! I'd like to know more about the ${packageName} wedding invitation package.`,
+    `Hi Forever! I'd like to know more about the ${packageName} wedding invitation package.`,
   );
   return `https://wa.me/94757115645?text=${message}`;
 }
@@ -157,7 +157,7 @@ export default function PackagesPage() {
               <span className="h-px w-10 bg-[#C59B48]" />
             </div>
             <h1 className="font-serif-luxury text-4xl font-semibold leading-tight text-[#29221D] sm:text-5xl lg:text-6xl">
-              Find your <span className="text-[#B88737]">Wedora plan</span>
+              Find your <span className="text-[#B88737]">Forever plan</span>
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-[#7D736A] sm:text-base">
               Start with the essentials or create a fully tailored celebration. Compare what is included in each plan and choose what feels right for you.
@@ -234,7 +234,7 @@ export default function PackagesPage() {
           </div>
 
           <p className="mt-7 text-center text-xs leading-5 text-[#8A7F74]">
-            Features are shown as described for each plan. Contact Wedora to confirm current availability, pricing and any usage limits.
+            Features are shown as described for each plan. Contact Forever to confirm current availability, pricing and any usage limits.
           </p>
         </section>
 

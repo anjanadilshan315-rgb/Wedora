@@ -117,7 +117,7 @@ function LiveInvitation({ slug }: { slug: string }) {
             : "We could not load this invitation. Please check your connection and try again."}
         </p>
         <Link href="/" className="mt-6 text-sm font-semibold text-[#B88737] hover:underline">
-          Go to Wedora
+          Go to Forever
         </Link>
       </div>
     );

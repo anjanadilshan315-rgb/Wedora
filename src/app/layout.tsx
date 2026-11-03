@@ -21,8 +21,8 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "Wedding Invitation | Customer Login",
-  description: "Create beautiful wedding invitations, share with your loved ones and celebrate together.",
+  title: "Forever | Digital Wedding Invitations",
+  description: "Create beautiful wedding invitations with Forever, share with your loved ones and celebrate together.",
 };
 
 export default function RootLayout({

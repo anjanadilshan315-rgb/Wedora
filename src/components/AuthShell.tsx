@@ -21,7 +21,7 @@ export default function AuthShell({ badge, children }: { badge: string; children
           transition={{ duration: 0.9, ease: "easeOut" }}
           className="relative z-10 flex flex-col items-center text-center px-10"
         >
-          <Link href="/" aria-label="Wedora home">
+          <Link href="/" aria-label="Forever home">
             <motion.div
               whileHover={{ scale: 1.03 }}
               transition={{ type: "spring", stiffness: 200, damping: 15 }}
@@ -68,7 +68,7 @@ export default function AuthShell({ badge, children }: { badge: string; children
       <div className="flex lg:hidden relative w-full shrink-0 overflow-hidden" style={{ height: "38vw", maxHeight: "180px" }}>
         <Image src="/assets/bg-artwork.png" alt="Wedding Background" fill priority className="object-cover object-left-bottom" />
         <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-[#FAF7F2] to-transparent" />
-        <Link href="/" className="absolute inset-0 flex items-center justify-center" aria-label="Wedora home">
+        <Link href="/" className="absolute inset-0 flex items-center justify-center" aria-label="Forever home">
           <div
             className="relative w-20 h-20 rounded-full p-[2px] shadow-lg"
             style={{ background: "linear-gradient(135deg, #ECC880 0%, #FDF4D8 30%, #C99B4B 60%, #9B6F23 100%)" }}
