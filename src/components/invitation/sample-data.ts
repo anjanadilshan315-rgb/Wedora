@@ -1,4 +1,5 @@
 import type { InvitationViewData } from "./types";
+import { FREE_SAMPLE, freeViewData } from "@/lib/free-invitation";
 
 const unsplash = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit=crop&q=80&w=900`;
 
@@ -12,6 +13,7 @@ export const SAMPLE_GALLERY = [
 
 /** Shown on the template gallery previews (/invite/demo-…). */
 export function sampleInvitation(code: string, guestName: string | null): InvitationViewData {
+  if (code === "tpl_free_arch") return freeViewData(FREE_SAMPLE, guestName ?? "Guest Name");
   const traditional = code === "tpl_royal";
   const goldenHour = code === "tpl_golden_hour";
   return {

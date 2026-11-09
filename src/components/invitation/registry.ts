@@ -1,12 +1,12 @@
 import type { ComponentType } from "react";
 import type { InvitationContent, Photos } from "@/lib/types";
 import ClassicTemplate from "./templates/ClassicTemplate";
-import FloralTemplate from "./templates/FloralTemplate";
 import MinimalTemplate from "./templates/MinimalTemplate";
-import ModernTemplate from "./templates/ModernTemplate";
-import RoyalTemplate from "./templates/RoyalTemplate";
+import { FreeRoyalTemplate, FreeFloralTemplate, FreeModernTemplate } from "./FreeInvitationTemplate";
 import GoldenHourTemplate from "./templates/GoldenHourTemplate";
+import FreeArchTemplate from "./templates/FreeArchTemplate";
 import type { InvitationViewData, TemplateProps } from "./types";
+import { TEMPLATE_CATALOG } from "@/lib/template-catalog";
 
 export interface TemplateDesign {
   code: string;
@@ -14,23 +14,28 @@ export interface TemplateDesign {
   style: string;
   gradient: string;
   accent: string;
+  /** Free designs use the browser editor instead of the paid checkout. */
+  plan: "free" | "paid";
+  description: string;
   /** Static preview route on this website (also stored as templates.demo_slug in the DB). */
   demoSlug: string;
   component: ComponentType<TemplateProps>;
 }
 
 /**
- * The five static designs. `code` must match the `templates.code` column
- * seeded by backend/database/schema.sql.
+ * Designs used by the gallery and invitation pages. Paid design codes must
+ * match the API's templates. Free designs use their own browser-based editor.
  */
-export const TEMPLATE_DESIGNS: TemplateDesign[] = [
-  { code: "tpl_classic", name: "Classic Elegance", style: "Sage & Gold", gradient: "from-[#FBF3E4] to-[#EDE0CC]", accent: "#C59B48", demoSlug: "demo-template", component: ClassicTemplate },
-  { code: "tpl_royal", name: "Royal Kandyan", style: "Traditional & Gold", gradient: "from-[#FDFBF7] to-[#EBE5DA]", accent: "#A67C00", demoSlug: "demo-kandyan", component: RoyalTemplate },
-  { code: "tpl_modern", name: "Modern Luxe", style: "Emerald & Amber", gradient: "from-[#E3EEE9] to-[#C9DDD3]", accent: "#1E4D3E", demoSlug: "demo-modern", component: ModernTemplate },
-  { code: "tpl_floral", name: "Floral Garden", style: "Blush Watercolor", gradient: "from-[#FBEAF0] to-[#EFE6F7]", accent: "#B5577A", demoSlug: "demo-floral", component: FloralTemplate },
-  { code: "tpl_minimal", name: "Minimal White", style: "Modern Editorial", gradient: "from-[#FFFFFF] to-[#EDEDED]", accent: "#262626", demoSlug: "demo-minimal", component: MinimalTemplate },
-  { code: "tpl_golden_hour", name: "Ruby Heart Romance", style: "Ruby, Blush & Gold Editorial", gradient: "from-[#64142D] to-[#F5DCE0]", accent: "#8C1D40", demoSlug: "demo-golden-hour", component: GoldenHourTemplate },
-];
+const components: Record<string, ComponentType<TemplateProps>> = {
+  tpl_classic: ClassicTemplate,
+  tpl_royal: FreeRoyalTemplate,
+  tpl_modern: FreeModernTemplate,
+  tpl_floral: FreeFloralTemplate,
+  tpl_minimal: MinimalTemplate,
+  tpl_golden_hour: GoldenHourTemplate,
+  tpl_free_arch: FreeArchTemplate,
+};
+export const TEMPLATE_DESIGNS: TemplateDesign[] = TEMPLATE_CATALOG.map((design) => ({ ...design, component: components[design.code] }));
 
 export function designFor(code: string | null | undefined): TemplateDesign {
   return TEMPLATE_DESIGNS.find((t) => t.code === code) ?? TEMPLATE_DESIGNS[0];

@@ -2,6 +2,10 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+Free invitation creation now includes a four-step studio, account-saved drafts,
+stable published links and a private guest RSVP dashboard. See
+[Free Studio setup and beginner guide](docs/free-invitation.md).
+
 First, run the development server:
 
 ```bash

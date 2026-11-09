@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import Footer from "@/components/Footer";
 import SiteHeader from "@/components/SiteHeader";
+import { FREE_TEMPLATES, FREE_PLAN } from "@/lib/template-catalog";
 
 export const metadata: Metadata = {
   title: "Wedding Invitation Packages | Forever",
@@ -34,14 +35,14 @@ const packagePlans = [
       "Wedding venue details",
       "Couple names display",
       "Basic invitation preview",
-      "Limited free templates",
+      `${FREE_TEMPLATES.length} free invitation designs`,
       "Share invitation link",
-      "Basic RSVP (Yes / No)",
+      "Central RSVP inbox (Yes / No)",
       "System watermark",
-      "Limited guest invitations",
+      `Up to ${FREE_PLAN.guestLimit} guests per invitation`,
     ],
     buttonText: "Get started free",
-    href: "/register",
+    href: "/free-invitation",
     highlighted: false,
   },
   {
@@ -217,6 +218,12 @@ export default function PackagesPage() {
                     ))}
                   </ul>
 
+                  {plan.name === "Free" && (
+                    <div className="mt-5 rounded-2xl bg-[#FFF7F9] p-4 text-xs leading-6 text-[#7F5A6B]">
+                      <p>One invitation per free account, with a saved draft, a permanent share link and a private RSVP inbox. Invite up to {FREE_PLAN.guestLimit} guests. Choose your design below.</p>
+                      <div className="mt-4 grid gap-2 sm:grid-cols-2">{FREE_TEMPLATES.map((template) => <Link key={template.code} href={`/free-invitation?template=${template.code}`} className="rounded-xl border border-[#EAD9DF] bg-white px-3 py-3 font-semibold text-[#8E2F59] hover:bg-[#FAF1F4]">{template.name} →</Link>)}</div>
+                    </div>
+                  )}
                   {premium && <p className="mt-4 text-[11px] leading-5 text-white/60">*Unlimited invitations are subject to fair-use terms. Please confirm details with our team.</p>}
 
                   <a

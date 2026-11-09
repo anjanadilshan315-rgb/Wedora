@@ -29,7 +29,7 @@ export default function AuthShell({ badge, children }: { badge: string; children
               style={{ background: "linear-gradient(135deg, #ECC880 0%, #FDF4D8 30%, #C99B4B 60%, #9B6F23 100%)" }}
             >
               <div className="relative w-full h-full rounded-full overflow-hidden bg-[#FBF8F4] border-[2px] border-[#FFF8E7]">
-                <Image src="/assets/forever-wedding-logo.svg" alt="Forever Wedding Invitation logo" fill priority className="object-cover scale-105" />
+                <Image src="/assets/forever-wedding-logo.svg" alt="Forever Wedding Invitation logo" fill preload sizes="(min-width: 1280px) 246px, 198px" className="object-contain p-4" />
               </div>
             </motion.div>
           </Link>
@@ -70,11 +70,11 @@ export default function AuthShell({ badge, children }: { badge: string; children
         <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-[#FAF7F2] to-transparent" />
         <Link href="/" className="absolute inset-0 flex items-center justify-center" aria-label="Forever home">
           <div
-            className="relative w-20 h-20 rounded-full p-[2px] shadow-lg"
+            className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full p-[2px] shadow-lg"
             style={{ background: "linear-gradient(135deg, #ECC880 0%, #FDF4D8 30%, #C99B4B 60%, #9B6F23 100%)" }}
           >
-            <div className="relative w-full h-full rounded-full overflow-hidden border-[2px] border-[#FFF8E7]">
-              <Image src="/assets/forever-wedding-logo.svg" alt="Forever Wedding Invitation logo" fill className="object-cover scale-105" />
+            <div className="relative w-full h-full rounded-full overflow-hidden bg-[#FBF8F4] border-[2px] border-[#FFF8E7]">
+              <Image src="/assets/forever-wedding-logo.svg" alt="Forever Wedding Invitation logo" fill sizes="(min-width: 640px) 120px, 104px" className="object-contain p-2" />
             </div>
           </div>
         </Link>

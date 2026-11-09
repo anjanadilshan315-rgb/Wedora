@@ -1,6 +1,7 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { Heart } from "lucide-react";
 import { formatDateBanner, formatDateLong, formatTime, mapLink, venueLine } from "../format";
@@ -14,12 +15,30 @@ const fadeUp = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
 };
 
-export default function RoyalTemplate({ data, actions }: TemplateProps) {
+interface RoyalTemplateProps extends TemplateProps {
+  freePlan?: boolean;
+  localReplies?: boolean;
+  whatsapp?: string;
+}
+
+export default function RoyalTemplate({ data, actions, freePlan = false, localReplies = false, whatsapp = "" }: RoyalTemplateProps) {
   const timeLeft = useCountdown(data.weddingDate, data.weddingTime);
   const { disabled, wishes, wish, rsvp } = useInvitationActions(data, actions);
   const map = mapLink(data.mapUrl, data.venueName, data.venueAddress);
   const heroPhoto = data.coverPhoto ?? data.gallery[0] ?? null;
   const dear = data.guestName ?? "Guest";
+  const [shareMessage, setShareMessage] = useState("");
+  const replyText = `Hi! I'm ${rsvp.name || dear}. ${rsvp.attend ? "Yes, I will attend" : "Sorry, I cannot attend"} ${data.brideName} & ${data.groomName}'s wedding.`;
+  const replyLink = `https://wa.me/${whatsapp.replace(/\D/g, "")}?text=${encodeURIComponent(replyText)}`;
+
+  async function copyLink() {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setShareMessage("Invitation link copied.");
+    } catch {
+      setShareMessage("Copy the invitation link from your browser's address bar.");
+    }
+  }
 
   return (
     <div className="bg-[#EBE5DA] min-h-screen font-sans text-[#2D241A] py-0 sm:py-8">
@@ -181,7 +200,7 @@ export default function RoyalTemplate({ data, actions }: TemplateProps) {
         )}
 
         {/* 6. WISHES */}
-        <section className="bg-[#F6F1E5] py-12 px-8 text-center border-y border-[#A67C00]/20">
+        {!freePlan && <section className="bg-[#F6F1E5] py-12 px-8 text-center border-y border-[#A67C00]/20">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
             <h2 className="font-serif-luxury text-2xl font-bold mb-1">Bless the Couple</h2>
             <p className="font-serif-luxury text-lg mb-6 font-bold">ප්‍රාර්ථනා</p>
@@ -226,21 +245,24 @@ export default function RoyalTemplate({ data, actions }: TemplateProps) {
               ))}
             </div>
           </motion.div>
-        </section>
+        </section>}
 
         {/* 7. RSVP */}
         <section className="py-12 px-8 text-center bg-[#FDFBF7] relative">
           <div className="absolute bottom-4 left-4 right-4 h-16 border-b-2 border-l-2 border-r-2 border-[#A67C00] rounded-b-xl opacity-60" />
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="relative z-10">
             <h2 className="font-serif-luxury text-2xl mb-2 font-bold">Kindly RSVP</h2>
+            {localReplies && <p className="mb-5 text-xs leading-6 text-[#6F5D3D]">Your reply is saved on this device only. Please also tell the couple{whatsapp ? " using the WhatsApp button after replying" : " directly"}.</p>}
+            {freePlan && actions.mode === "demo" && <p className="mb-5 text-xs leading-6">Sample invitation. Replies here are for demonstration only.</p>}
             {data.rsvpDeadline && <p className="text-[10px] mb-6 opacity-70">Please respond by {formatDateLong(data.rsvpDeadline)}</p>}
 
             {rsvp.submitted ? (
               <div className="bg-[#A67C00]/10 p-6 rounded-md border border-[#A67C00]/30 mb-8 mt-6">
                 <p className="font-serif-luxury text-xl font-bold mb-1">Thank You!</p>
                 <p className="text-xs opacity-80">
-                  {rsvp.attend ? `We look forward to seeing you (${rsvp.count} guest${rsvp.count > 1 ? "s" : ""}).` : "Your response has been recorded."}
+                  {localReplies ? "Your answer is saved on this device." : rsvp.attend ? `We look forward to seeing you (${rsvp.count} guest${rsvp.count > 1 ? "s" : ""}).` : "Your response has been recorded."}
                 </p>
+                {whatsapp && <a href={replyLink} target="_blank" rel="noopener noreferrer" className="mt-4 block text-xs underline text-[#806000]">Tell the couple on WhatsApp</a>}
                 <button type="button" onClick={rsvp.edit} className="mt-3 text-[10px] underline text-[#A67C00]">
                   Change my response
                 </button>
@@ -285,7 +307,7 @@ export default function RoyalTemplate({ data, actions }: TemplateProps) {
                   </div>
                 </div>
 
-                {rsvp.attend === true && (
+                {rsvp.attend === true && !freePlan && (
                   <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} className="pt-2">
                     <label className="text-[10px] mb-2 block font-bold text-center">NUMBER OF GUESTS</label>
                     <div className="flex items-center justify-center gap-4 bg-white py-2 rounded border border-[#A67C00]/40 shadow-sm max-w-[200px] mx-auto">
@@ -309,6 +331,13 @@ export default function RoyalTemplate({ data, actions }: TemplateProps) {
             )}
           </motion.div>
         </section>
+        {freePlan && <footer className="border-t border-[#A67C00]/20 bg-[#F6F1E5] px-6 py-8 text-center text-xs">
+          {actions.mode === "live" && <>
+            <button type="button" onClick={copyLink} className="mb-3 rounded border border-[#A67C00]/40 px-5 py-3 text-[#806000]">Copy invitation link</button>
+            <p role="status" className="mb-4">{shareMessage}</p>
+          </>}
+          <Link href="/packages" className="text-[#806000]">Made with Forever · Free Plan</Link>
+        </footer>}
       </div>
     </div>
   );

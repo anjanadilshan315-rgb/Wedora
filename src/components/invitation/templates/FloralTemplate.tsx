@@ -1,6 +1,7 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { Flower2, Heart, MapPin } from "lucide-react";
 import { formatDateBanner, formatDateLong, formatTime, mapLink, venueLine } from "../format";
@@ -23,12 +24,30 @@ function Petals({ className }: { className?: string }) {
 
 const fade = { hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6 } } };
 
-export default function FloralTemplate({ data, actions }: TemplateProps) {
+interface FloralTemplateProps extends TemplateProps {
+  freePlan?: boolean;
+  localReplies?: boolean;
+  whatsapp?: string;
+}
+
+export default function FloralTemplate({ data, actions, freePlan = false, localReplies = false, whatsapp = "" }: FloralTemplateProps) {
   const timeLeft = useCountdown(data.weddingDate, data.weddingTime);
   const { disabled, wishes, wish, rsvp } = useInvitationActions(data, actions);
   const map = mapLink(data.mapUrl, data.venueName, data.venueAddress);
   const heroPhoto = data.coverPhoto ?? data.gallery[0] ?? null;
   const dear = data.guestName ?? "Guest";
+  const [shareMessage, setShareMessage] = useState("");
+  const replyText = `Hi! I'm ${rsvp.name || dear}. ${rsvp.attend ? "Yes, I will attend" : "Sorry, I cannot attend"} ${data.brideName} & ${data.groomName}'s wedding.`;
+  const replyLink = `https://wa.me/${whatsapp.replace(/\D/g, "")}?text=${encodeURIComponent(replyText)}`;
+
+  async function copyLink() {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setShareMessage("Invitation link copied.");
+    } catch {
+      setShareMessage("Copy the invitation link from your browser's address bar.");
+    }
+  }
 
   const input = "w-full px-4 py-3 rounded-2xl border border-[#EBD5DE] bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#E7A6BA]/40";
 
@@ -134,12 +153,15 @@ export default function FloralTemplate({ data, actions }: TemplateProps) {
         {/* RSVP */}
         <section className="py-12 px-8 bg-gradient-to-b from-[#FBEAF0] to-[#F1EAF8] text-center">
           <h2 className="font-serif-luxury text-3xl text-[#B5577A] mb-1">Kindly Reply</h2>
+          {localReplies && <p className="mb-5 text-xs leading-6">Your reply is saved on this device only. Please also tell the couple{whatsapp ? " using the WhatsApp button after replying" : " directly"}.</p>}
+          {freePlan && actions.mode === "demo" && <p className="mb-5 text-xs leading-6">Sample invitation. Replies here are for demonstration only.</p>}
           {data.rsvpDeadline && <p className="text-xs mb-6">by {formatDateLong(data.rsvpDeadline)}</p>}
           {rsvp.submitted ? (
             <div className="bg-white rounded-3xl p-6 shadow-sm mt-4">
               <Heart className="w-8 h-8 mx-auto text-[#E7A6BA] fill-[#E7A6BA]" />
               <p className="font-serif-luxury text-xl mt-2">Thank you!</p>
-              <p className="text-xs mt-1">{rsvp.attend ? `See you there — ${rsvp.count} guest${rsvp.count > 1 ? "s" : ""}.` : "We will miss you."}</p>
+              <p className="text-xs mt-1">{localReplies ? "Your answer is saved on this device." : rsvp.attend ? `See you there — ${rsvp.count} guest${rsvp.count > 1 ? "s" : ""}.` : "We will miss you."}</p>
+              {whatsapp && <a href={replyLink} target="_blank" rel="noopener noreferrer" className="mt-4 block text-xs underline text-[#B5577A]">Tell the couple on WhatsApp</a>}
               <button type="button" onClick={rsvp.edit} className="mt-3 text-xs underline text-[#B5577A]">Change my response</button>
             </div>
           ) : (
@@ -157,7 +179,7 @@ export default function FloralTemplate({ data, actions }: TemplateProps) {
                   Regretfully decline
                 </button>
               </div>
-              {rsvp.attend === true && (
+              {rsvp.attend === true && !freePlan && (
                 <div className="flex items-center justify-center gap-4">
                   <button type="button" onClick={rsvp.decrement} className="w-9 h-9 rounded-full bg-white border border-[#EBD5DE]">-</button>
                   <span className="font-serif-luxury text-2xl w-8 text-center">{rsvp.count}</span>
@@ -173,7 +195,7 @@ export default function FloralTemplate({ data, actions }: TemplateProps) {
         </section>
 
         {/* WISHES */}
-        <section className="py-12 px-8">
+        {!freePlan && <section className="py-12 px-8">
           <h2 className="font-serif-luxury text-3xl text-center text-[#B5577A] mb-6">Wishes for the Couple</h2>
           <form onSubmit={wish.submit} className="space-y-3">
             {wish.askName && <input className={input} placeholder="Your name" value={wish.name} maxLength={150} disabled={disabled} onChange={(e) => wish.setName(e.target.value)} />}
@@ -192,7 +214,14 @@ export default function FloralTemplate({ data, actions }: TemplateProps) {
               </div>
             ))}
           </div>
-        </section>
+        </section>}
+        {freePlan && <footer className="border-t border-[#EBD5DE] bg-[#FBEAF0] px-6 py-8 text-center text-xs">
+          {actions.mode === "live" && <>
+            <button type="button" onClick={copyLink} className="mb-3 rounded-2xl border border-[#EBD5DE] bg-white px-5 py-3 text-[#B5577A]">Copy invitation link</button>
+            <p role="status" className="mb-4">{shareMessage}</p>
+          </>}
+          <Link href="/packages" className="text-[#B5577A]">Made with Forever · Free Plan</Link>
+        </footer>}
       </div>
     </div>
   );
