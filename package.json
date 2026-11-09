@@ -3,12 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "setup": "npm install --include=dev --include=optional",
+    "predev": "node scripts/check-dependencies.cjs --dev --install",
     "dev": "next dev -p 3000",
+    "prebuild": "node scripts/check-dependencies.cjs --dev",
     "build": "next build",
+    "prestart": "node scripts/check-dependencies.cjs",
     "start": "next start -p 3000",
     "lint": "eslint",
     "test:free": "node --test tests/free-invitation.test.cjs",
     "test:free:integration": "node --test tests/free-studio.integration.test.cjs"
+  },
+  "engines": {
+    "node": ">=20.9.0"
   },
   "dependencies": {
     "@libsql/client": "^0.18.0",
