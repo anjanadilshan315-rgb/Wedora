@@ -1,0 +1,118 @@
+/* Ever After Editorial: its own layout, with shared Basic invitation functionality. */
+.invitation {
+  background: var(--paper);
+  color: var(--ink);
+  font: 400 13px/1.8 var(--font-montserrat), sans-serif;
+  position: relative;
+  container-type: inline-size;
+  padding-bottom: 40px;
+  /* Quiet stationery texture, with colours inherited from the selected theme. */
+  background-image: radial-gradient(var(--line) .45px, transparent .45px);
+  background-size: 9px 9px;
+}
+.invitation * { box-sizing: border-box; }
+.invitation p, .invitation h1, .invitation h2 { overflow-wrap: anywhere; }
+.invitation a { text-underline-offset: 4px; }
+.invitation :focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
+.masthead { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0 7%; padding: 26px 0; border-bottom: 1px solid var(--line); font-size: 8px; letter-spacing: 2px; }
+.monogram { font: 28px var(--font-cormorant), Georgia, serif; letter-spacing: -2px; }
+.monogram i { font-size: 19px; padding: 0 4px; color: var(--gold); }
+.masthead a { font-size: 9px; font-weight: 600; color: var(--accent); }
+.hero { max-width: 1200px; margin: 0 auto; padding: 48px 7% 0; text-align: center; }
+.spread { display: grid; gap: 38px; }
+.heroCopy { text-align: left; }
+.eyebrow { color: var(--muted); font-size: 8px; letter-spacing: 2.2px; line-height: 2; }
+.heroCopy > .eyebrow { display: flex; align-items: center; gap: 12px; }
+.eyebrow > span { display: inline-block; width: 28px; height: 1px; background: var(--gold); }
+.heading { margin: 28px 0 24px; }
+.heading > span { font: italic 24px var(--font-cormorant), Georgia, serif; color: var(--muted); }
+.heading h1 { font: 400 clamp(58px, 13cqi, 88px)/.94 var(--font-cormorant), Georgia, serif; letter-spacing: -2.5px; margin: 12px 0 0; }
+.heading em { color: var(--accent); font-weight: 400; }
+.heroNote { color: var(--muted); font-size: 11px; line-height: 2; margin: 0 0 24px; }
+.heroLink { display: inline-flex; align-items: center; gap: 16px; padding-bottom: 9px; border-bottom: 1px solid var(--accent); color: var(--accent); font-size: 8px; font-weight: 600; letter-spacing: 1.5px; }
+.edition { display: flex; align-items: center; gap: 13px; margin-top: 30px; color: var(--gold); }
+.edition span { color: var(--muted); font-size: 7px; letter-spacing: 1.6px; line-height: 1.9; }
+.editorialPhoto { width: 100%; max-width: 540px; aspect-ratio: 4/4.8; margin: 0 auto; position: relative; background: var(--bg); padding: 9px; border: 1px solid var(--line); box-shadow: 12px 14px 0 var(--bg); }
+.editorialPhoto > img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.photoPlaceholder { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; min-width: 0; color: var(--gold); background: radial-gradient(ellipse at 30% 25%, var(--paper), transparent 65%), var(--bg); position: relative; }
+.portraitMonogram { display: flex; justify-content: center; align-items: center; width: 65%; aspect-ratio: 1; border: 1px solid var(--line); border-radius: 50% 50% 0 0; margin-bottom: 26px; font: 66px var(--font-cormorant), Georgia, serif; color: var(--accent); }
+.portraitMonogram i { color: var(--gold); font-size: 34px; padding: 0 6px; }
+.photoPlaceholder > span { font: italic 32px var(--font-cormorant), Georgia, serif; color: var(--accent); margin-top: 14px; }
+.photoPlaceholder small { margin-top: 16px; font-size: 7px; letter-spacing: 2px; color: var(--muted); }
+.photoLabel { position: absolute; left: -17px; bottom: 10px; writing-mode: vertical-rl; transform: rotate(180deg); font-size: 7px; letter-spacing: 2px; color: var(--muted); }
+.photoSeal { position: absolute; right: -12px; bottom: -18px; display: grid; place-content: center; width: 92px; height: 92px; border-radius: 50%; background: var(--accent); color: var(--on-accent); border: 5px solid var(--paper); outline: 1px solid var(--gold); outline-offset: -9px; font: 17px/.95 var(--font-cormorant), Georgia, serif; transform: rotate(-12deg); }
+.photoSeal svg { margin: 0 auto 6px; }
+.photoSeal em { font-size: 28px; }
+.nameplate { display: grid; gap: 24px; padding: 48px 0 30px; border-bottom: 1px solid var(--line); }
+.nameplate p { font: 43px/1.15 var(--font-cormorant), Georgia, serif; margin: 12px 0 0; }
+.nameplate i { padding: 0 12px; color: var(--gold); font-size: 27px; }
+.dateplate { display: grid; gap: 4px; justify-items: center; }
+.dateplate > span { color: var(--muted); font-size: 7px; letter-spacing: 2px; }
+.dateplate strong { color: var(--accent); font: 27px var(--font-cormorant), Georgia, serif; }
+.dateplate small { color: var(--muted); font-size: 10px; max-width: 240px; overflow-wrap: anywhere; }
+.guest { font-size: 12px; color: var(--muted); margin: 24px 0 0; }
+.guest strong { color: var(--accent); }
+.countdownWrap { padding-top: 30px; }
+.countdownWrap > div > div { border: 0; border-right: 1px solid var(--line); border-radius: 0; min-width: 66px; padding: 0 12px; }
+.countdownWrap > div > div:last-child { border-right: 0; }
+.countdownWrap > div b { font-size: 34px; font-weight: 400; }
+.countdownWrap > div span { text-transform: uppercase; letter-spacing: 1.5px; font-size: 7px; }
+.scrollNote { display: flex; align-items: center; flex-direction: column; gap: 12px; padding: 30px 0 10px; color: var(--muted); font-size: 7px; letter-spacing: 2px; }
+.block { max-width: 860px; margin: 0 auto; padding: 54px 7%; text-align: center; }
+.block h2 { font: 400 47px/1.1 var(--font-cormorant), Georgia, serif; margin: 0 0 26px; letter-spacing: -1px; }
+.message { background: var(--bg); margin-top: 30px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); position: relative; }
+.message::before { content: "A NOTE FROM OUR HEARTS"; display: block; color: var(--accent); font-size: 8px; letter-spacing: 2px; margin-bottom: 23px; }
+.message > p { font: italic 30px/1.5 var(--font-cormorant), Georgia, serif; white-space: pre-line; margin: 0; }
+.families { border-top: 1px solid var(--line); margin-top: 28px; padding-top: 20px; font-size: 10px; color: var(--muted); }
+.families p { margin: 4px 0; }
+.details { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; text-align: left; counter-reset: detail; }
+.details > div { counter-increment: detail; padding: 25px 20px; border: 1px solid var(--line); background: var(--paper); box-shadow: 4px 4px 0 var(--bg); }
+.details > div::before { content: "0" counter(detail) " / THE CELEBRATION"; font-size: 7px; color: var(--muted); letter-spacing: 1.4px; }
+.details h3 { font: 38px var(--font-cormorant), Georgia, serif; margin: 16px 0 12px; color: var(--accent); }
+.details p { margin: 4px 0; font-size: 12px; }
+.muted, .deadline { color: var(--muted); font-size: 11px; }
+.map { border: 1px solid var(--line); padding: 7px; margin-bottom: 24px; background: var(--paper); box-shadow: 7px 7px 0 var(--bg); }
+.map iframe { display: block; width: 100%; height: 280px; border: 0; }
+.button { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; border: 1px solid var(--accent); background: var(--accent); color: var(--on-accent); padding: 14px 24px; font: 500 11px var(--font-montserrat), sans-serif; cursor: pointer; }
+.button:hover { filter: brightness(.92); }
+.button:disabled { opacity: .5; cursor: default; }
+.ghost { background: transparent; color: var(--accent); }
+.form { border: 1px solid var(--line); padding: 32px; background: var(--bg); display: grid; gap: 24px; text-align: left; box-shadow: 7px 7px 0 var(--paper), 7px 7px 0 1px var(--line); }
+.form label { display: grid; gap: 9px; font-size: 11px; color: var(--muted); }
+.form input:not([type="radio"]) { width: 100%; min-height: 47px; padding: 12px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); font: inherit; border-radius: 0; }
+.form fieldset { padding: 0; margin: 0; border: 0; min-width: 0; }
+.form legend { color: var(--muted); margin-bottom: 10px; font-size: 11px; }
+.form .radio { display: flex; align-items: center; gap: 10px; color: var(--ink); margin-top: 8px; }
+.radio input { accent-color: var(--accent); width: 16px; height: 16px; }
+.status { color: var(--accent); font-size: 12px; }
+.confirmation { border: 1px solid var(--line); padding: 12px; font-size: 12px; }
+.contact { display: inline-block; margin-top: 24px; color: var(--accent); font-size: 10px; text-decoration: underline; }
+.footer { border-top: 1px solid var(--line); margin: 0 7%; padding: 28px 0; text-align: center; font: italic 29px var(--font-cormorant), Georgia, serif; color: var(--accent); overflow-wrap: anywhere; }
+.music { position: sticky; bottom: 16px; padding: 0 16px; display: flex; justify-content: flex-end; pointer-events: none; }
+.music button { pointer-events: auto; width: 48px; height: 48px; display: grid; place-items: center; border: 1px solid var(--gold); background: var(--paper); color: var(--accent); cursor: pointer; }
+.music button[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); }
+/* The editor preview is narrow; the published desktop invitation opens into a spread. */
+@container (min-width: 760px) {
+  .masthead { margin: 0 7%; padding: 30px 0; }
+  .hero { padding-top: 70px; }
+  .spread { grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+  .heading h1 { font-size: clamp(76px, 9cqi, 118px); }
+  .editorialPhoto { aspect-ratio: 4/5; }
+  .nameplate { grid-template-columns: 1fr auto; align-items: center; text-align: left; margin-top: 32px; padding: 38px 0; }
+  .nameplate p { font-size: 52px; }
+  .dateplate { justify-items: start; border-left: 1px solid var(--line); padding-left: 35px; }
+  .edition { margin-top: 45px; }
+}
+@container (max-width: 400px) {
+  .masthead { font-size: 6px; letter-spacing: 1px; }
+  .hero { padding-top: 36px; }
+  .nameplate p { font-size: 34px; }
+  .nameplate i { padding: 0 7px; }
+  .details { grid-template-columns: 1fr; gap: 18px; }
+  .form { padding: 22px; }
+  .photoSeal { width: 80px; height: 80px; right: -7px; }
+  .photoPlaceholder > span { font-size: 27px; }
+  .portraitMonogram { font-size: 50px; }
+  .countdownWrap > div > div { min-width: 52px; padding: 0 8px; }
+  .block h2 { font-size: 39px; }
+}

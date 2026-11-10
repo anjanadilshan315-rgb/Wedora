@@ -1,0 +1,7 @@
+.share { display: flex; flex-direction: column-reverse; align-items: center; gap: 24px; color: var(--muted); }
+.share img { background: white; padding: 5px; border-radius: 10px; border: 1px solid var(--line); }
+.address { overflow-wrap: anywhere; font-size: 10px; line-height: 1.8; margin: 0 0 16px; }
+.buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.button { display: inline-flex; justify-content: center; align-items: center; gap: 8px; min-height: 44px; padding: 12px 20px; border-radius: 30px; border: 1px solid var(--accent); color: var(--accent); background: transparent; font: inherit; font-size: 12px; cursor: pointer; }
+.whatsapp { background: #1f9d55; border-color: #1f9d55; color: white; }
+.hint { font-size: 10px; color: var(--muted); margin: 14px 0 0; }

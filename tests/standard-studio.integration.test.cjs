@@ -1,0 +1,60 @@
+const test = require("node:test");
+const assert = require("node:assert/strict");
+const { randomUUID } = require("node:crypto");
+const path = require("node:path");
+const fs = require("node:fs/promises");
+const databasePath = path.join(process.cwd(), ".data", `standard-test-${randomUUID()}.db`);
+process.env.FREE_DATABASE_URL = `file:${databasePath.replaceAll("\\", "/")}`;
+process.env.FREE_ALLOW_LOCAL_DATABASE = "true";
+const load = require("./load-typescript.cjs");
+const studio = load("src/lib/server/standard-studio.ts");
+const basic = load("src/lib/server/basic-studio.ts");
+const { freeDatabase } = load("src/lib/server/free-database.ts");
+const { STANDARD_SAMPLE } = load("src/lib/standard-invitation.ts");
+
+test("Standard persists drafts, protects publication, enforces URL uniqueness, tracks replies and caps total party places at 500", async () => {
+  await fs.mkdir(path.dirname(databasePath), { recursive: true });
+  const db = await freeDatabase();
+  const user = { id: randomUUID(), email: "standard-test@example.com" };
+  const other = { id: randomUUID(), email: "other-test@example.com" };
+  try {
+    for (const owner of [user, other]) await db.execute({ sql: "INSERT INTO studio_users(id,email,password_hash,created_at) VALUES (?,?,?,?)", args: [owner.id, owner.email, "unused-test-hash", new Date().toISOString()] });
+    const details = { ...STANDARD_SAMPLE, customSlug: "our-standard-wedding", weddingDate: "2099-06-19", rsvpDeadline: "2099-06-01", standardLayout: "garden", font: "script", animation: "enchanted", customColors: { primary: "#844359", accent: "#d4b878", background: "#fff1f3" }, motionEnabled: false };
+    const saved = await studio.saveDraft(user, details);
+    assert.equal(saved.invitation.slug, details.customSlug);
+    await assert.rejects(studio.publicInvitation(details.customSlug), (error) => error.status === 404);
+    assert.equal((await basic.snapshot(user)).invitation, null);
+    await assert.rejects(studio.saveDraft(other, details), (error) => error.status === 409);
+    await assert.rejects(studio.publishInvitation(user, 0, true), (error) => error.status === 409);
+    await studio.publishInvitation(user, saved.invitation.version, true);
+    const appearance = (await studio.publicInvitation(details.customSlug)).details;
+    assert.equal(appearance.font, "script"); assert.equal(appearance.standardLayout, "garden");
+    assert.equal(appearance.customColors.primary, "#844359"); assert.equal(appearance.motionEnabled, false);
+    await assert.rejects(studio.saveDraft(user, { ...details, customSlug: "changed-url" }), (error) => error.status === 409);
+    const guest = (await studio.addGuest(user, "Charlotte & James")).guests[0];
+    const input = { attending: true, headCount: 3, events: ["wedding"], dietary: "Vegetarian", message: "So excited!" };
+    await studio.replyToInvitation(details.customSlug, input, guest.token);
+    const publicResult = await studio.publicInvitation(details.customSlug, guest.token);
+    assert.equal(publicResult.guest.reply.headCount, 3);
+    assert.equal(publicResult.guest.reply.dietary, "Vegetarian");
+    assert.equal((await studio.publicInvitation(details.customSlug)).guest, null);
+    await assert.rejects(studio.replyToInvitation(details.customSlug, { ...input, events: ["bad"] }, guest.token), (error) => error.status === 400);
+    const changed = await studio.saveDraft(user, { ...details, greetingMessage: "Unpublished change" });
+    assert.notEqual((await studio.publicInvitation(details.customSlug)).details.greetingMessage, "Unpublished change");
+    await db.batch(Array.from({ length: 496 }, (_, i) => ({ sql: "INSERT INTO standard_guests(token,invitation_id,name,name_key) VALUES (?,?,?,?)", args: [randomUUID(), saved.invitation.id, `Seed ${i}`, `seed ${i}`] })), "write");
+    // 496 pending places + one party of 3 = 499; only one more place fits.
+    await assert.rejects(studio.replyToInvitation(details.customSlug, { ...input, name: "Too large", headCount: 2 }), (error) => error.status === 409);
+    await studio.addGuest(user, "Last place");
+    await assert.rejects(studio.addGuest(user, "Over capacity"), (error) => error.status === 409);
+    await assert.rejects(studio.replyToInvitation(details.customSlug, { ...input, headCount: 4 }, guest.token), (error) => error.status === 409);
+    await studio.replyToInvitation(details.customSlug, { ...input, attending: false }, guest.token);
+    assert.equal((await studio.snapshot(user)).guests.find((g) => g.token === guest.token).reply.headCount, 0);
+    await studio.publishInvitation(user, changed.invitation.version, false);
+    await assert.rejects(studio.publicInvitation(details.customSlug), (error) => error.status === 404);
+    await studio.saveDraft(user, { ...details, customSlug: "changed-url" });
+  } finally {
+    db.close();
+    // libSQL can retain a native Windows file handle until this worker exits.
+    for (const suffix of ["", "-wal", "-shm"]) await fs.rm(databasePath + suffix, { force: true }).catch((error) => { if (error.code !== "EBUSY") throw error; });
+  }
+});

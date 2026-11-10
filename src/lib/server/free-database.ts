@@ -32,6 +32,28 @@ async function openDatabase() {
       replied_at TEXT, UNIQUE(invitation_id, name_key)
     )`,
     `CREATE INDEX IF NOT EXISTS studio_guests_invitation ON studio_guests(invitation_id)`,
+    `CREATE TABLE IF NOT EXISTS basic_invitations (
+      id TEXT PRIMARY KEY, owner_id TEXT NOT NULL UNIQUE REFERENCES studio_users(id), slug TEXT NOT NULL UNIQUE,
+      draft_details TEXT NOT NULL, published_details TEXT, version INTEGER NOT NULL DEFAULT 1,
+      published_version INTEGER, updated_at TEXT NOT NULL
+    )`,
+    `CREATE TABLE IF NOT EXISTS basic_guests (
+      token TEXT PRIMARY KEY, invitation_id TEXT NOT NULL REFERENCES basic_invitations(id), name TEXT NOT NULL,
+      name_key TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending','attending','declined')),
+      replied_at TEXT, UNIQUE(invitation_id, name_key)
+    )`,
+    `CREATE INDEX IF NOT EXISTS basic_guests_invitation ON basic_guests(invitation_id)`,
+    `CREATE TABLE IF NOT EXISTS standard_invitations (
+      id TEXT PRIMARY KEY, owner_id TEXT NOT NULL UNIQUE REFERENCES studio_users(id), slug TEXT NOT NULL UNIQUE,
+      draft_details TEXT NOT NULL, published_details TEXT, version INTEGER NOT NULL DEFAULT 1,
+      published_version INTEGER, updated_at TEXT NOT NULL
+    )`,
+    `CREATE TABLE IF NOT EXISTS standard_guests (
+      token TEXT PRIMARY KEY, invitation_id TEXT NOT NULL REFERENCES standard_invitations(id), name TEXT NOT NULL,
+      name_key TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending','attending','declined')),
+      replied_at TEXT, reply TEXT, UNIQUE(invitation_id, name_key)
+    )`,
+    `CREATE INDEX IF NOT EXISTS standard_guests_invitation ON standard_guests(invitation_id)`,
     `CREATE TABLE IF NOT EXISTS studio_rate_limits (key TEXT PRIMARY KEY, count INTEGER NOT NULL, expires_at INTEGER NOT NULL)`,
   ], "write");
   return db;

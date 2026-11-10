@@ -13,6 +13,8 @@ import {
 import Footer from "@/components/Footer";
 import SiteHeader from "@/components/SiteHeader";
 import { FREE_TEMPLATES, FREE_PLAN } from "@/lib/template-catalog";
+import { BASIC_PLAN, BASIC_TEMPLATES } from "@/lib/basic-invitation";
+import { STANDARD_PLAN } from "@/lib/standard-invitation";
 
 export const metadata: Metadata = {
   title: "Wedding Invitation Packages | Forever",
@@ -67,8 +69,8 @@ const packagePlans = [
       "No watermark",
       "Up to 100 guests",
     ],
-    buttonText: "Ask about Basic",
-    href: "whatsapp",
+    buttonText: "Create Basic invitation",
+    href: "/basic-invitation",
     highlighted: false,
   },
   {
@@ -96,8 +98,8 @@ const packagePlans = [
       "Up to 500 guests",
       "Downloadable invitation video",
     ],
-    buttonText: "Ask about Standard",
-    href: "whatsapp",
+    buttonText: "Create Standard invitation",
+    href: "/standard-invitation",
     highlighted: true,
   },
   {
@@ -222,6 +224,26 @@ export default function PackagesPage() {
                     <div className="mt-5 rounded-2xl bg-[#FFF7F9] p-4 text-xs leading-6 text-[#7F5A6B]">
                       <p>One invitation per free account, with a saved draft, a permanent share link and a private RSVP inbox. Invite up to {FREE_PLAN.guestLimit} guests. Choose your design below.</p>
                       <div className="mt-4 grid gap-2 sm:grid-cols-2">{FREE_TEMPLATES.map((template) => <Link key={template.code} href={`/free-invitation?template=${template.code}`} className="rounded-xl border border-[#EAD9DF] bg-white px-3 py-3 font-semibold text-[#8E2F59] hover:bg-[#FAF1F4]">{template.name} →</Link>)}</div>
+                    </div>
+                  )}
+                  {plan.name === "Basic" && (
+                    <div className="mt-5 rounded-2xl bg-[#FBF3E4] p-4 text-xs leading-6 text-[#7D6542]">
+                      <p>Personalize your Basic wedding invitation with your couple photo, background music and wedding details. Invite up to {BASIC_PLAN.guestLimit} guests with no watermark.</p>
+                      <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                        {BASIC_TEMPLATES.map((template) => <Link key={template.code} href={`/basic-invitation?template=${template.code}${template.code === "botanical" ? "&design=sage" : ""}`} className="rounded-xl border border-[#E6D5B5] bg-white px-3 py-3 text-[#8A6329] hover:bg-[#FFF9EF]">
+                          <span className="block font-semibold">{template.name} →</span>
+                          <span className="mt-1 block text-[11px] font-normal leading-5 text-[#7D736A]">{template.description}</span>
+                        </Link>)}
+                      </div>
+                    </div>
+                  )}
+                  {plan.name === "Standard" && (
+                    <div className="mt-5 overflow-hidden rounded-xl border border-[#D8CEB4] bg-[#762847] text-[#FFF4F8]">
+                      <div className="relative grid grid-cols-[1fr_88px] items-center gap-4 overflow-hidden px-4 py-4 sm:grid-cols-[1fr_108px]">
+                        <div className="relative z-10"><p className="text-[7px] uppercase tracking-[.2em] text-[#F0C6B8]">The Standard Collection</p><h4 className="mt-1 font-serif-luxury text-3xl">The Vow</h4><p className="mt-1 font-serif-luxury text-base italic text-[#F0C6B8]">Your love, in motion.</p><p className="mt-2 text-[10px] leading-5 text-[#F4DDE5]">3 designs. Your colours. Your signature style.</p></div>
+                        <div className="relative h-28 overflow-hidden rounded-t-full border border-[#BDA16A]/60 sm:h-32">{/* eslint-disable-next-line @next/next/no-img-element */}<img src="/assets/standard/couple.jpg" alt="A romantic wedding celebration in The Vow collection" className="absolute inset-0 h-full w-full object-cover" loading="lazy" /></div>
+                      </div>
+                      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-t border-white/15 px-4 py-3 text-[10px] leading-5"><p className="text-[#F4DDE5]">4 animation styles · {STANDARD_PLAN.guestLimit} guests</p><Link href="/standard-invitation/preview" className="inline-flex items-center gap-2 font-semibold text-[#FFE1CD]">Explore the designs <ArrowRight size={12} /></Link></div>
                     </div>
                   )}
                   {premium && <p className="mt-4 text-[11px] leading-5 text-white/60">*Unlimited invitations are subject to fair-use terms. Please confirm details with our team.</p>}

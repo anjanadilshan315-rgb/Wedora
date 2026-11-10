@@ -1,0 +1,127 @@
+/* Botanical Vow: photo-led cover and layered botanical stationery. */
+.invitation {
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 13px/1.8 var(--font-montserrat), system-ui, sans-serif;
+  container-type: inline-size;
+  position: relative;
+  padding-bottom: 40px;
+  background-image: radial-gradient(var(--line) .45px, transparent .45px);
+  background-size: 10px 10px;
+}
+.invitation * { box-sizing: border-box; }
+.invitation p, .invitation h1, .invitation h2 { overflow-wrap: anywhere; }
+.invitation :focus-visible { outline: 2px solid var(--gold); outline-offset: 5px; }
+
+/* A dark overlay keeps names readable on every uploaded photo. */
+.cover { min-height: 760px; position: relative; isolation: isolate; display: flex; flex-direction: column; background: radial-gradient(ellipse at 50% 25%, #3b5542, #182f26 80%); color: #fffdf5; overflow: hidden; }
+.coverPhoto, .coverShade { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; }
+.coverPhoto { object-fit: cover; }
+.coverShade { background: linear-gradient(180deg, #10251dd9, #10251d80 40%, #10251dee); }
+.cover::before { content: ""; position: absolute; top: 135px; bottom: 90px; width: 75%; max-width: 650px; left: 50%; transform: translateX(-50%); border: 1px solid #d6c79722; border-radius: 50% 50% 0 0; pointer-events: none; z-index: -1; }
+.cover::after { content: ""; position: absolute; inset: 16px; border: 1px solid #e5dfbf60; outline: 1px solid #e5dfbf20; outline-offset: 6px; pointer-events: none; z-index: -1; }
+/* Native vector sprigs stay crisp at every screen size. */
+.topSprig, .bottomSprig { position: absolute; width: 160px; color: #d6c797; opacity: .23; pointer-events: none; z-index: -1; }
+.topSprig { left: -43px; top: 60px; transform: rotate(24deg); }
+.bottomSprig { right: -35px; bottom: 65px; transform: rotate(202deg); }
+.topSprig svg, .bottomSprig svg, .welcomeSprig svg { display: block; width: 100%; height: auto; }
+.navigation { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 30px 7%; }
+.navigation > span { font: 30px var(--font-cormorant), Georgia, serif; }
+.navigation i { color: #d6c797; padding: 0 5px; font-size: 20px; }
+.navigation a { font-size: 8px; letter-spacing: 1.6px; padding-bottom: 5px; border-bottom: 1px solid #ffffff60; }
+.coverContent { text-align: center; width: 100%; padding: 35px 8% 72px; margin: auto 0; }
+.coverEdition { display: block; margin-bottom: 28px; color: #d6c797; font-size: 6px; letter-spacing: 3px; }
+.botanicalMark { display: flex; justify-content: center; gap: 0; margin-bottom: 24px; color: #d6c797; }
+.botanicalMark svg:first-child { transform: rotate(-35deg); }
+.botanicalMark svg:last-child { transform: scaleX(-1) rotate(-35deg); margin-left: -8px; }
+.eyebrow { font-size: 8px; line-height: 2; letter-spacing: 2.3px; color: var(--muted); }
+.cover .eyebrow { color: #e8e5d5; }
+.cover h1 { margin: 28px 0 24px; font: 400 clamp(60px, 14cqi, 110px)/.95 var(--font-cormorant), Georgia, serif; letter-spacing: -2px; overflow-wrap: anywhere; text-shadow: 0 3px 25px #0d201a35; }
+.cover h1 span { display: block; }
+.cover h1 i { display: block; margin: 12px 0; font-size: 37px; color: #d6c797; }
+.coverInvitation { font: italic 23px/1.5 var(--font-cormorant), Georgia, serif; color: #ede7d6; }
+.coverDate { margin: 30px auto; padding: 20px 16px; max-width: 350px; border-top: 1px solid #e5dfbf60; border-bottom: 1px solid #e5dfbf60; background: #10251d20; }
+.coverDate span { display: block; font-size: 7px; letter-spacing: 2.4px; color: #d6c797; }
+.coverDate strong { display: block; margin-top: 7px; font: 23px/1.4 var(--font-cormorant), Georgia, serif; }
+.coverDate small { display: block; font-size: 9px; color: #e8e5d5; margin-top: 8px; letter-spacing: .8px; overflow-wrap: anywhere; }
+.discover { display: inline-flex; align-items: center; flex-direction: column; gap: 12px; margin-top: 12px; font-size: 7px; letter-spacing: 2px; }
+.coverFootnote { text-align: center; padding: 0 25px 30px; font-size: 6px; letter-spacing: 2.5px; color: #e8e5d5; }
+
+/* The welcome card overlaps the cover, like a piece of printed stationery. */
+.welcome { position: relative; isolation: isolate; margin: -30px auto 0; max-width: 680px; width: 88%; padding: 62px 7% 40px; background: var(--paper); text-align: center; border: 1px solid var(--line); outline: 1px solid var(--line); outline-offset: -10px; box-shadow: 0 18px 55px #10251d12; }
+.welcomeSeal { position: absolute; top: -28px; left: calc(50% - 28px); width: 56px; height: 56px; display: grid; place-items: center; border-radius: 50%; color: var(--on-accent); background: var(--accent); outline: 1px solid var(--gold); outline-offset: -6px; box-shadow: 0 4px 14px #10251d20; }
+.welcomeSprig { position: absolute; width: 95px; right: -4px; bottom: 16px; transform: rotate(180deg); color: var(--accent); opacity: .09; pointer-events: none; z-index: -1; }
+.welcomeCaption { font-size: 6px; letter-spacing: 1.5px; line-height: 2; color: var(--muted); margin-top: 24px; }
+.welcome h2 { font: 400 39px/1.15 var(--font-cormorant), Georgia, serif; margin: 22px 0; letter-spacing: -.6px; }
+.welcome em { font-weight: 400; color: var(--accent); }
+.guest { font-size: 11px; color: var(--muted); }
+.guest strong { display: block; color: var(--accent); margin-top: 5px; }
+.countdownWrap { margin-top: 27px; }
+.countdownWrap > div { gap: 0; }
+.countdownWrap > div > div { border: 0; border-right: 1px solid var(--line); border-radius: 0; padding: 0 12px; min-width: 59px; }
+.countdownWrap > div > div:last-child { border-right: 0; }
+.countdownWrap > div b { font-size: 31px; font-weight: 400; }
+.countdownWrap > div span { font-size: 7px; text-transform: uppercase; letter-spacing: 1px; }
+.storyAnchor { scroll-margin-top: 28px; }
+
+/* Shared sections keep the same class names as the other Basic templates. */
+.block { max-width: 800px; margin: 0 auto; padding: 56px 7%; text-align: center; }
+.block h2 { font: 400 42px/1.15 var(--font-cormorant), Georgia, serif; margin: 0 0 25px; letter-spacing: -.6px; }
+.block h2::before { content: ""; display: block; height: 24px; width: 1px; margin: 0 auto 22px; background: var(--gold); }
+.message::before { content: "WITH JOY IN OUR HEARTS"; display: block; color: var(--accent); font-size: 8px; letter-spacing: 2px; margin: 0 0 22px; }
+.message > p { font: italic 30px/1.5 var(--font-cormorant), Georgia, serif; margin: 0; white-space: pre-line; }
+.families { margin-top: 25px; color: var(--muted); font-size: 10px; }
+.families p { margin: 5px 0; }
+.details { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; padding-top: 12px; padding-bottom: 12px; }
+.details > div { position: relative; background: var(--paper); padding: 38px 20px 30px; border: 1px solid var(--line); border-radius: 90px 90px 4px 4px; box-shadow: 0 8px 24px #10251d06; }
+.details > div::before { content: "✧"; display: block; color: var(--gold); font-size: 22px; margin-bottom: 8px; }
+.details h3 { margin: 10px 0 18px; font: italic 34px var(--font-cormorant), Georgia, serif; color: var(--accent); }
+.details p { font-size: 11px; margin: 5px 0; }
+.muted, .deadline { color: var(--muted); font-size: 11px; }
+.map { border: 1px solid var(--line); border-radius: 120px 120px 4px 4px; padding: 7px; overflow: hidden; background: var(--paper); margin-bottom: 22px; }
+.map iframe { display: block; height: 285px; width: 100%; border: 0; border-radius: 114px 114px 0 0; }
+.button { display: inline-flex; align-items: center; justify-content: center; gap: 10px; border-radius: 30px; min-height: 48px; padding: 15px 26px; color: var(--on-accent); background: var(--accent); border: 1px solid var(--accent); font: 500 11px var(--font-montserrat), sans-serif; cursor: pointer; box-shadow: 0 4px 14px #10251d08; }
+.button:hover { filter: brightness(.93); }
+.button:disabled { opacity: .5; cursor: default; }
+.ghost { background: transparent; color: var(--accent); }
+.form { padding: 32px; border: 1px solid var(--line); border-radius: 5px; background: var(--paper); display: grid; gap: 25px; text-align: left; outline: 1px solid var(--line); outline-offset: 7px; margin: 30px 7px 0; box-shadow: 0 15px 40px #10251d08; }
+.form label { display: grid; gap: 8px; color: var(--muted); font-size: 11px; }
+.form input:not([type="radio"]) { min-height: 46px; width: 100%; border: 1px solid var(--line); border-radius: 5px; background: var(--bg); color: var(--ink); padding: 12px; font: inherit; }
+.form fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+.form legend { color: var(--muted); font-size: 11px; margin-bottom: 8px; }
+.form .radio { display: flex; align-items: center; gap: 9px; color: var(--ink); margin-top: 9px; }
+.radio input { accent-color: var(--accent); width: 16px; height: 16px; }
+.status { color: var(--accent); font-size: 12px; }
+.confirmation { background: var(--paper); padding: 12px; border: 1px solid var(--line); font-size: 12px; }
+.contact { display: inline-block; margin-top: 26px; text-decoration: underline; text-underline-offset: 4px; color: var(--accent); font-size: 10px; }
+.footer { max-width: 680px; width: 86%; margin: 10px auto 0; padding: 28px 0; border-top: 1px solid var(--line); text-align: center; font: italic 30px var(--font-cormorant), Georgia, serif; color: var(--accent); overflow-wrap: anywhere; }
+.music { position: sticky; bottom: 16px; display: flex; justify-content: flex-end; padding: 0 16px; pointer-events: none; }
+.music button { pointer-events: auto; display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; color: var(--accent); background: var(--paper); border: 1px solid var(--gold); cursor: pointer; box-shadow: 0 4px 15px #10251d15; }
+.music button[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); }
+
+@container (min-width: 800px) {
+  .cover { min-height: 890px; }
+  .topSprig, .bottomSprig { width: 270px; opacity: .27; }
+  .topSprig { left: -30px; }
+  .bottomSprig { right: -15px; }
+  .coverContent { padding-top: 40px; padding-bottom: 95px; }
+  .cover h1 { font-size: 115px; }
+  .cover h1 span { display: inline; }
+  .cover h1 i { display: inline-block; padding: 0 25px; vertical-align: middle; }
+  .welcome { padding-left: 65px; padding-right: 65px; margin-top: -48px; }
+  .welcome h2 { font-size: 46px; }
+}
+@container (max-width: 400px) {
+  .cover { min-height: 720px; }
+  .cover h1 { font-size: 54px; }
+  .cover .eyebrow { font-size: 6px; letter-spacing: 1.8px; }
+  .welcome { padding-left: 18px; padding-right: 18px; }
+  .welcome h2 { font-size: 32px; }
+  .countdownWrap > div > div { min-width: 48px; padding: 0 8px; }
+  .details { grid-template-columns: 1fr; }
+  .details > div { border-radius: 60px 60px 4px 4px; }
+  .form { padding: 22px; }
+  .block h2 { font-size: 36px; }
+  .coverEdition { font-size: 5px; letter-spacing: 2px; }
+  .topSprig, .bottomSprig { width: 125px; opacity: .17; }
+}

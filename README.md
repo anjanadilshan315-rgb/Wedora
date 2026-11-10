@@ -2,6 +2,20 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+Standard Plan now includes **The Vow**, an animated invitation with a wax-seal
+envelope, three layouts, four animation styles, four fonts, colour themes and custom palettes, slideshow, music controls,
+video backgrounds, wedding/homecoming events and advanced RSVP for up to 500
+guest places. Explore `/standard-invitation/preview`, personalize it at
+`/standard-invitation`, and manage replies at `/standard-invitation/dashboard`.
+See the [Standard invitation guide](docs/standard-invitation.md).
+
+Basic Plan invitations now include the original arch, Ever After Editorial,
+Botanical Vow and Maison Amour templates, each with four colour themes, couple
+photo upload, background music, Google Maps, named RSVP, up to 100 guests and
+WhatsApp/email/QR sharing. Start at `/basic-invitation`. See the
+[Basic invitation beginner guide](docs/basic-invitation.md) for setup, feature
+details and where to edit the code.
+
 Free invitation creation now includes a four-step studio, account-saved drafts,
 stable published links and a private guest RSVP dashboard. See
 [Free Studio setup and beginner guide](docs/free-invitation.md).
