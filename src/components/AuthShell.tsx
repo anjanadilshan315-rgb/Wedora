@@ -2,7 +2,6 @@
 
 import React from "react";
 import Image from "next/image";
-import BrandLogo from "@/components/BrandLogo";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Heart, User } from "lucide-react";
@@ -26,9 +25,12 @@ export default function AuthShell({ badge, children }: { badge: string; children
             <motion.div
               whileHover={{ scale: 1.03 }}
               transition={{ type: "spring", stiffness: 200, damping: 15 }}
-              className="mb-5 w-56 xl:w-60"
+              className="relative w-52 h-52 xl:w-64 xl:h-64 mb-5 rounded-full p-[3px] shadow-[0_12px_35px_rgba(180,135,65,0.35)]"
+              style={{ background: "linear-gradient(135deg, #ECC880 0%, #FDF4D8 30%, #C99B4B 60%, #9B6F23 100%)" }}
             >
-              <BrandLogo preload className="w-full" />
+              <div className="relative w-full h-full rounded-full overflow-hidden bg-[#FBF8F4] border-[2px] border-[#FFF8E7]">
+                <Image src="/assets/forever-wedding-logo.svg" alt="Forever Wedding Invitation logo" fill preload sizes="(min-width: 1280px) 246px, 198px" className="object-contain p-4" />
+              </div>
             </motion.div>
           </Link>
 
@@ -68,9 +70,12 @@ export default function AuthShell({ badge, children }: { badge: string; children
         <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-[#FAF7F2] to-transparent" />
         <Link href="/" className="absolute inset-0 flex items-center justify-center" aria-label="Forever home">
           <div
-            className="w-24 max-w-[32vw]"
+            className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full p-[2px] shadow-lg"
+            style={{ background: "linear-gradient(135deg, #ECC880 0%, #FDF4D8 30%, #C99B4B 60%, #9B6F23 100%)" }}
           >
-            <BrandLogo className="w-full" />
+            <div className="relative w-full h-full rounded-full overflow-hidden bg-[#FBF8F4] border-[2px] border-[#FFF8E7]">
+              <Image src="/assets/forever-wedding-logo.svg" alt="Forever Wedding Invitation logo" fill sizes="(min-width: 640px) 120px, 104px" className="object-contain p-2" />
+            </div>
           </div>
         </Link>
       </div>

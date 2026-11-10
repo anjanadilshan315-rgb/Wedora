@@ -1,96 +1,262 @@
+import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowDown, ArrowRight, Check, Crown, ExternalLink, Flower2, Heart, MessageCircle, Sparkles } from "lucide-react";
+import {
+  ArrowRight,
+  Check,
+  Crown,
+  Gem,
+  Heart,
+  MessageCircle,
+  Sparkles,
+  Star,
+} from "lucide-react";
 import Footer from "@/components/Footer";
 import SiteHeader from "@/components/SiteHeader";
-import { INVITATION_PACKAGES } from "@/components/invitation/packages";
-import { TEMPLATE_DESIGNS } from "@/components/invitation/registry";
+import { FREE_TEMPLATES, FREE_PLAN } from "@/lib/template-catalog";
 
-const WHATSAPP_NUMBER = "94757115645";
+export const metadata: Metadata = {
+  title: "Wedding Invitation Packages | Forever",
+  description:
+    "Compare Forever Free, Basic, Standard and Premium digital wedding invitation packages.",
+};
 
-function packageLink(packageName: string) {
-  const message = encodeURIComponent(`Hi Wedora! I'd like to know more about the ${packageName} invitation package.`);
-  return `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;
+// Add each plan's own features here. Higher plans automatically include lower plans.
+const packagePlans = [
+  {
+    name: "Free",
+    subtitle: "A lovely way to get started",
+    description: "Share the essential details of your special day with a simple digital invitation.",
+    icon: Heart,
+    accent: "from-[#FCF8F0] to-white",
+    ownFeatures: [
+      "Normal wedding invitation template",
+      "Basic bride and groom details",
+      "Wedding date and time",
+      "Wedding venue details",
+      "Couple names display",
+      "Basic invitation preview",
+      `${FREE_TEMPLATES.length} free invitation designs`,
+      "Share invitation link",
+      "Central RSVP inbox (Yes / No)",
+      "System watermark",
+      `Up to ${FREE_PLAN.guestLimit} guests per invitation`,
+    ],
+    buttonText: "Get started free",
+    href: "/free-invitation",
+    highlighted: false,
+  },
+  {
+    name: "Basic",
+    subtitle: "More ways to make it yours",
+    description: "Add personal touches and useful tools to make sharing and planning easier.",
+    icon: Star,
+    accent: "from-[#FBF3E4] to-white",
+    ownFeatures: [
+      "Premium-looking static templates",
+      "Multiple invitation designs",
+      "Couple photo upload",
+      "Background music",
+      "Custom wedding message",
+      "Google Maps venue location",
+      "RSVP with guest name",
+      "Guest list management",
+      "WhatsApp sharing",
+      "Email invitation sharing",
+      "QR code invitation",
+      "Guest count tracking",
+      "No watermark",
+      "Up to 100 guests",
+    ],
+    buttonText: "Ask about Basic",
+    href: "whatsapp",
+    highlighted: false,
+  },
+  {
+    name: "Standard",
+    subtitle: "Bring your invitation to life",
+    description: "Create a memorable, animated experience with more ways to celebrate together.",
+    icon: Sparkles,
+    accent: "from-[#F7EBDD] to-white",
+    ownFeatures: [
+      "Animated wedding invitation",
+      "Wedding invitation video",
+      "Couple photo slideshow",
+      "Animated text effects",
+      "Background music with controls",
+      "Video background support",
+      "Countdown timer",
+      "Animated opening envelope",
+      "Multiple animation styles",
+      "Personalized welcome screen",
+      "Wedding event schedule",
+      "Multiple events (Homecoming / Wedding)",
+      "Advanced RSVP",
+      "Guest attendance tracking",
+      "Custom invitation URL",
+      "Up to 500 guests",
+      "Downloadable invitation video",
+    ],
+    buttonText: "Ask about Standard",
+    href: "whatsapp",
+    highlighted: true,
+  },
+  {
+    name: "Premium",
+    subtitle: "A celebration, designed around you",
+    description: "Enjoy a bespoke invitation and advanced guest tools, tailored to your vision.",
+    icon: Crown,
+    accent: "from-[#29221D] to-[#51402F]",
+    ownFeatures: [
+      "Full custom invitation design",
+      "Custom color combinations",
+      "Custom fonts and typography",
+      "Custom animation effects",
+      "Custom video background",
+      "Personalized invitation layout",
+      "Custom opening animation",
+      "Upload your own wedding video",
+      "Multiple photo galleries",
+      "Custom music upload",
+      "Unlimited guest invitations*",
+      "Advanced guest management",
+      "Individual guest invitation links",
+      "Guest seating management",
+      "Custom RSVP questions",
+      "Guest analytics dashboard",
+      "Invitation password protection",
+      "Priority customer support",
+      "No platform branding",
+    ],
+    buttonText: "Plan my Premium invitation",
+    href: "whatsapp",
+    highlighted: false,
+  },
+];
+
+function getInquiryLink(packageName: string) {
+  const message = encodeURIComponent(
+    `Hi Forever! I'd like to know more about the ${packageName} wedding invitation package.`,
+  );
+  return `https://wa.me/94757115645?text=${message}`;
 }
 
 export default function PackagesPage() {
   return (
-    <div className="min-h-screen bg-[#faf8f4] text-[#29221d]">
+    <div className="min-h-screen bg-[#FAF7F2] font-sans">
       <SiteHeader active="Packages" />
 
       <main>
-        <section className="relative overflow-hidden border-b border-[#e9dfd2] bg-[#f4eee5]">
-          <div className="pointer-events-none absolute -right-20 -top-32 h-[28rem] w-[28rem] rounded-full border border-[#c59b48]/20" />
-          <div className="pointer-events-none absolute -right-8 -top-20 h-[24rem] w-[24rem] rounded-full border border-[#c59b48]/20" />
-          <div className="relative mx-auto grid max-w-7xl gap-12 px-5 py-16 sm:px-8 sm:py-24 lg:grid-cols-[1.15fr_.85fr] lg:items-end lg:px-12">
-            <div>
-              <p className="mb-5 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[.25em] text-[#9a6f24]"><Sparkles className="h-4 w-4" /> Wedora invitation collections</p>
-              <h1 className="max-w-3xl font-serif-luxury text-5xl font-medium leading-[.98] tracking-tight sm:text-7xl">Make every detail<br /><span className="italic text-[#9a6f24]">feel like yours.</span></h1>
-              <p className="mt-6 max-w-xl text-sm leading-7 text-[#766a5e] sm:text-base">Three considered ways to share your wedding day. Each package is built around Wedora&apos;s existing invitation designs and guest features.</p>
-              <a href="#packages" className="mt-8 inline-flex items-center gap-2 rounded-full bg-[#29221d] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#493b30]">Explore packages <ArrowDown className="h-4 w-4" /></a>
+        <section className="relative overflow-hidden border-b border-[#EDE3D6] bg-white px-4 py-16 text-center sm:py-20">
+          <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-[#FBF3E4] blur-3xl" />
+          <div className="pointer-events-none absolute -right-24 bottom-0 h-72 w-72 rounded-full bg-[#F7EBDD] blur-3xl" />
+          <div className="relative mx-auto max-w-3xl">
+            <div className="mb-4 flex items-center justify-center gap-3 text-[#B88737]">
+              <span className="h-px w-10 bg-[#C59B48]" />
+              <Heart className="h-4 w-4 fill-current" />
+              <span className="text-xs font-semibold uppercase tracking-[0.22em]">Made for your day</span>
+              <Heart className="h-4 w-4 fill-current" />
+              <span className="h-px w-10 bg-[#C59B48]" />
             </div>
-            <div className="relative mx-auto w-full max-w-sm lg:mr-4">
-              <div className="absolute inset-5 rotate-[-7deg] rounded-[2rem] border border-[#c59b48]/40 bg-white/40" />
-              <div className="relative rounded-[2rem] border border-[#e5d8c6] bg-[#fbfaf7] p-8 text-center shadow-[0_24px_70px_rgba(71,51,31,.12)] sm:p-10">
-                <p className="text-[10px] font-semibold uppercase tracking-[.28em] text-[#9a6f24]">A day to remember</p>
-                <div className="mx-auto my-6 flex h-12 w-12 items-center justify-center rounded-full border border-[#c59b48]/50 text-[#a77e37]"><Heart className="h-5 w-5" /></div>
-                <p className="font-serif-luxury text-3xl italic text-[#463a30]">Your names, your story</p>
-                <div className="mx-auto my-6 h-px w-16 bg-[#c59b48]/60" />
-                <p className="text-[10px] uppercase tracking-[.22em] text-[#9c9083]">Invitation · Celebration · Together</p>
-                <p className="mt-6 text-xs text-[#766a5e]">Digital invitations designed around the moments that matter.</p>
-              </div>
-            </div>
+            <h1 className="font-serif-luxury text-4xl font-semibold leading-tight text-[#29221D] sm:text-5xl lg:text-6xl">
+              Find your <span className="text-[#B88737]">Forever plan</span>
+            </h1>
+            <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-[#7D736A] sm:text-base">
+              Start with the essentials or create a fully tailored celebration. Compare what is included in each plan and choose what feels right for you.
+            </p>
           </div>
         </section>
 
-        <section id="packages" className="mx-auto max-w-7xl scroll-mt-24 px-5 py-16 sm:px-8 sm:py-20 lg:px-12">
-          <div className="mb-10 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-            <div><p className="text-[10px] font-semibold uppercase tracking-[.25em] text-[#a77e37]">Choose your experience</p><h2 className="mt-2 font-serif-luxury text-4xl font-medium sm:text-5xl">Three ways to celebrate</h2></div>
-            <p className="max-w-sm text-sm leading-6 text-[#766a5e]">Every celebration is different. Tell us what you have in mind and we&apos;ll help you choose the right fit.</p>
+        <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+          <div className="mb-8 text-center">
+            <h2 className="font-serif-luxury text-3xl font-semibold text-[#29221D] sm:text-4xl">Four ways to celebrate</h2>
+            <p className="mt-2 text-sm text-[#7D736A]">Paid plan pricing and setup can be discussed with our team.</p>
           </div>
 
-          <div className="grid gap-5 lg:grid-cols-3 lg:items-stretch">
-            {INVITATION_PACKAGES.map((item) => {
-              const includedDesigns = item.templateCodes.map((code) => TEMPLATE_DESIGNS.find((template) => template.code === code)).filter((template) => template !== undefined);
-              const includedPackage = item.includesPackageId ? INVITATION_PACKAGES.find((packageItem) => packageItem.id === item.includesPackageId) : undefined;
-              const isBespoke = item.id === "signature";
-              const PackageIcon = item.id === "essential" ? Flower2 : item.id === "celebration" ? Sparkles : Crown;
+          <div className="grid items-stretch gap-6 md:grid-cols-2">
+            {packagePlans.map((plan, index) => {
+              const Icon = plan.icon;
+              const premium = plan.name === "Premium";
+              const buttonHref = plan.href === "whatsapp" ? getInquiryLink(plan.name) : plan.href;
+
               return (
-                <article id={item.id} key={item.id} className={`group relative isolate scroll-mt-28 flex flex-col overflow-hidden rounded-[1.7rem] border p-6 transition duration-300 hover:-translate-y-1 sm:p-7 ${item.featured ? "border-[#a77e37] bg-[#2d2822] text-white shadow-[0_22px_55px_rgba(45,40,34,.18)] hover:shadow-[0_28px_65px_rgba(45,40,34,.24)] lg:-translate-y-3" : "border-[#e8dfd4] bg-white text-[#29221d] shadow-[0_10px_35px_rgba(71,51,31,.05)] hover:border-[#d2b67b] hover:shadow-[0_22px_50px_rgba(71,51,31,.12)]"}`}>
-                  <div aria-hidden="true" className={`pointer-events-none absolute -right-16 -top-20 -z-10 h-52 w-52 rounded-full border ${item.featured ? "border-[#d9b96f]/15" : "border-[#c59b48]/15"}`} />
-                  <div aria-hidden="true" className={`pointer-events-none absolute -right-10 -top-14 -z-10 h-40 w-40 rounded-full border ${item.featured ? "border-[#d9b96f]/10" : "border-[#c59b48]/10"}`} />
-                  {item.featured && <span className="mb-5 inline-flex self-start rounded-full bg-[#c59b48] px-4 py-1.5 text-[9px] font-bold uppercase tracking-[.16em] text-[#29221d]">Most popular</span>}
-                  {isBespoke && <span className="mb-5 inline-flex self-start items-center gap-1.5 rounded-full border border-[#b9975b]/50 bg-white/70 px-4 py-1.5 text-[9px] font-bold uppercase tracking-[.16em] text-[#80602b]"><Crown className="h-3 w-3" /> Premium invitation collection</span>}
-                  <div className="flex items-start justify-between gap-3"><div><p className={`text-[10px] font-semibold uppercase tracking-[.21em] ${item.featured ? "text-[#d9b96f]" : "text-[#9a6f24]"}`}>{item.eyebrow}</p><h3 className="mt-2 font-serif-luxury text-4xl">{item.name}</h3></div><span className={`flex h-12 w-12 items-center justify-center rounded-full border ${item.featured ? "border-[#d9b96f]/30 bg-white/10 text-[#e2c477]" : "border-[#c59b48]/25 bg-[#f7f0e5] text-[#a77e37]"}`}><PackageIcon className="h-5 w-5" /></span></div>
-                  <p className={`mt-3 min-h-12 text-sm leading-6 ${item.featured ? "text-white/65" : "text-[#766a5e]"}`}>{item.description}</p>
-                  {item.id === "essential" && <div className="mt-4 flex flex-wrap gap-2"><span className="rounded-full border border-[#c59b48]/35 bg-[#fbf6eb] px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[.12em] text-[#8e6b32]">One wedding</span><span className="rounded-full border border-[#c59b48]/35 bg-[#fbf6eb] px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[.12em] text-[#8e6b32]">{item.highlights.length} included features</span></div>}
-                  {isBespoke && <div className="mt-5 flex items-center justify-between gap-4 rounded-2xl border border-[#c6aa76]/45 bg-[linear-gradient(135deg,#fffdf8,#f4ead7)] p-4"><div><p className="text-[9px] font-bold uppercase tracking-[.2em] text-[#876734]">Heritage Door invitation</p><p className="mt-1 max-w-[13rem] font-serif-luxury text-lg leading-snug text-[#463925]">A heritage doorway to your celebration</p></div><div aria-label="Heritage day sky, flowers, night sky and gold palette" className="flex shrink-0 -space-x-2">{["#f6d9bd", "#f2b8bd", "#1c3f8f", "#e6c58f"].map((color) => <span key={color} className="h-6 w-6 rounded-full border-2 border-white shadow-sm" style={{ backgroundColor: color }} />)}</div></div>}
-                  {includedDesigns.length > 0 && <div className={`my-6 border-y py-4 ${item.featured ? "border-white/15" : "border-[#eee6dc]"}`}>
-                    <p className={`text-[9px] font-semibold uppercase tracking-[.2em] ${item.featured ? "text-white/45" : "text-[#9c9083]"}`}>{item.id === "essential" ? "Choose one ready-made design" : isBespoke ? "Your exclusive invitation designs" : "Package sample designs"} <span className="normal-case tracking-normal">· select to preview</span></p>
-                    <div className={`mt-3 grid gap-2 ${includedDesigns.length === 1 ? "grid-cols-1" : "grid-cols-2"}`}>
-                      {includedDesigns.map((design) => (
-                        <Link key={design.code} href={`/invite/${design.demoSlug}`} className={`group flex min-w-0 flex-col rounded-xl border px-3 py-3 transition ${item.featured ? "border-white/10 bg-white/[.06] text-white/85 hover:border-[#d9b96f]/60 hover:bg-white/10" : "border-[#eee6dc] bg-[#fcfaf7] text-[#574a3d] hover:border-[#c59b48]/60 hover:bg-[#f7f0e5]"}`}>
-                          <span className="min-w-0"><span className={`block whitespace-normal break-words text-[11px] font-semibold leading-4 ${item.featured ? "text-white" : "text-[#3f342a]"}`}>{design.name}</span><span className={`mt-1 block line-clamp-1 text-[9px] leading-4 ${item.featured ? "text-white/55" : "text-[#968a7e]"}`}>{design.style}</span></span>
-                          <span className="mt-2 flex items-center justify-between border-t border-current/10 pt-2 text-[9px] font-semibold text-[#d9b96f]">View sample <ExternalLink className="h-3 w-3" /></span>
-                        </Link>
-                      ))}
+                <article
+                  key={plan.name}
+                  className={`relative flex flex-col overflow-hidden rounded-[1.75rem] border bg-gradient-to-br p-6 shadow-sm transition-transform hover:-translate-y-1 sm:p-8 ${plan.accent} ${plan.highlighted ? "border-[#C59B48] shadow-[0_18px_55px_rgba(154,111,36,0.14)]" : "border-[#EADBCA]"}`}
+                >
+                  {plan.highlighted && (
+                    <span className="absolute right-5 top-5 rounded-full bg-[#B88737] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-white">
+                      Most popular
+                    </span>
+                  )}
+
+                  <div className="flex items-start gap-4">
+                    <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${premium ? "bg-white/10 text-[#E8C97A]" : "bg-[#FBF3E4] text-[#B88737]"}`}>
+                      <Icon className="h-5 w-5" />
                     </div>
-                  </div>}
-                  <p className={`mb-3 text-[9px] font-semibold uppercase tracking-[.2em] ${item.featured ? "text-white/45" : "text-[#9c9083]"}`}>{includedPackage ? `Everything in ${includedPackage.name}, plus` : "Your package includes"}</p>
-                  <ul className="space-y-3">{item.highlights.map((highlight) => <li key={highlight} className={`flex gap-2.5 text-xs leading-5 ${item.featured ? "text-white/80" : "text-[#51473e]"}`}><Check className={`mt-0.5 h-3.5 w-3.5 shrink-0 ${item.featured ? "text-[#d9b96f]" : "text-[#9a6f24]"}`} />{highlight}</li>)}</ul>
-                  <div className={`mt-auto pt-7`}><p className={`mb-3 text-[10px] leading-5 ${item.featured ? "text-white/50" : "text-[#94887c]"}`}>{item.note}</p><a href={packageLink(item.name)} target="_blank" rel="noopener noreferrer" className={`flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3.5 text-xs font-semibold transition ${item.featured ? "bg-[#c59b48] text-[#29221d] hover:bg-[#d7b663]" : "bg-[#29221d] text-white hover:bg-[#493b30]"}`}><MessageCircle className="h-4 w-4" /> Ask about {item.name}<ArrowRight className="h-3.5 w-3.5" /></a><p className={`mt-3 text-center text-[9px] ${item.featured ? "text-white/35" : "text-[#b0a69a]"}`}>Package pricing shared on request</p></div>
+                    <div className="pr-20 sm:pr-24">
+                      <p className={`text-[10px] font-bold uppercase tracking-[0.18em] ${premium ? "text-[#E8C97A]" : "text-[#B88737]"}`}>{plan.subtitle}</p>
+                      <h3 className={`mt-1 font-serif-luxury text-3xl font-semibold ${premium ? "text-white" : "text-[#29221D]"}`}>{plan.name} Plan</h3>
+                    </div>
+                  </div>
+                  <p className={`mt-4 min-h-12 text-sm leading-6 ${premium ? "text-white/75" : "text-[#7D736A]"}`}>{plan.description}</p>
+
+                  <div className={`my-5 h-px ${premium ? "bg-white/15" : "bg-[#F0E8DC]"}`} />
+
+                  <p className={`mb-4 text-xs font-semibold uppercase tracking-[0.14em] ${premium ? "text-[#E8C97A]" : "text-[#9A6F24]"}`}>
+                    {index === 0
+                      ? `${plan.ownFeatures.length} features included`
+                      : plan.name === "Premium"
+                        ? `Includes Standard Plan features (excluding custom URL) + ${plan.ownFeatures.length} new features`
+                        : `Includes all ${packagePlans[index - 1].name} Plan features + ${plan.ownFeatures.length} new features`}
+                  </p>
+                  <ul className="grid flex-1 content-start gap-x-5 gap-y-3 sm:grid-cols-2">
+                    {plan.ownFeatures.map((feature, featureIndex) => (
+                      <li key={`${feature}-${featureIndex}`} className={`flex gap-2.5 text-xs leading-5 sm:text-[13px] ${premium ? "text-white/85" : "text-[#4A3F37]"}`}>
+                        <Check className={`mt-0.5 h-3.5 w-3.5 shrink-0 ${premium ? "text-[#E8C97A]" : "text-[#B88737]"}`} />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  {plan.name === "Free" && (
+                    <div className="mt-5 rounded-2xl bg-[#FFF7F9] p-4 text-xs leading-6 text-[#7F5A6B]">
+                      <p>One invitation per free account, with a saved draft, a permanent share link and a private RSVP inbox. Invite up to {FREE_PLAN.guestLimit} guests. Choose your design below.</p>
+                      <div className="mt-4 grid gap-2 sm:grid-cols-2">{FREE_TEMPLATES.map((template) => <Link key={template.code} href={`/free-invitation?template=${template.code}`} className="rounded-xl border border-[#EAD9DF] bg-white px-3 py-3 font-semibold text-[#8E2F59] hover:bg-[#FAF1F4]">{template.name} →</Link>)}</div>
+                    </div>
+                  )}
+                  {premium && <p className="mt-4 text-[11px] leading-5 text-white/60">*Unlimited invitations are subject to fair-use terms. Please confirm details with our team.</p>}
+
+                  <a
+                    href={buttonHref}
+                    target={plan.href === "whatsapp" ? "_blank" : undefined}
+                    rel={plan.href === "whatsapp" ? "noopener noreferrer" : undefined}
+                    className={`mt-7 inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-3.5 text-sm font-semibold transition-colors ${premium ? "bg-[#E8C97A] text-[#29221D] hover:bg-[#F1DFAE]" : plan.highlighted ? "bg-[#B88737] text-white hover:bg-[#9A6F24]" : "border border-[#C59B48] text-[#9A6F24] hover:bg-[#FBF3E4]"}`}
+                  >
+                    {plan.href === "whatsapp" ? <MessageCircle className="h-4 w-4" /> : <ArrowRight className="h-4 w-4" />}
+                    {plan.buttonText}
+                  </a>
                 </article>
               );
             })}
           </div>
+
+          <p className="mt-7 text-center text-xs leading-5 text-[#8A7F74]">
+            Features are shown as described for each plan. Contact Forever to confirm current availability, pricing and any usage limits.
+          </p>
         </section>
 
-        <section className="border-y border-[#e9dfd2] bg-[#f4eee5]">
-          <div className="mx-auto grid max-w-7xl gap-6 px-5 py-12 sm:grid-cols-3 sm:px-8 lg:px-12">
-            {[{ n: "01", title: "Choose a package", text: "Pick the invitation experience that suits your celebration." }, { n: "02", title: "Select a design", text: "Choose from the existing Wedora styles included with your package." }, { n: "03", title: "Share the joy", text: "Add your details, then send your invitation link to guests." }].map((step) => <div key={step.n} className="flex gap-4"><span className="font-serif-luxury text-3xl italic text-[#b88737]">{step.n}</span><div><h3 className="text-sm font-semibold">{step.title}</h3><p className="mt-1 text-xs leading-5 text-[#766a5e]">{step.text}</p></div></div>)}
+        <section className="border-y border-[#EDE3D6] bg-white px-4 py-12 sm:py-14">
+          <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-6 text-center sm:flex-row sm:text-left">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#B88737]">Need a hand choosing?</p>
+              <h2 className="mt-2 font-serif-luxury text-3xl font-semibold text-[#29221D]">Let’s plan your invitation</h2>
+              <p className="mt-2 max-w-xl text-sm leading-6 text-[#7D736A]">Tell us about your celebration and our team can help you find a package that fits.</p>
+            </div>
+            <Link href="/contact" className="inline-flex shrink-0 items-center gap-2 rounded-full bg-[#29221D] px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-[#4A3F37]">
+              Talk to our team <Gem className="h-4 w-4" />
+            </Link>
           </div>
         </section>
-
-        <section className="mx-auto max-w-5xl px-5 py-16 text-center sm:py-20"><div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[#f3eadb] text-[#9a6f24]"><Heart className="h-5 w-5" /></div><h2 className="mt-5 font-serif-luxury text-4xl">Still deciding?</h2><p className="mx-auto mt-3 max-w-lg text-sm leading-6 text-[#766a5e]">Browse every existing invitation style, or message our team and we&apos;ll help you find a package that feels right.</p><div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row"><Link href="/templates" className="inline-flex items-center justify-center gap-2 rounded-full border border-[#d8c7ad] px-5 py-3 text-xs font-semibold text-[#574a3d] transition hover:bg-white">Browse existing designs <ArrowRight className="h-3.5 w-3.5" /></Link><a href={packageLink("Wedora packages")} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full bg-[#29221d] px-5 py-3 text-xs font-semibold text-white transition hover:bg-[#493b30]"><MessageCircle className="h-4 w-4" /> Talk to our team</a></div></section>
       </main>
 
       <Footer />

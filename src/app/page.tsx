@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import Footer from "@/components/Footer";
 import SiteHeader from "@/components/SiteHeader";
-import { INVITATION_PACKAGES } from "@/components/invitation/packages";
+import { TEMPLATE_DESIGNS } from "@/components/invitation/registry";
 
 /* ─────────────────────────────────────────── */
 /*  HERO SLIDES DATA                           */
@@ -230,7 +230,7 @@ export default function HomePage() {
                       style={{ background: "linear-gradient(90deg,#C79848,#B88737,#A87428)" }}
                     >
                       <LayoutTemplate className="w-4 h-4" />
-                  <span>Browse Packages</span>
+                      <span>Browse Templates</span>
                     </motion.button>
                   </Link>
                 </motion.div>
@@ -297,7 +297,7 @@ export default function HomePage() {
       </section>
 
       {/* ══════════════════════════════════════ */}
-      {/* INVITATION PACKAGES SECTION           */}
+      {/* POPULAR TEMPLATES SECTION             */}
       {/* ══════════════════════════════════════ */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         {/* Section header */}
@@ -309,42 +309,49 @@ export default function HomePage() {
               <span className="h-px w-8 bg-gradient-to-l from-transparent to-[#C59B48]" />
             </div>
             <h2 className="font-serif-luxury text-3xl sm:text-4xl font-semibold text-[#29221D]">
-              Find your invitation package
+              Popular Invitation Templates
             </h2>
-            <p className="text-sm text-[#7D736A] mt-1">Choose an experience, then preview its included designs</p>
+            <p className="text-sm text-[#7D736A] mt-1">Choose from our most loved designs</p>
           </div>
-          <Link href="/packages">
+          <Link href="/templates">
             <button className="flex items-center space-x-1.5 px-5 py-2.5 rounded-full border border-[#C59B48] text-[#9A6F24] text-sm font-semibold hover:bg-[#FBF3E4] transition-colors whitespace-nowrap">
-              <span>Explore Packages</span>
+              <span>View All Templates</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
-          {INVITATION_PACKAGES.map((item, i) => (
-            <motion.div
-              key={item.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.08, duration: 0.5 }}
-              className={`rounded-3xl border p-6 sm:p-7 ${item.featured ? "border-[#A77E37] bg-[#2D2822] text-white shadow-lg" : "border-[#EADBCA] bg-white text-[#29221D] shadow-sm"}`}
-            >
-              <p className={`text-[10px] font-semibold uppercase tracking-[.2em] ${item.featured ? "text-[#D9B96F]" : "text-[#9A6F24]"}`}>{item.eyebrow}</p>
-              <h3 className="mt-2 font-serif-luxury text-3xl">{item.name}</h3>
-              <p className={`mt-3 min-h-12 text-sm leading-6 ${item.featured ? "text-white/65" : "text-[#766A5E]"}`}>{item.description}</p>
-              <ul className="mt-5 space-y-2">
-                {item.highlights.slice(0, 3).map((highlight) => (
-                  <li key={highlight} className={`flex gap-2 text-xs leading-5 ${item.featured ? "text-white/80" : "text-[#51473E]"}`}>
-                    <Heart className={`mt-0.5 h-3.5 w-3.5 shrink-0 ${item.featured ? "text-[#D9B96F]" : "text-[#B88737]"}`} />{highlight}
-                  </li>
-                ))}
-              </ul>
-              <Link href={`/packages#${item.id}`} className={`mt-6 inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-xs font-semibold transition ${item.featured ? "bg-[#C59B48] text-[#29221D] hover:bg-[#D7B663]" : "bg-[#29221D] text-white hover:bg-[#493B30]"}`}>
-                {item.templateCodes.length > 0 ? "View package samples" : "View package details"} <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
-            </motion.div>
+        {/* Template cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {TEMPLATE_DESIGNS.filter((tpl, index) => index < 3 || tpl.code === "tpl_golden_hour").map((tpl, i) => (
+            <Link key={tpl.code} href={`/invite/${tpl.demoSlug}`}>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.08, duration: 0.5 }}
+                className={`relative group rounded-3xl overflow-hidden bg-gradient-to-br ${tpl.gradient} aspect-[4/3] sm:aspect-square md:aspect-[4/5] cursor-pointer border border-[#EADBCA] shadow-sm transition-all md:hover:shadow-md md:hover:-translate-y-1`}
+              >
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+                  <div
+                    className="w-16 h-16 rounded-full border-4 flex items-center justify-center mb-4 bg-white/40 backdrop-blur-sm"
+                    style={{ borderColor: tpl.accent }}
+                  >
+                    <Heart className="w-7 h-7" style={{ fill: tpl.accent, color: tpl.accent }} />
+                  </div>
+                  <p className="font-serif-luxury text-2xl font-bold" style={{ color: tpl.accent }}>
+                    {tpl.name}
+                  </p>
+                  <p className="text-xs mt-2 font-semibold tracking-widest uppercase opacity-70" style={{ color: tpl.accent }}>
+                    {tpl.style}
+                  </p>
+
+                  <div className="mt-8 px-6 py-2.5 rounded-full bg-white/80 text-sm font-semibold border border-[#C59B48]/30 shadow-sm" style={{ color: tpl.accent }}>
+                    View Live Preview
+                  </div>
+                </div>
+              </motion.div>
+            </Link>
           ))}
         </div>
       </section>

@@ -119,7 +119,6 @@ export function useInvitationActions(data: InvitationViewData, actions: Invitati
       attend: rsvpAttend,
       setAttend: setRsvpAttend,
       count: rsvpCount,
-      setCount: setRsvpCount,
       increment: () => setRsvpCount((c) => Math.min(20, c + 1)),
       decrement: () => setRsvpCount((c) => Math.max(1, c - 1)),
       name: rsvpName,

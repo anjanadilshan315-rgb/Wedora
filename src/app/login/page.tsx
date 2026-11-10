@@ -128,7 +128,7 @@ function LoginContent() {
         <div className="absolute inset-0 flex items-center">
           <div className="w-full border-t border-[#EADBCA]" />
         </div>
-        <span className="relative px-3 bg-white text-[11px] text-[#827870]">New to Wedora?</span>
+        <span className="relative px-3 bg-white text-[11px] text-[#827870]">New to Forever?</span>
       </div>
 
       <Link

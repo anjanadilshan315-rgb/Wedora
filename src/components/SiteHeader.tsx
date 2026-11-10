@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import BrandLogo from "@/components/BrandLogo";
+import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { LayoutDashboard, LogOut, Menu, Sparkles, User, X } from "lucide-react";
@@ -52,8 +52,14 @@ export default function SiteHeader({ active, fixed = false }: SiteHeaderProps) {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-[70px]">
-          <Link href="/" aria-label="Forever home" className="flex items-center shrink-0">
-            <BrandLogo preload className="w-16 lg:w-[70px]" />
+          <Link href="/" className="flex items-center space-x-2.5 shrink-0">
+            <div className="relative w-12 h-12 rounded-full overflow-hidden bg-[#FBF3E4] ring-2 ring-[#C59B48]/50 shadow-sm">
+              <Image src="/assets/forever-wedding-logo.svg" alt="Forever Wedding Invitation logo" fill className="object-contain p-1" sizes="48px" />
+            </div>
+            <div className="leading-none">
+              <p className="font-serif-luxury text-[17px] font-bold text-[#28211B] tracking-tight">Forever</p>
+              <p className="text-[9px] text-[#B88737] tracking-[0.15em] uppercase font-medium">by ApexRow Solutions</p>
+            </div>
           </Link>
 
           <nav className="hidden lg:flex items-center space-x-1">

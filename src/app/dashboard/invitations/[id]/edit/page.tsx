@@ -37,17 +37,6 @@ import {
 } from "@/components/dashboard/ui";
 import { formatDateLong, formatTime } from "@/components/invitation/format";
 import { TEMPLATE_DESIGNS, designFor } from "@/components/invitation/registry";
-import HeirloomEditor from "@/components/invitation/HeirloomEditor";
-import EnvelopeEditor from "@/components/invitation/EnvelopeEditor";
-import RubyEditor from "@/components/invitation/RubyEditor";
-import SunsetEditor from "@/components/invitation/SunsetEditor";
-import GildedEditor from "@/components/invitation/GildedEditor";
-import { gildedSettings, isGildedUrl, type GildedSettings } from "@/components/invitation/gilded";
-import { isSunsetMediaUrl, sunsetSettings, type SunsetSettings } from "@/components/invitation/sunset";
-import { rubySettings, type RubySettings } from "@/components/invitation/ruby";
-import { envelopeSettings, type EnvelopeSettings } from "@/components/invitation/envelope";
-import { heirloomSettings, type HeirloomSettings } from "@/components/invitation/heirloom";
-import { KEEPSAKE_COLOUR_KEYS, KEEPSAKE_FRAMES, KEEPSAKE_GALLERY_LIMIT, KEEPSAKE_PALETTES, KEEPSAKE_THEMES, KEEPSAKE_THEME_COLOURS, keepsakeSettings, type KeepsakeSettings } from "@/components/invitation/keepsake";
 import { api, ApiError, errorMessage } from "@/lib/api";
 import type { Invitation, PhotoCategory, Photos, Template } from "@/lib/types";
 
@@ -72,13 +61,6 @@ interface EventRow {
 }
 
 interface FormState {
-  extraDetails: Record<string, unknown>;
-  keepsake: KeepsakeSettings;
-  heirloom: HeirloomSettings;
-  floralEnvelope: EnvelopeSettings;
-  ruby: RubySettings;
-  sunset: SunsetSettings;
-  gilded: GildedSettings;
   templateId: number;
   groomName: string;
   brideName: string;
@@ -100,13 +82,6 @@ let rowKey = 0;
 
 function toForm(inv: Invitation): FormState {
   return {
-    extraDetails: inv.extraDetails ?? {},
-    keepsake: keepsakeSettings(inv.extraDetails?.keepsake),
-    heirloom: heirloomSettings(inv.extraDetails?.heirloom),
-    floralEnvelope: envelopeSettings(inv.extraDetails?.floralEnvelope),
-    ruby: rubySettings(inv.extraDetails?.ruby),
-    sunset: sunsetSettings(inv.extraDetails?.sunset),
-    gilded: gildedSettings(inv.extraDetails?.gilded),
     templateId: inv.template.id,
     groomName: inv.groomName ?? "",
     brideName: inv.brideName ?? "",
@@ -128,7 +103,7 @@ function toForm(inv: Invitation): FormState {
 const orNull = (value: string) => (value.trim() === "" ? null : value.trim());
 
 /** Fields saved by each step. */
-function payloadFor(step: number, form: FormState, templateCode?: string): Record<string, unknown> {
+function payloadFor(step: number, form: FormState): Record<string, unknown> {
   switch (step) {
     case 1:
       return { templateId: form.templateId };
@@ -152,7 +127,6 @@ function payloadFor(step: number, form: FormState, templateCode?: string): Recor
       };
     case 4:
       return {
-        extraDetails: { ...form.extraDetails, keepsake: form.keepsake, heirloom: form.heirloom, ...(templateCode === "tpl_heirloom_envelope" ? { floralEnvelope: form.floralEnvelope } : {}), ...(templateCode === "tpl_golden_hour" ? { ruby: form.ruby } : {}), ...(templateCode === "tpl_sunset_journey" ? { sunset: form.sunset } : {}), ...(templateCode === "tpl_gilded_celebration" ? { gilded: form.gilded } : {}) },
         greetingMessage: form.greetingMessage,
         eventsSchedule: form.events
           .filter((e) => e.name.trim() || e.time.trim())
@@ -164,7 +138,7 @@ function payloadFor(step: number, form: FormState, templateCode?: string): Recor
 }
 
 /** Client-side checks before saving a step. */
-function validateStep(step: number, form: FormState, templateCode?: string): Record<string, string> {
+function validateStep(step: number, form: FormState): Record<string, string> {
   const errors: Record<string, string> = {};
   if (step === 2) {
     if (!form.groomName.trim()) errors.groomName = "Groom's name is required";
@@ -179,12 +153,6 @@ function validateStep(step: number, form: FormState, templateCode?: string): Rec
     if (form.mapUrl.trim() && !/^https?:\/\//i.test(form.mapUrl.trim())) errors.mapUrl = "Paste a full link starting with https://";
   }
   if (step === 4) {
-    if (templateCode === "tpl_heirloom_envelope" && form.floralEnvelope.musicUrl && !/^(https:\/\/|\/(?!\/))/.test(form.floralEnvelope.musicUrl)) errors.envelopeMusicUrl = "Use an https:// URL or a local path starting with /.";
-    if (templateCode === "tpl_sunset_journey" && (!isSunsetMediaUrl(form.sunset.musicUrl) || !isSunsetMediaUrl(form.sunset.filmVideoUrl))) errors.sunsetMediaUrl = "Music and video need an https:// URL or a local path starting with /.";
-    if (templateCode === "tpl_gilded_celebration" && (!isGildedUrl(form.gilded.musicUrl) || form.gilded.eventMaps.some(url => url && !/^https:\/\//.test(url)))) errors.gildedMediaUrl = "Music needs HTTPS or a local path; event maps need an HTTPS link.";
-    if (Object.values(form.heirloom.scenePhotos).some((url) => url && !/^(https:\/\/|\/(?!\/))/.test(url))) errors.heirloomScenePhotos = "Scene photos need an https:// URL or a local path starting with /.";
-    if (form.heirloom.musicUrl && !/^(https:\/\/|\/(?!\/))/.test(form.heirloom.musicUrl)) errors.heirloomMusicUrl = "Use an https:// URL or a local path starting with /.";
-    if (form.keepsake.musicUrl && !/^(https:\/\/|\/(?!\/))/.test(form.keepsake.musicUrl)) errors.musicUrl = "Use an https:// URL or a local path starting with /.";
     form.events.forEach((e, i) => {
       if ((e.time.trim() || e.venue.trim()) && !e.name.trim()) errors[`eventsSchedule.${i}.name`] = "Event name is required";
     });
@@ -295,7 +263,7 @@ export default function EditInvitationPage() {
       .then(([inv, tpl]) => {
         if (!active) return;
         setInvitation(inv.data);
-        setTemplates(tpl.data.filter((template) => TEMPLATE_DESIGNS.some((design) => design.code === template.code)));
+        setTemplates(tpl.data);
         setForm(toForm(inv.data));
         setStep(Math.min(Math.max(inv.data.currentStep, 1), STEPS.length));
       })
@@ -347,9 +315,8 @@ export default function EditInvitationPage() {
       setStep(nextStep);
       return true;
     }
-    const templateCode = templates.find((template) => template.id === form.templateId)?.code ?? invitation.template.code;
-    const errors = validateStep(step, form, templateCode);
-    if (Object.keys(errors).length && (nextStep > step || Boolean(errors.sunsetMediaUrl || errors.gildedMediaUrl))) {
+    const errors = validateStep(step, form);
+    if (Object.keys(errors).length && nextStep > step) {
       setFieldErrors(errors);
       return false;
     }
@@ -357,7 +324,7 @@ export default function EditInvitationPage() {
     setError("");
     setSavedNotice("");
     try {
-      const payload = { ...payloadFor(step, form, templateCode), currentStep: Math.max(nextStep, invitation.currentStep) };
+      const payload = { ...payloadFor(step, form), currentStep: Math.max(nextStep, invitation.currentStep) };
       const { data } = await api<Invitation>(`/customer/invitations/${id}`, { method: "PATCH", body: payload });
       setInvitation({ ...data, guestStats: invitation.guestStats });
       setFieldErrors({});
@@ -402,8 +369,8 @@ export default function EditInvitationPage() {
     setPhotoError("");
     const problem = checkFiles(files);
     if (problem) return setPhotoError(problem);
-    if (category === "gallery" && invitation.photos.gallery.length + files.length > galleryLimit) {
-      return setPhotoError(`The gallery can hold up to ${galleryLimit} photos.`);
+    if (category === "gallery" && invitation.photos.gallery.length + files.length > MAX_GALLERY) {
+      return setPhotoError(`The gallery can hold up to ${MAX_GALLERY} photos.`);
     }
     setUploading(category);
     try {
@@ -462,10 +429,6 @@ export default function EditInvitationPage() {
   }
 
   const design = designFor(templates.find((t) => t.id === form.templateId)?.code ?? invitation.template.code);
-  const isKeepsake = (templates.find((t) => t.id === form.templateId)?.code ?? invitation.template.code) === "tpl_classic";
-  const isHeirloom = design.code === "tpl_grand_heirloom";
-  const isEnvelope = design.code === "tpl_heirloom_envelope";
-  const galleryLimit = isKeepsake ? KEEPSAKE_GALLERY_LIMIT : MAX_GALLERY;
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -566,12 +529,12 @@ export default function EditInvitationPage() {
                         >
                           <button type="button" disabled={!editable} onClick={() => update("templateId", t.id)} className={`w-full aspect-[4/3] bg-gradient-to-br ${d.gradient} flex flex-col items-center justify-center p-4 text-center`}>
                             <Heart className="w-7 h-7 mb-2" style={{ fill: d.accent, color: d.accent }} />
-                            <p className="font-serif-luxury text-lg font-bold" style={{ color: d.accent }}>{d.name}</p>
+                            <p className="font-serif-luxury text-lg font-bold" style={{ color: d.accent }}>{t.name}</p>
                             <p className="text-[10px] uppercase tracking-widest opacity-70" style={{ color: d.accent }}>{d.style}</p>
                           </button>
                           <div className="flex items-center justify-between px-3 py-2 bg-white">
                             <span className={`text-xs font-semibold ${selected ? "text-[#9A6F24]" : "text-[#A69B90]"}`}>{selected ? "✓ Selected" : "Select"}</span>
-                            <Link href={`/invite/${d.demoSlug}`} className="text-xs text-[#9A6F24] hover:underline">
+                            <Link href={`/invite/${d.demoSlug}`} target="_blank" className="text-xs text-[#9A6F24] hover:underline">
                               Live preview
                             </Link>
                           </div>
@@ -649,34 +612,6 @@ export default function EditInvitationPage() {
               {/* STEP 4 — MESSAGE & SCHEDULE */}
               {step === 4 && (
                 <div className="space-y-6">
-                  {isHeirloom && <HeirloomEditor settings={form.heirloom} onChange={(settings) => update("heirloom", settings)} disabled={!editable} musicError={fieldErrors.heirloomMusicUrl} sceneError={fieldErrors.heirloomScenePhotos} />}
-                  {design.code === "tpl_golden_hour" && <RubyEditor settings={form.ruby} onChange={(settings) => update("ruby", settings)} disabled={!editable} />}
-                  {design.code === "tpl_sunset_journey" && <SunsetEditor settings={form.sunset} onChange={(settings) => update("sunset", settings)} disabled={!editable} mediaError={fieldErrors.sunsetMediaUrl} eventNames={form.events.map(event => event.name)} />}
-                  {design.code === "tpl_gilded_celebration" && <GildedEditor settings={form.gilded} onChange={(settings) => update("gilded", settings)} disabled={!editable} mediaError={fieldErrors.gildedMediaUrl} eventNames={form.events.map(event => event.name)} />}
-                  {isEnvelope && <EnvelopeEditor settings={form.floralEnvelope} onChange={(settings) => update("floralEnvelope", settings)} disabled={!editable} musicError={fieldErrors.envelopeMusicUrl} />}
-                  {isKeepsake && (
-                    <div className="space-y-4 rounded-2xl border border-[#DFD3C3] bg-[#FCFAF7] p-5">
-                      <h3 className="font-serif-luxury text-2xl">The Golden Keepsake design</h3>
-                      <div className="space-y-1.5">
-                        <label htmlFor="keepsake-theme" className={labelClass}>Colour theme</label>
-                        <select id="keepsake-theme" className={inputClass} disabled={!editable} value={form.keepsake.theme} onChange={(e) => update("keepsake", { ...form.keepsake, theme: e.target.value as KeepsakeSettings["theme"], accent: "", gold: "", ground: "", paper: "", paper2: "", ink: "" })}>
-                          {KEEPSAKE_THEMES.map(({ value, label }) => <option key={value} value={value}>{label}</option>)}
-                        </select>
-                        <p className="text-xs text-[#7D736A]">Choose Luxury Gold &amp; Ivory or one of four wedding palettes. You can customise each colour below.</p>
-                      </div>
-                      {([ ["sinhala", "Sinhala wording"], ["blessing", "Blessing"], ["heading", "Invitation heading"], ["dress", "Dress note"], ["musicUrl", "Background music URL (optional)"] ] as const).map(([key, label]) => (
-                        <div key={key} className="space-y-1.5"><label htmlFor={`keepsake-${key}`} className={labelClass}>{label}</label><input id={`keepsake-${key}`} className={inputClass} disabled={!editable} maxLength={1000} value={form.keepsake[key]} onChange={(e) => update("keepsake", { ...form.keepsake, [key]: e.target.value })} /><FieldError message={fieldErrors[key]} /></div>
-                      ))}
-                      <fieldset className="space-y-2">
-                        <legend className={labelClass}>Wedding colour palettes</legend>
-                        <div className="flex flex-wrap gap-2">{KEEPSAKE_PALETTES.map(({ label, ...colours }) => <button key={label} type="button" className={secondaryButton} disabled={!editable} aria-pressed={form.keepsake.theme === colours.theme && KEEPSAKE_COLOUR_KEYS.every((key) => (form.keepsake[key] || KEEPSAKE_THEME_COLOURS[form.keepsake.theme][key]) === colours[key])} onClick={() => update("keepsake", { ...form.keepsake, ...colours })}>{Array.from(new Set(KEEPSAKE_COLOUR_KEYS.map((key) => colours[key]))).map((colour) => <span key={colour} className="h-4 w-4 rounded-full border border-black/10" style={{ background: colour }} />)}{label}</button>)}</div>
-                      </fieldset>
-                      <div className="grid gap-3 sm:grid-cols-3">
-                        {([ ["accent", "Buttons / borders"], ["gold", "Icons / highlights"], ["ground", "Cover background"], ["paper", "Page background"], ["paper2", "Cards"], ["ink", "Headings / text"] ] as const).map(([key, label]) => <div key={key}><label htmlFor={`keepsake-${key}`} className={labelClass}>{label}</label><input id={`keepsake-${key}`} type="color" className="h-10 w-full" disabled={!editable} value={form.keepsake[key] || KEEPSAKE_THEME_COLOURS[form.keepsake.theme][key]} onChange={(e) => update("keepsake", { ...form.keepsake, [key]: e.target.value })} /><p className="mt-1 text-[11px] uppercase text-[#7D736A]">{form.keepsake[key] || KEEPSAKE_THEME_COLOURS[form.keepsake.theme][key]}</p></div>)}
-                      </div>
-                      <button type="button" className={secondaryButton} disabled={!editable} onClick={() => update("keepsake", { ...form.keepsake, accent: "", gold: "", ground: "", paper: "", paper2: "", ink: "" })}>Use theme colours</button>
-                    </div>
-                  )}
                   <div className="space-y-1.5">
                     <label className={labelClass}>Invitation message</label>
                     <textarea {...bind("greetingMessage")} rows={3} maxLength={2000} className={`${inputClass} resize-none`} placeholder="Together with our families, we joyfully invite you to celebrate our wedding." />
@@ -752,30 +687,21 @@ export default function EditInvitationPage() {
                       {photoError}
                     </Notice>
                   )}
-                  {isKeepsake && <div className="space-y-4 rounded-2xl border border-[#DFD3C3] bg-[#FCFAF7] p-5">
-                    <h3 className="font-serif-luxury text-2xl">Your love story, beautifully framed.</h3>
-                    <p className="text-sm text-[#7D736A]">Choose a cover portrait and add up to four couple photos to your gallery. The gallery combines arched, oval and softly rounded frames with botanical details that match your colour palette.</p>
-                    <label htmlFor="keepsake-frame" className={labelClass}>Top couple photo frame</label>
-                    <select id="keepsake-frame" className={inputClass} disabled={!editable} value={form.keepsake.photoFrame} onChange={(e) => update("keepsake", { ...form.keepsake, photoFrame: e.target.value as KeepsakeSettings["photoFrame"] })}>{KEEPSAKE_FRAMES.map((frame) => <option key={frame.value} value={frame.value}>{frame.label}</option>)}</select>
-                    <p className="text-xs text-[#7D736A]">Five new designs: Floral Classic, Circular Floral, Geometric, Elegant Arch and Royal. This frame surrounds the top photo above “Two hearts. One forever.” and follows your colour palette. Keep both faces near the centre. JPEG, PNG or WebP, up to {MAX_PHOTO_MB} MB.</p>
-                  </div>}
-                  <div className={`grid grid-cols-1 gap-6 ${isKeepsake ? "mx-auto max-w-sm" : "sm:grid-cols-3"}`}>
-                    <SinglePhoto label={isKeepsake ? "Couple photo" : "Cover photo"} hint={isKeepsake ? "One photo of the two of you, displayed in your chosen frame." : "Main photo at the top of the invitation."} photo={invitation.photos.cover} busy={uploading === "cover"} disabled={!editable} onUpload={(f) => upload("cover", f)} onDelete={(pid) => removePhoto(pid, "cover")} />
-                    {!isKeepsake && <>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                    <SinglePhoto label="Cover photo" hint="Main photo at the top of the invitation." photo={invitation.photos.cover} busy={uploading === "cover"} disabled={!editable} onUpload={(f) => upload("cover", f)} onDelete={(pid) => removePhoto(pid, "cover")} />
                     <SinglePhoto label="Groom" hint="Optional portrait." photo={invitation.photos.groom} busy={uploading === "groom"} disabled={!editable} onUpload={(f) => upload("groom", f)} onDelete={(pid) => removePhoto(pid, "groom")} />
                     <SinglePhoto label="Bride" hint="Optional portrait." photo={invitation.photos.bride} busy={uploading === "bride"} disabled={!editable} onUpload={(f) => upload("bride", f)} onDelete={(pid) => removePhoto(pid, "bride")} />
-                    </>}
                   </div>
 
                   <div>
                     <div className="flex items-center justify-between mb-3">
                       <p className={labelClass}>
-                        {isKeepsake ? "Couple photo gallery" : "Gallery"} ({invitation.photos.gallery.length}/{galleryLimit})
+                        Gallery ({invitation.photos.gallery.length}/{MAX_GALLERY})
                       </p>
                       {editable && (
                         <button
                           type="button"
-                          disabled={uploading !== null || invitation.photos.gallery.length >= galleryLimit}
+                          disabled={uploading !== null || invitation.photos.gallery.length >= MAX_GALLERY}
                           onClick={() => galleryInput.current?.click()}
                           className="flex items-center gap-1.5 text-xs font-semibold text-[#C59B48] hover:text-[#9A6F24] bg-[#FBF3E4] px-3 py-1.5 rounded-lg disabled:opacity-50"
                         >
@@ -795,8 +721,7 @@ export default function EditInvitationPage() {
                         }}
                       />
                     </div>
-                    {isKeepsake && <p className="mb-3 text-sm text-[#7D736A]">Add four favourite photos of the two of you. They appear in upload order, with decorative frames that follow your selected theme. The first four photos are displayed.</p>}
-                    <div className={`grid grid-cols-2 ${isKeepsake ? "sm:grid-cols-4" : "sm:grid-cols-5"} gap-3`}>
+                    <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
                       {invitation.photos.gallery.map((p) => (
                         <div key={p.id} className="relative aspect-square rounded-2xl overflow-hidden border border-[#EADBCA] group">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -857,9 +782,7 @@ export default function EditInvitationPage() {
                       ["Schedule", form.events.length ? form.events.map((e) => `${formatTime(e.time)} ${e.name}`.trim()).join(" · ") : "—", 4],
                       [
                         "Photos",
-                        isKeepsake
-                          ? `${invitation.photos.cover ? "Couple photo ✓" : "No couple photo"} · ${KEEPSAKE_FRAMES.find((frame) => frame.value === form.keepsake.photoFrame)?.label} · ${Math.min(invitation.photos.gallery.length, galleryLimit)} gallery photos`
-                          : `${invitation.photos.cover ? "Cover ✓" : "No cover"} · ${invitation.photos.gallery.length} gallery photo${invitation.photos.gallery.length === 1 ? "" : "s"}`,
+                        `${invitation.photos.cover ? "Cover ✓" : "No cover"} · ${invitation.photos.gallery.length} gallery photo${invitation.photos.gallery.length === 1 ? "" : "s"}`,
                         5,
                       ],
                     ].map(([label, value, s]) => (

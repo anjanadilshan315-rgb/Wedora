@@ -2,17 +2,33 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+Free invitation creation now includes a four-step studio, account-saved drafts,
+stable published links and a private guest RSVP dashboard. See
+[Free Studio setup and beginner guide](docs/free-invitation.md).
+
+Use Node.js 20.9 or newer. On a new laptop, or after pulling dependency updates,
+open a terminal in the project folder and run:
 
 ```bash
+npm run setup
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
+
+Stop an already running dev server with **Ctrl+C** before doing this. Copy or
+pull both `package.json` and `package-lock.json`; do not copy `node_modules`
+from another computer. `npm run dev` now checks dependencies first and installs
+missing packages, including `@libsql/client`, before starting Next.js. This
+repair needs internet access. Build and production startup also check for
+missing dependencies and show the repair command in the terminal.
+
+If the message is **Module not found: Can't resolve '@libsql/client'**, run
+`npm run setup` and restart the development server. For an incomplete or
+cross-platform copied install that still fails, stop the server and run
+`npm ci --include=dev --include=optional`, then `npm run dev`.
+
+Each laptop uses its own local Free Studio database during development.
+To access the same saved accounts and invitations from multiple computers,
+configure the same remote database as described in the Free Studio guide.
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 

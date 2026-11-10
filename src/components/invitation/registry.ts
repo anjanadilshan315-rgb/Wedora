@@ -1,18 +1,12 @@
 import type { ComponentType } from "react";
 import type { InvitationContent, Photos } from "@/lib/types";
-import KeepsakeTemplate from "./templates/KeepsakeTemplate";
-import { keepsakeSettings } from "./keepsake";
+import ClassicTemplate from "./templates/ClassicTemplate";
+import MinimalTemplate from "./templates/MinimalTemplate";
+import { FreeRoyalTemplate, FreeFloralTemplate, FreeModernTemplate } from "./FreeInvitationTemplate";
 import GoldenHourTemplate from "./templates/GoldenHourTemplate";
-import HeirloomTemplate from "./templates/HeritageDoorTemplate";
-import FloralEnvelopeTemplate from "./templates/FloralEnvelopeTemplate";
-import { envelopeSettings } from "./envelope";
-import { heirloomSettings } from "./heirloom";
-import { rubySettings } from "./ruby";
-import SunsetJourneyTemplate from "./templates/SunsetJourneyTemplate";
-import { sunsetSettings } from "./sunset";
-import GildedCelebrationTemplate from "./templates/GildedCelebrationTemplate";
-import { gildedSettings } from "./gilded";
+import FreeArchTemplate from "./templates/FreeArchTemplate";
 import type { InvitationViewData, TemplateProps } from "./types";
+import { TEMPLATE_CATALOG } from "@/lib/template-catalog";
 
 export interface TemplateDesign {
   code: string;
@@ -20,31 +14,36 @@ export interface TemplateDesign {
   style: string;
   gradient: string;
   accent: string;
+  /** Free designs use the browser editor instead of the paid checkout. */
+  plan: "free" | "paid";
+  description: string;
   /** Static preview route on this website (also stored as templates.demo_slug in the DB). */
   demoSlug: string;
   component: ComponentType<TemplateProps>;
 }
 
 /**
- * The available designs. `code` must match the `templates.code` column
- * seeded by backend/database/schema.sql.
+ * Designs used by the gallery and invitation pages. Paid design codes must
+ * match the API's templates. Free designs use their own browser-based editor.
  */
-export const TEMPLATE_DESIGNS: TemplateDesign[] = [
-  { code: "tpl_classic", name: "The Golden Keepsake", style: "Luxury Gold & Ivory", gradient: "from-[#FFFFF0] to-[#F5EBDD]", accent: "#C6A667", demoSlug: "demo-keepsake", component: KeepsakeTemplate },
-  { code: "tpl_golden_hour", name: "Ruby Heart Romance", style: "Ruby, Blush & Gold Editorial", gradient: "from-[#64142D] to-[#F5DCE0]", accent: "#8C1D40", demoSlug: "demo-golden-hour", component: GoldenHourTemplate },
-  { code: "tpl_grand_heirloom", name: "The Grand Heirloom", style: "Heritage Door · Sinhala & English", gradient: "from-[#7A4A28] to-[#1C3F8F]", accent: "#E6C58F", demoSlug: "demo-grand-heirloom", component: HeirloomTemplate },
-  { code: "tpl_heirloom_envelope", name: "Floral Envelope", style: "Burgundy & Gold · Sinhala & English", gradient: "from-[#F8EAE8] to-[#ECD0CC]", accent: "#7A1414", demoSlug: "demo-heirloom-envelope", component: FloralEnvelopeTemplate },
-  { code: "tpl_sunset_journey", name: "Sunset Journey", style: "Vintage Car · Sunset & Petals", gradient: "from-[#2f5a45] to-[#f08a24]", accent: "#c4a468", demoSlug: "demo-sunset-journey", component: SunsetJourneyTemplate },
-  { code: "tpl_gilded_celebration", name: "The Gilded Celebration", style: "Burgundy, Gold & Ivory", gradient: "from-[#faf7f0] to-[#efdfc8]", accent: "#781c32", demoSlug: "demo-gilded-celebration", component: GildedCelebrationTemplate },
-];
+const components: Record<string, ComponentType<TemplateProps>> = {
+  tpl_classic: ClassicTemplate,
+  tpl_royal: FreeRoyalTemplate,
+  tpl_modern: FreeModernTemplate,
+  tpl_floral: FreeFloralTemplate,
+  tpl_minimal: MinimalTemplate,
+  tpl_golden_hour: GoldenHourTemplate,
+  tpl_free_arch: FreeArchTemplate,
+};
+export const TEMPLATE_DESIGNS: TemplateDesign[] = TEMPLATE_CATALOG.map((design) => ({ ...design, component: components[design.code] }));
 
 export function designFor(code: string | null | undefined): TemplateDesign {
   return TEMPLATE_DESIGNS.find((t) => t.code === code) ?? TEMPLATE_DESIGNS[0];
 }
 
 export function designForDemoSlug(slug: string): TemplateDesign | null {
-  // Previously shared preview URLs now display the replacement invitation.
-  if (slug === "demo-template" || slug === "demo-minimal") return designFor("tpl_classic");
+  // "template2" is an older preview link for the Kandyan design.
+  if (slug === "template2") return designFor("tpl_royal");
   return TEMPLATE_DESIGNS.find((t) => t.demoSlug === slug) ?? null;
 }
 
@@ -54,14 +53,6 @@ export function toViewData(
   guestName: string | null,
 ): InvitationViewData {
   return {
-    keepsake: keepsakeSettings(invitation.extraDetails?.keepsake),
-    heirloom: heirloomSettings(invitation.extraDetails?.heirloom),
-    floralEnvelope: envelopeSettings(invitation.extraDetails?.floralEnvelope),
-    ruby: rubySettings(invitation.extraDetails?.ruby),
-    sunset: sunsetSettings(invitation.extraDetails?.sunset),
-    gilded: gildedSettings(invitation.extraDetails?.gilded),
-    bridePhone: invitation.bridePhone,
-    groomPhone: invitation.groomPhone,
     guestName,
     groomName: invitation.groomName || "Groom",
     brideName: invitation.brideName || "Bride",

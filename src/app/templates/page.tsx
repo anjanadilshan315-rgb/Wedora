@@ -17,7 +17,7 @@ const ADMIN_WHATSAPP = "94757115645";
 
 function buildWhatsAppLink(templateName: string) {
   const msg = encodeURIComponent(
-    `Hi! I visited Wedora and I'm interested in the "${templateName}" template. Could you please provide more details?`,
+    `Hi! I visited Forever and I'm interested in the "${templateName}" template. Could you please provide more details?`,
   );
   return `https://wa.me/${ADMIN_WHATSAPP}?text=${msg}`;
 }
@@ -31,11 +31,13 @@ interface TemplateCard {
   gradient: string;
   accent: string;
   previewUrl: string;
+  free: boolean;
 }
 
 export default function TemplatesPage() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
+  const [planFilter, setPlanFilter] = useState<"all" | "free" | "paid">("all");
   const [apiTemplates, setApiTemplates] = useState<Template[] | null>(null);
   const [loadError, setLoadError] = useState("");
   const [startingCode, setStartingCode] = useState<string | null>(null);
@@ -67,33 +69,29 @@ export default function TemplatesPage() {
       const design = TEMPLATE_DESIGNS.find((d) => d.code === t.code)!;
       return {
         code: t.code,
-        name: design.name,
+        name: design.plan === "free" || t.code === "tpl_golden_hour" ? design.name : t.name,
         style: design.style,
-        description: t.code === "tpl_gilded_celebration"
-          ? "An elegant burgundy, gold and ivory celebration with an envelope opening, love story, gallery, event maps, RSVP and invitation sharing."
-          : t.code === "tpl_sunset_journey"
-          ? "A vintage car sunset intro with a bouquet toss, falling petals, illustrated memories, six colour themes, three fonts and a built-in melody."
-          : t.code === "tpl_heirloom_envelope"
-          ? "A floral wax-seal envelope with the original burgundy and gold artwork, nine colour themes, animated opening and gentle sound effects."
-          : t.code === "tpl_grand_heirloom"
-          ? "Carved heritage doors open into illustrated wedding scenes, with six colour themes, floating fireflies and Sinhala and English wording."
-          : t.code === "tpl_golden_hour"
-          ? "A dramatic ruby-red wedding design with oversized falling hearts, a cinematic cover and warm gold accents."
-          : t.code === "tpl_classic" ? "A lotus and mandala invitation with a cracking wax seal, three colour themes and elegant Sinhala and English wording." : t.description,
-        price: t.price,
+        description: design.plan === "free" || t.code === "tpl_golden_hour" ? design.description : t.description ?? design.description,
+        price: design.plan === "free" ? 0 : t.price,
         gradient: design.gradient,
         accent: design.accent,
-        previewUrl: `/invite/${design.demoSlug}`,
+        previewUrl: `/invite/${design.plan === "free" || t.code === "tpl_golden_hour" ? design.demoSlug : t.demoSlug ?? design.demoSlug}`,
+        free: design.plan === "free",
       };
     });
   }, [apiTemplates]);
 
   const filtered = templates.filter((t) =>
+    (planFilter === "all" || (planFilter === "free" ? t.free : !t.free)) &&
     [t.name, t.style, t.description ?? ""].some((v) => v.toLowerCase().includes(searchQuery.toLowerCase())),
   );
 
   const startWithTemplate = async (code: string) => {
     setStartError("");
+    if (TEMPLATE_DESIGNS.find((design) => design.code === code)?.plan === "free") {
+      router.push(`/free-invitation?template=${encodeURIComponent(code)}`);
+      return;
+    }
     if (!getSession()) {
       router.push(`/register?template=${encodeURIComponent(code)}`);
       return;
@@ -150,6 +148,10 @@ export default function TemplatesPage() {
 
       {/* GRID */}
       <section className="py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="mb-6 flex flex-wrap gap-2" role="group" aria-label="Filter templates by plan">
+          {(["all", "free", "paid"] as const).map((plan) => <button key={plan} type="button" onClick={() => setPlanFilter(plan)} aria-pressed={planFilter === plan} className={`rounded-full border px-5 py-2.5 text-xs font-semibold ${planFilter === plan ? "border-[#B88737] bg-[#B88737] text-white" : "border-[#EADBCA] bg-white text-[#7D736A]"}`}>{plan === "all" ? "All designs" : plan === "free" ? "Free Plan" : "Paid designs"}</button>)}
+          <Link href="/free-invitation/dashboard" className="ml-auto self-center text-xs font-semibold text-[#9A6F24] hover:underline">My Free Studio →</Link>
+        </div>
         <div className="flex items-center justify-between mb-6">
           <p className="text-sm text-[#7D736A]">
             Showing <span className="font-semibold text-[#29221D]">{filtered.length}</span> template{filtered.length !== 1 ? "s" : ""}
@@ -166,14 +168,14 @@ export default function TemplatesPage() {
 
         {(loadError || startError) && (
           <div className="mb-6 p-3 rounded-xl bg-red-50 border border-red-100 text-sm text-red-600 flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 shrink-0" /> {startError || `${loadError} You can still browse the previews.`}
+            <AlertCircle className="w-4 h-4 shrink-0" /> {startError || "Some paid designs could not be loaded. Free designs are ready to use."}
           </div>
         )}
 
         <AnimatePresence mode="wait">
           {filtered.length > 0 ? (
             <motion.div
-              key={searchQuery}
+              key={`${searchQuery}:${planFilter}`}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -189,6 +191,7 @@ export default function TemplatesPage() {
                   className="group relative rounded-3xl overflow-hidden bg-white shadow-sm border border-[#EADBCA] transition-all flex flex-col hover:shadow-md"
                 >
                   <div className={`relative aspect-[4/3] sm:aspect-square md:aspect-[4/5] bg-gradient-to-br ${tpl.gradient} flex-shrink-0 border-b border-[#F0E8DC]`}>
+                    {tpl.free && <span className="absolute right-4 top-4 z-10 rounded-full border border-white/70 bg-white/90 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-[#715537]">Free Plan</span>}
                     <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
                       <div className="w-14 h-14 rounded-full border-[3px] flex items-center justify-center mb-3 bg-white/40 backdrop-blur-sm" style={{ borderColor: tpl.accent }}>
                         <Heart className="w-6 h-6" style={{ fill: tpl.accent, color: tpl.accent }} />
@@ -198,7 +201,7 @@ export default function TemplatesPage() {
                       {tpl.description && <p className="text-[11px] mt-3 text-[#5D534A] line-clamp-3">{tpl.description}</p>}
                       {tpl.price !== null && (
                         <p className="mt-3 text-sm font-bold" style={{ color: tpl.accent }}>
-                          LKR {tpl.price.toLocaleString()}
+                          {tpl.free ? "Free Plan · No payment needed" : `LKR ${tpl.price.toLocaleString()}`}
                         </p>
                       )}
                     </div>
@@ -207,18 +210,19 @@ export default function TemplatesPage() {
                   <div className="p-5 flex flex-col gap-3 bg-white">
                     <Link
                       href={tpl.previewUrl}
+                      target="_blank"
                       className="flex items-center justify-center w-full py-3 rounded-xl border border-[#C59B48] text-[#9A6F24] text-sm font-semibold hover:bg-[#FBF3E4] active:bg-[#F0E8DC] transition-colors"
                     >
                       View Live Preview
                     </Link>
                     <button
                       onClick={() => startWithTemplate(tpl.code)}
-                      disabled={startingCode !== null || (!apiTemplates && !loadError)}
+                      disabled={startingCode !== null || (!tpl.free && !apiTemplates && !loadError)}
                       className="flex items-center justify-center gap-2 w-full py-3 rounded-xl text-white text-sm font-bold shadow-sm md:hover:shadow-md transition-all active:scale-[0.98] md:hover:scale-[1.02] disabled:opacity-70 disabled:hover:scale-100"
                       style={{ background: "linear-gradient(90deg,#C79848,#9A6F24)" }}
                     >
                       {startingCode === tpl.code ? <Loader2 className="w-4 h-4 animate-spin" /> : <Wand2 className="w-4 h-4" />}
-                      Use This Template
+                      {tpl.free ? "Create Free Invitation" : "Use This Template"}
                     </button>
                     <a
                       href={buildWhatsAppLink(tpl.name)}

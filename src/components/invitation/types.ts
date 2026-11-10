@@ -1,21 +1,7 @@
 import type { EventItem, RsvpStatus } from "@/lib/types";
-import type { KeepsakeSettings } from "./keepsake";
-import type { HeirloomSettings } from "./heirloom";
-import type { EnvelopeSettings } from "./envelope";
-import type { RubySettings } from "./ruby";
-import type { SunsetSettings } from "./sunset";
-import type { GildedSettings } from "./gilded";
 
 /** Everything a template needs to render, already resolved from the API (or sample data). */
 export interface InvitationViewData {
-  keepsake?: KeepsakeSettings;
-  heirloom?: HeirloomSettings;
-  floralEnvelope?: EnvelopeSettings;
-  ruby?: RubySettings;
-  sunset?: SunsetSettings;
-  gilded?: GildedSettings;
-  bridePhone?: string | null;
-  groomPhone?: string | null;
   /** Name of the person viewing the invitation ("Dear …"). */
   guestName: string | null;
   groomName: string;
@@ -57,7 +43,7 @@ export interface InvitationInteractions {
   guestIdentified: boolean;
   rsvp: { status: RsvpStatus; headCount: number } | null;
   submitWish: (name: string, message: string) => Promise<void>;
-  submitRsvp: (input: { attending: boolean; headCount: number; name: string; email?: string }) => Promise<void>;
+  submitRsvp: (input: { attending: boolean; headCount: number; name: string }) => Promise<void>;
 }
 
 export interface TemplateProps {
