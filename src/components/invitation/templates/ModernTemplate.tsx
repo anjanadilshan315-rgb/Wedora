@@ -1,257 +1,256 @@
 "use client";
 
-import React from "react";
-import { motion } from "framer-motion";
-import { Calendar, Camera, CheckCircle2, Clock, Heart, MapPin, MessageSquareHeart, Send } from "lucide-react";
-import { formatDateLong, formatTime, mapLink, venueLine } from "../format";
+import { useState } from "react";
+import Link from "next/link";
+import { ArrowDown, ArrowUpRight, Check, Heart, MapPin } from "lucide-react";
+import { formatDateLong, formatTime, mapLink } from "../format";
 import { useCountdown, useInvitationActions } from "../hooks";
 import type { TemplateProps } from "../types";
+import styles from "./ModernTemplate.module.css";
 
-/* Emerald & Amber — "Modern Luxe" (tpl_modern) */
+interface ModernTemplateProps extends TemplateProps {
+  freePlan?: boolean;
+  localReplies?: boolean;
+  whatsapp?: string;
+}
 
-export default function ModernTemplate({ data, actions }: TemplateProps) {
+/** One small Art Deco drawing is reused in all four cover corners. */
+function DecoCorner({ className }: { className: string }) {
+  return (
+    <svg className={className} viewBox="0 0 160 160" fill="none" aria-hidden="true">
+      <g stroke="currentColor" strokeWidth="1">
+        <path d="M8 152V8H152M18 122V18H122M28 92V28H92" />
+        <path d="M8 68L68 8M18 88L88 18M28 108L108 28" opacity=".5" />
+        <path d="M42 42H64V64H42ZM53 34L72 53L53 72L34 53Z" />
+        <path d="M8 142L18 132L28 142L18 152ZM142 8L152 18L142 28L132 18Z" />
+      </g>
+      <circle cx="53" cy="53" r="4" fill="currentColor" />
+    </svg>
+  );
+}
+
+/** Layout lives here; colours, spacing and mobile rules live in the CSS file. */
+export default function ModernTemplate({ data, actions, freePlan = false, localReplies = false, whatsapp = "" }: ModernTemplateProps) {
   const timeLeft = useCountdown(data.weddingDate, data.weddingTime);
   const { disabled, wishes, wish, rsvp } = useInvitationActions(data, actions);
+  const [shareMessage, setShareMessage] = useState("");
   const map = mapLink(data.mapUrl, data.venueName, data.venueAddress);
-  const heroPhoto = data.coverPhoto ?? data.gallery[0] ?? null;
-  const dear = data.guestName ?? "Guest";
+  const heroPhoto = data.coverPhoto || data.gallery[0];
+  const guestName = data.guestName || "our favourite people";
+  const groomInitial = Array.from(data.groomName.trim())[0] || "G";
+  const brideInitial = Array.from(data.brideName.trim())[0] || "B";
+  const initials = `${groomInitial}${brideInitial}`;
+  const weddingDate = data.weddingDate ? new Date(`${data.weddingDate.slice(0, 10)}T12:00:00`) : null;
+  const hasDate = weddingDate && !Number.isNaN(weddingDate.getTime());
+  const whatsappNumber = whatsapp.replace(/\D/g, "");
+  const replyText = `Hi! I'm ${rsvp.name || data.guestName || "your guest"}. ${rsvp.attend ? "Yes, I will attend" : "Sorry, I cannot attend"} ${data.groomName} & ${data.brideName}'s wedding.`;
+  const replyLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(replyText)}`;
+
+  async function copyLink() {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setShareMessage("Invitation link copied.");
+    } catch {
+      setShareMessage("Copy the invitation link from your browser's address bar.");
+    }
+  }
 
   return (
-    <div className="min-h-screen bg-[#FDFBF7] text-stone-800 font-sans selection:bg-amber-100 pb-16">
-      {/* 1. HERO */}
-      <section className="min-h-screen flex flex-col justify-center items-center text-center px-4 relative bg-gradient-to-b from-[#0F2F24] to-[#1E4D3E] text-white overflow-hidden">
-        {heroPhoto && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={heroPhoto} alt="" className="absolute inset-0 w-full h-full object-cover opacity-25" />
-        )}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="z-10 max-w-lg">
-          <div className="inline-block px-4 py-1.5 rounded-full border border-amber-300/40 bg-white/10 backdrop-blur-md text-amber-200 text-sm mb-6">
-            ආරාධනාවයි: <span className="font-semibold text-white">{dear}</span> වෙත
-          </div>
-          <p className="tracking-widest uppercase text-xs text-amber-300/90 mb-2">Save The Date</p>
-          <h1 className="text-4xl md:text-6xl font-serif-luxury font-normal text-amber-100 tracking-wide break-words">
-            {data.groomName} <span className="text-amber-400 font-sans text-3xl">&</span> {data.brideName}
-          </h1>
-          <p className="mt-4 text-stone-200 text-sm md:text-base">
-            {data.greetingMessage ?? "අපගේ ප්‍රේමයේ නව ඇරඹුම සැමරීමට ඔබ සැමට ගෞරවයෙන් ඇරයුම් කරමු."}
-          </p>
-          <div className="mt-8 flex items-center justify-center gap-2 text-amber-300/80">
-            <Heart className="w-5 h-5 fill-amber-300/20" />
-            <span className="text-sm tracking-wider">{formatDateLong(data.weddingDate)}</span>
-          </div>
-        </motion.div>
+    <div className={styles.invitation}>
+      {/* 1. This typographic cover also works without uploaded photos. */}
+      <header className={styles.hero}>
+        <div className={styles.cornerArtwork}>
+          <DecoCorner className={styles.cornerTopLeft} />
+          <DecoCorner className={styles.cornerTopRight} />
+          <DecoCorner className={styles.cornerBottomLeft} />
+          <DecoCorner className={styles.cornerBottomRight} />
+        </div>
+        <div className={styles.halo} aria-hidden="true" />
+        <div className={styles.edition}><span>A celebration of love</span><span>Modern Luxe / Forever</span></div>
+        <div className={styles.heroContent}>
+          <div className={styles.monogram} aria-hidden="true"><span>{initials}</span></div>
+          <p className={styles.eyebrow}>Together with our families</p>
+          <h1 className={styles.names}><span>{data.groomName}</span><em>&</em><span>{data.brideName}</span></h1>
+          <div className={styles.goldRule} aria-hidden="true" />
+          <p className={styles.heroDate}>{formatDateLong(data.weddingDate)}</p>
+          <p className={styles.heroVenue}>{data.venueName || "A beautiful beginning awaits"}</p>
+          <a href="#modern-details" className={styles.discover}>The invitation <ArrowDown size={14} /></a>
+        </div>
+        <div className={styles.heroBottom}><span>Two hearts. One beautiful beginning.</span><Heart size={14} strokeWidth={1} aria-hidden="true" /></div>
+      </header>
+
+      {/* 2. Personal greeting and optional photo use the existing invitation data. */}
+      <section id="modern-details" className={`${styles.section} ${styles.introduction}`}>
+        <div className={styles.loveSeal} aria-hidden="true">
+          <Heart size={22} strokeWidth={1} />
+        </div>
+        <p className={styles.eyebrow}>An invitation, especially for you</p>
+        <h2>Dear {guestName},</h2>
+        <p className={styles.greeting}>{data.greetingMessage || "With full hearts, we invite you to celebrate our wedding and the beginning of our forever."}</p>
+        <p className={styles.signature}>Your presence would mean the world to us.</p>
+        {(data.groomParents || data.brideParents) && <div className={styles.families}>
+          {data.groomParents && <p><span>Groom’s family</span>{data.groomParents}</p>}
+          {data.brideParents && <p><span>Bride’s family</span>{data.brideParents}</p>}
+        </div>}
+        {heroPhoto && <figure className={styles.coverPhoto}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={heroPhoto} alt={`${data.groomName} and ${data.brideName}`} />
+          <figcaption>A little moment. A lifetime of love.</figcaption>
+        </figure>}
       </section>
 
-      {/* 2. COUNTDOWN */}
-      {data.weddingDate && (
-        <section className="py-12 px-4 max-w-md mx-auto -mt-10 relative z-20">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            className="bg-white rounded-2xl shadow-xl p-6 border border-stone-100 grid grid-cols-4 gap-2 text-center"
-          >
-            {Object.entries(timeLeft).map(([key, val]) => (
-              <div key={key} className="bg-stone-50 rounded-xl p-3 border border-stone-100">
-                <span className="text-2xl font-bold text-[#1E4D3E] block">{val}</span>
-                <span className="text-[11px] text-stone-500 uppercase tracking-wider">{key}</span>
-              </div>
-            ))}
-          </motion.div>
-        </section>
-      )}
+      {data.weddingDate && <section className={styles.countdown} aria-label="Wedding countdown">
+        <p className={styles.eyebrow}>Every moment brings us closer</p>
+        <div className={styles.countdownGrid}>
+          {Object.entries(timeLeft).map(([label, value]) => <div key={label}><strong>{String(value).padStart(2, "0")}</strong><span>{label}</span></div>)}
+        </div>
+      </section>}
 
-      {/* 3. DATE & VENUE */}
-      <section className="py-12 px-6 max-w-md mx-auto text-center">
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="space-y-4">
-          <h2 className="text-2xl font-serif-luxury text-[#1E4D3E]">දිනය සහ ස්ථානය</h2>
-          <div className="flex items-center justify-center gap-2 text-stone-600">
-            <Calendar className="w-5 h-5 text-amber-600 shrink-0" />
-            <span>
-              {formatDateLong(data.weddingDate)}
-              {data.weddingTime ? ` | ${formatTime(data.weddingTime)}` : ""}
-            </span>
-          </div>
-          <div className="flex items-center justify-center gap-2 text-stone-600">
-            <MapPin className="w-5 h-5 text-amber-600 shrink-0" />
-            <span>{venueLine(data.venueName, data.venueAddress)}</span>
-          </div>
-          {(data.groomParents || data.brideParents) && (
-            <p className="text-sm text-stone-500 italic">
-              {[data.groomParents, data.brideParents].filter(Boolean).join(" · ")}
-            </p>
-          )}
-          {map && (
-            <a
-              href={map}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-block mt-3 px-5 py-2.5 rounded-full bg-[#1E4D3E] text-white text-sm font-medium shadow-sm hover:bg-[#163a2f] transition"
-            >
-              Google Map හරහා බලන්න
-            </a>
-          )}
-        </motion.div>
-      </section>
-
-      {/* 4. SCHEDULE */}
-      {data.eventsSchedule.length > 0 && (
-        <section className="py-12 px-6 max-w-md mx-auto">
-          <h2 className="text-2xl font-serif-luxury text-[#1E4D3E] text-center mb-8">දවසේ කාලසටහන</h2>
-          <div className="relative border-l-2 border-amber-300 ml-4 space-y-8">
-            {data.eventsSchedule.map((item, i) => (
-              <motion.div key={i} initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="relative pl-6">
-                <div className="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-amber-400 border-2 border-white" />
-                <div className="text-xs text-amber-700 font-semibold flex items-center gap-1">
-                  <Clock className="w-3.5 h-3.5" /> {formatTime(item.time)}
-                </div>
-                <h3 className="font-semibold text-stone-800 mt-0.5">{item.name}</h3>
-                {(item.description || item.venue) && <p className="text-sm text-stone-500">{item.description ?? item.venue}</p>}
-              </motion.div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* 5. GALLERY */}
-      {data.gallery.length > 0 && (
-        <section className="py-12 px-6 max-w-md mx-auto">
-          <h2 className="text-2xl font-serif-luxury text-[#1E4D3E] text-center mb-6 flex items-center justify-center gap-2">
-            <Camera className="w-5 h-5 text-amber-600" /> අපේ මතකයන්
-          </h2>
-          <div className="grid grid-cols-2 gap-3">
-            {data.gallery.map((src, i) => (
-              <div key={src + i} className="rounded-xl overflow-hidden aspect-[4/5] bg-stone-200 border border-stone-200">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={src} alt="Couple moment" className="w-full h-full object-cover hover:scale-105 transition duration-300" loading="lazy" />
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* 6. RSVP */}
-      <section className="py-12 px-6 max-w-md mx-auto">
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="bg-white rounded-2xl shadow-md border border-stone-100 p-6">
-          <div className="text-center mb-6">
-            <CheckCircle2 className="w-8 h-8 text-[#1E4D3E] mx-auto mb-1" />
-            <h2 className="text-2xl font-serif-luxury text-[#1E4D3E]">RSVP Confirmation</h2>
-            <p className="text-xs text-stone-500">
-              කරුණාකර ඔබ පැමිණෙන්නේදැයි තහවුරු කරන්න
-              {data.rsvpDeadline ? ` (${formatDateLong(data.rsvpDeadline)} ට පෙර)` : ""}
-            </p>
-          </div>
-
-          {rsvp.submitted ? (
-            <div className="text-center py-4">
-              <p className="font-semibold text-[#1E4D3E]">ස්තූතියි! Thank you, {rsvp.name || dear}.</p>
-              <p className="text-xs text-stone-500 mt-1">
-                {rsvp.attend ? `පැමිණෙන සංඛ්‍යාව: ${rsvp.count}` : "Your response has been recorded."}
-              </p>
-              <button type="button" onClick={rsvp.edit} className="mt-3 text-xs underline text-[#1E4D3E]">
-                Change my response
-              </button>
+      {/* 3. These two cards stack on smaller screens. */}
+      <section className={styles.section}>
+        <p className={styles.eyebrow}>The finer details</p>
+        <h2>A day to <em>remember.</em></h2>
+        <div className={styles.detailsGrid}>
+          <article className={styles.detailCard}>
+            <p className={styles.cardNumber}>01 / The date</p>
+            {hasDate && <div className={styles.calendarDate} aria-hidden="true">
+              <span>{weddingDate.toLocaleDateString("en-GB", { month: "long" })}</span>
+              <strong>{String(weddingDate.getDate()).padStart(2, "0")}</strong>
+              <span>{weddingDate.getFullYear()}</span>
+            </div>}
+            <h3>{formatDateLong(data.weddingDate)}</h3>
+            <p>{formatTime(data.weddingTime) || "Time to be announced"}</p>
+            <span className={styles.cardNote}>The beginning of our next chapter</span>
+          </article>
+          <article className={styles.detailCard}>
+            <p className={styles.cardNumber}>02 / The setting</p>
+            <div className={styles.venueEmblem} aria-hidden="true">
+              <MapPin size={32} strokeWidth={1} />
+              <span>A place for beautiful memories</span>
             </div>
-          ) : (
-            <form onSubmit={rsvp.submit} className="space-y-4">
-              {rsvp.askName ? (
+            <h3>{data.venueName || "Venue to be announced"}</h3>
+            {data.venueAddress && <p>{data.venueAddress}</p>}
+            {map && <a className={styles.textLink} href={map} target="_blank" rel="noopener noreferrer"><MapPin size={14} /> Get directions <ArrowUpRight size={14} /></a>}
+          </article>
+        </div>
+      </section>
+
+      <div className={styles.loveNote}>
+        <div className={styles.rings} aria-hidden="true"><span /><span /></div>
+        <p>One day. One promise.<br /><em>A lifetime of us.</em></p>
+        <span className={styles.eyebrow}>And you, beside us.</span>
+      </div>
+
+      {data.eventsSchedule.length > 0 && <section className={`${styles.section} ${styles.schedule}`}>
+        <p className={styles.eyebrow}>From the first hello to the last dance</p>
+        <h2>The celebration <em>unfolds.</em></h2>
+        <ol className={styles.timeline}>{data.eventsSchedule.map((event, index) => <li key={`${event.name}-${index}`}>
+          <span>{formatTime(event.time)}</span><div><h3>{event.name}</h3>{(event.description || event.venue) && <p>{event.description || event.venue}</p>}</div>
+        </li>)}</ol>
+      </section>}
+
+      {data.gallery.length > 0 && <section className={styles.section}>
+        <p className={styles.eyebrow}>Our story, in little moments</p>
+        <h2>Better <em>together.</em></h2>
+        <div className={styles.gallery}>{data.gallery.map((photo, index) => <div key={`${photo}-${index}`}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={photo} alt={`${data.groomName} and ${data.brideName}, memory ${index + 1}`} loading="lazy" />
+        </div>)}</div>
+      </section>}
+
+      {/* 4. Shared hooks keep real replies, demo mode and previews consistent. */}
+      <section className={`${styles.section} ${styles.rsvpSection}`}>
+        <div className={styles.rsvpIntro}>
+          <p className={styles.eyebrow}>A place reserved for you</p>
+          <h2>Be part of<br /><em>our forever.</em></h2>
+          <p>We would love to celebrate with you.</p>
+          <p>{data.rsvpDeadline ? `Kindly reply by ${formatDateLong(data.rsvpDeadline)}.` : "Kindly let us know if you can join us."}</p>
+          {localReplies && <p className={styles.notice}>Your reply is saved on this device only. Please also tell the couple{whatsappNumber ? " using WhatsApp after replying" : " directly"}.</p>}
+          {actions.mode === "demo" && <p className={styles.notice}>Sample invitation. Replies here are for demonstration only.</p>}
+        </div>
+        <div className={styles.rsvpCard}>
+          {rsvp.submitted ? <div className={styles.confirmation} role="status">
+            <Check size={30} aria-hidden="true" />
+            <h3>Thank you, {rsvp.name || data.guestName || "friend"}.</h3>
+            <p>{localReplies ? "Your answer is saved on this device." : rsvp.attend ? "We can’t wait to celebrate with you." : "We will miss you. Thank you for letting us know."}</p>
+            {whatsappNumber && <a className={styles.textLink} href={replyLink} target="_blank" rel="noopener noreferrer">Tell the couple on WhatsApp <ArrowUpRight size={14} /></a>}
+            <button type="button" className={styles.editButton} onClick={rsvp.edit}>Change my response</button>
+          </div> : <form onSubmit={rsvp.submit} className={styles.form}>
+            <h3>Kindly RSVP</h3>
+            {rsvp.askName ? (
+              <label>
+                Your name
                 <input
-                  type="text"
+                  autoComplete="name"
                   value={rsvp.name}
-                  onChange={(e) => rsvp.setName(e.target.value)}
-                  disabled={disabled}
+                  onChange={(event) => rsvp.setName(event.target.value)}
+                  disabled={disabled || rsvp.sending}
                   maxLength={150}
-                  placeholder="ඔබගේ නම (Your name)"
-                  className="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm focus:outline-none focus:border-[#1E4D3E]"
+                  required
+                  placeholder="Your full name"
                 />
-              ) : (
-                <p className="text-center text-sm font-semibold text-[#1E4D3E]">{dear}</p>
-              )}
-              <div className="grid grid-cols-2 gap-2">
+              </label>
+            ) : <p>{data.guestName}</p>}
+            <fieldset disabled={disabled || rsvp.sending}>
+              <legend>Will you be joining us?</legend>
+              <div className={styles.choices}>
                 <button
                   type="button"
-                  disabled={disabled}
+                  aria-pressed={rsvp.attend === true}
                   onClick={() => rsvp.setAttend(true)}
-                  className={`py-2.5 rounded-xl text-sm border ${rsvp.attend === true ? "bg-[#1E4D3E] text-white border-[#1E4D3E]" : "border-stone-200"}`}
                 >
-                  පැමිණෙනවා
+                  Joyfully accept
                 </button>
                 <button
                   type="button"
-                  disabled={disabled}
+                  aria-pressed={rsvp.attend === false}
                   onClick={() => rsvp.setAttend(false)}
-                  className={`py-2.5 rounded-xl text-sm border ${rsvp.attend === false ? "bg-stone-700 text-white border-stone-700" : "border-stone-200"}`}
                 >
-                  පැමිණීමට නොහැක
+                  Sadly decline
                 </button>
               </div>
-              {rsvp.attend === true && (
-                <div className="flex items-center justify-center gap-4">
-                  <button type="button" onClick={rsvp.decrement} className="w-9 h-9 rounded-full border border-stone-200 font-bold">-</button>
-                  <span className="text-xl font-bold text-[#1E4D3E] w-8 text-center">{rsvp.count}</span>
-                  <button type="button" onClick={rsvp.increment} className="w-9 h-9 rounded-full border border-stone-200 font-bold">+</button>
-                </div>
-              )}
-              {rsvp.error && <p className="text-xs text-red-600 text-center">{rsvp.error}</p>}
-              <button
-                type="submit"
-                disabled={disabled || rsvp.attend === null || rsvp.sending}
-                className="w-full py-3 bg-[#1E4D3E] text-white font-medium rounded-xl text-sm shadow hover:bg-[#163a2f] transition disabled:opacity-50"
-              >
-                {disabled ? "RSVP disabled in preview" : rsvp.sending ? "Sending…" : "තහවුරු කරන්න (Confirm RSVP)"}
-              </button>
-            </form>
-          )}
-        </motion.div>
-      </section>
-
-      {/* 7. WISHES */}
-      <section className="py-12 px-6 max-w-md mx-auto">
-        <div className="text-center mb-6">
-          <MessageSquareHeart className="w-8 h-8 text-amber-600 mx-auto mb-1" />
-          <h2 className="text-2xl font-serif-luxury text-[#1E4D3E]">සුබපැතුම් එක් කරන්න</h2>
-          <p className="text-xs text-stone-500">අලුත් යුවළට ආශිර්වාද එක් කරන්න</p>
-        </div>
-
-        <form onSubmit={wish.submit} className="space-y-2 mb-6">
-          {wish.askName && (
-            <input
-              type="text"
-              value={wish.name}
-              onChange={(e) => wish.setName(e.target.value)}
-              disabled={disabled}
-              maxLength={150}
-              placeholder="ඔබගේ නම (Your name)"
-              className="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm focus:outline-none focus:border-[#1E4D3E]"
-            />
-          )}
-          <div className="flex gap-2">
-            <input
-              type="text"
-              value={wish.text}
-              onChange={(e) => wish.setText(e.target.value)}
-              disabled={disabled}
-              maxLength={1000}
-              placeholder="ඔබේ සුබපැතුම ලියන්න..."
-              className="flex-1 min-w-0 px-4 py-2.5 rounded-xl border border-stone-200 text-sm focus:outline-none focus:border-[#1E4D3E]"
-            />
-            <button type="submit" disabled={disabled || wish.sending || !wish.text.trim()} className="px-4 py-2.5 bg-amber-600 text-white rounded-xl text-sm hover:bg-amber-700 disabled:opacity-60" aria-label="Send wish">
-              <Send className="w-4 h-4" />
+            </fieldset>
+            {rsvp.attend === true && !freePlan && <div className={styles.guestCount}>
+              <span>Number of guests</span>
+              <button type="button" aria-label="Remove one guest" disabled={disabled || rsvp.sending || rsvp.count <= 1} onClick={rsvp.decrement}>−</button>
+              <span aria-live="polite">{rsvp.count}</span>
+              <button type="button" aria-label="Add one guest" disabled={disabled || rsvp.sending || rsvp.count >= 20} onClick={rsvp.increment}>+</button>
+            </div>}
+            {rsvp.error && <p className={styles.error} role="alert">{rsvp.error}</p>}
+            <button
+              type="submit"
+              className={styles.primaryButton}
+              disabled={disabled || rsvp.attend === null || rsvp.sending}
+            >
+              {disabled ? "RSVP disabled in preview" : rsvp.sending ? "Sending…" : "Send my response"}
+              <ArrowUpRight size={16} />
             </button>
-          </div>
-          {wish.error && <p className="text-xs text-red-600">{wish.error}</p>}
-          {wish.sent && !wish.error && <p className="text-xs text-[#1E4D3E]">ස්තූතියි! Thank you for your wishes.</p>}
-        </form>
-
-        <div className="space-y-3">
-          {wishes.map((w) => (
-            <div key={w.id} className="p-3 bg-white rounded-xl border border-stone-100 shadow-sm text-sm text-stone-600">
-              <p className="break-words">&ldquo;{w.message}&rdquo;</p>
-              <p className="text-xs font-semibold text-[#1E4D3E] mt-1">— {w.name}</p>
-            </div>
-          ))}
+          </form>}
         </div>
       </section>
+
+      {!freePlan && <section className={styles.section}>
+        <p className={styles.eyebrow}>Words we will treasure</p>
+        <h2>A little <em>love note.</em></h2>
+        <form onSubmit={wish.submit} className={styles.form}>
+          {wish.askName && <label>Your name<input value={wish.name} onChange={(event) => wish.setName(event.target.value)} maxLength={150} disabled={disabled || wish.sending} required autoComplete="name" /></label>}
+          <label>Your wishes<textarea value={wish.text} onChange={(event) => wish.setText(event.target.value)} maxLength={1000} disabled={disabled || wish.sending} required rows={3} placeholder="Leave a message for the couple…" /></label>
+          <button className={styles.primaryButton} type="submit" disabled={disabled || wish.sending || !wish.text.trim()}>{disabled ? "Wishes disabled in preview" : wish.sending ? "Sending…" : "Send with love"}<Heart size={16} /></button>
+          {wish.error && <p className={styles.error} role="alert">{wish.error}</p>}
+          {wish.sent && !wish.error && <p role="status">Thank you for your lovely wishes.</p>}
+        </form>
+        <div className={styles.wishes}>{wishes.map((item) => <blockquote key={item.id}><p>“{item.message}”</p><cite>{item.name}</cite></blockquote>)}</div>
+      </section>}
+
+      <footer className={styles.footer}>
+        <Heart size={18} strokeWidth={1} aria-hidden="true" />
+        <p className={styles.footerNames}>{data.groomName} & {data.brideName}</p>
+        <p>With love, always.</p>
+        {freePlan && <>
+          {actions.mode === "live" && <><button type="button" onClick={copyLink} className={styles.shareButton}>Copy invitation link <ArrowUpRight size={14} /></button><p role="status">{shareMessage}</p></>}
+          <Link href="/packages" className={styles.brand}>Made with Forever · Free Plan</Link>
+        </>}
+      </footer>
     </div>
   );
 }

@@ -1,0 +1,908 @@
+/* Change these variables to recolour the entire Modern Luxe invitation. */
+.invitation {
+  --paper: #f7f3eb;
+  --ink: #262b29;
+  --muted: #62665f;
+  --gold: #bc9d65;
+  --line: #d9cfbd;
+  width: 100%;
+  container: modern-luxe / inline-size;
+  max-width: 1040px;
+  margin: 0 auto;
+  background: radial-gradient(ellipse at 0% 35%, #e8decc55, transparent 55%), var(--paper);
+  color: var(--ink);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+.invitation *, .invitation *::before, .invitation *::after {
+  box-sizing: border-box;
+}
+
+.invitation h1, .invitation h2, .invitation h3, .invitation p, .invitation figure {
+  margin: 0;
+}
+
+.invitation h2, .invitation h3, .names, .monogram, .footerNames {
+  font-family: var(--font-cormorant, Georgia), "Times New Roman", serif;
+  font-weight: 400;
+}
+
+.invitation h2 {
+  font-size: clamp(32px, 5cqi, 46px);
+  line-height: 1.2;
+  margin: 14px 0 26px;
+}
+
+.invitation h2 em {
+  font-weight: 400;
+}
+
+.invitation h3 {
+  font-size: 27px;
+  line-height: 1.35;
+}
+
+.invitation a {
+  color: inherit;
+}
+
+.invitation button, .invitation input, .invitation textarea {
+  font: inherit;
+}
+
+.invitation button {
+  cursor: pointer;
+}
+
+.invitation button:disabled {
+  cursor: not-allowed;
+  opacity: .5;
+}
+
+.invitation a:focus-visible, .invitation button:focus-visible, .invitation input:focus-visible, .invitation textarea:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 5px;
+}
+
+.eyebrow {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .23em;
+  line-height: 1.8;
+}
+
+/* Cover: fine gold frames and generous spacing replace the botanical arch. */
+.hero {
+  position: relative;
+  background: radial-gradient(ellipse at 50% 35%, #4d5141 0%, #30372f 35%, var(--ink) 75%);
+  color: var(--paper);
+  padding: 28px 7% 24px;
+  isolation: isolate;
+}
+
+.hero::before, .hero::after {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  border: 1px solid #bc9d654d;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.hero::after {
+  inset: 18px;
+  border-color: #bc9d6526;
+}
+
+.edition, .heroBottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  font-size: 8px;
+  text-transform: uppercase;
+  letter-spacing: .2em;
+  color: #d6c7a9;
+}
+
+.heroContent {
+  position: relative;
+  padding: 60px 0 45px;
+  text-align: center;
+  animation: coverReveal 1s ease-out both;
+}
+
+.monogram {
+  width: 62px;
+  height: 62px;
+  border: 1px solid var(--gold);
+  margin: 0 auto 38px;
+  transform: rotate(45deg);
+  display: grid;
+  place-items: center;
+  box-shadow: 0 0 0 6px #262b29, 0 0 0 7px #bc9d654d;
+  background: #262b29;
+}
+
+.monogram span {
+  transform: rotate(-45deg);
+  color: #ddc79e;
+  font-size: 27px;
+  letter-spacing: -.08em;
+  padding-right: 3px;
+}
+
+.hero .eyebrow {
+  color: #d6c7a9;
+}
+
+.names {
+  margin: 26px 0 !important;
+  font-size: clamp(48px, 9cqi, 88px);
+  line-height: 1.12;
+  letter-spacing: -.035em;
+}
+
+.names > span {
+  display: block;
+  text-shadow: 0 4px 30px #00000020;
+}
+
+.names em {
+  display: block;
+  font-size: .48em;
+  color: #d5b985;
+  margin: 8px 0;
+  font-weight: 400;
+}
+
+.goldRule {
+  width: 48px;
+  height: 1px;
+  background: var(--gold);
+  margin: 30px auto 23px;
+}
+
+.heroDate {
+  font-size: 12px;
+  letter-spacing: .1em;
+}
+
+.heroVenue {
+  color: #c2c5bb;
+  font-size: 12px;
+  margin-top: 7px !important;
+}
+
+.discover {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: .2em;
+  text-decoration: none;
+  padding: 10px;
+  margin-top: 28px;
+  color: #d6c7a9 !important;
+  border: 1px solid #bc9d6555;
+  padding: 12px 20px;
+  transition: background .2s ease, border-color .2s ease;
+}
+
+.discover:hover {
+  background: #bc9d651a;
+  border-color: var(--gold);
+}
+
+.heroBottom {
+  border-top: 1px solid #bc9d6540;
+  padding-top: 18px;
+  font-size: 8px;
+}
+
+/* Every section uses the same spacing, so adding a section stays simple. */
+.section {
+  padding: 64px 8%;
+  text-align: center;
+}
+
+.section > .eyebrow {
+  color: var(--muted);
+}
+
+.introduction {
+  max-width: 780px;
+  margin: auto;
+}
+
+.introduction h2 {
+  font-size: clamp(30px, 4cqi, 40px);
+}
+
+.greeting {
+  max-width: 510px;
+  margin: auto !important;
+  color: var(--muted);
+}
+
+.signature {
+  margin-top: 18px !important;
+  font-style: italic;
+  font-family: Georgia, serif;
+}
+
+.families {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 24px 56px;
+  margin-top: 30px;
+  font-size: 12px;
+}
+
+.families span {
+  display: block;
+  text-transform: uppercase;
+  font-size: 9px;
+  letter-spacing: .15em;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.coverPhoto {
+  margin-top: 40px !important;
+  padding: 10px;
+  border: 1px solid var(--line);
+}
+
+.coverPhoto img {
+  width: 100%;
+  max-height: 520px;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+}
+
+.coverPhoto figcaption {
+  font-size: 9px;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  padding: 14px 4px 4px;
+  color: var(--muted);
+}
+
+.countdown {
+  padding: 32px 8% 38px;
+  border-block: 1px solid var(--line);
+  text-align: center;
+  background: #eee8db;
+}
+
+.countdown .eyebrow {
+  color: var(--muted);
+}
+
+.countdownGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  max-width: 480px;
+  margin: 24px auto 0;
+}
+
+.countdownGrid > div + div {
+  border-left: 1px solid var(--line);
+}
+
+.countdownGrid strong {
+  display: block;
+  font: 400 clamp(30px, 5cqi, 46px)/1.2 Georgia, serif;
+  font-variant-numeric: tabular-nums;
+}
+
+.countdownGrid span {
+  display: block;
+  margin-top: 8px;
+  font-size: 8px;
+  text-transform: uppercase;
+  letter-spacing: .15em;
+  color: var(--muted);
+}
+
+.detailsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 34px;
+}
+
+.detailCard {
+  padding: 32px 26px;
+  min-width: 0;
+  border: 1px solid var(--line);
+  background: linear-gradient(145deg, #fffdf8, #f1ebdf);
+  box-shadow: 0 8px 24px #262b2905;
+}
+
+.detailCard + .detailCard {
+  border-left: 1px solid var(--line);
+}
+
+.cardNumber {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: .2em;
+  color: var(--muted);
+  margin-bottom: 22px !important;
+}
+
+.detailCard h3 {
+  font-size: 25px;
+  margin-bottom: 12px;
+}
+
+.detailCard > p:not(.cardNumber) {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.cardNote {
+  display: block;
+  font-size: 11px;
+  font-style: italic;
+  margin-top: 22px;
+  color: var(--muted);
+}
+
+.textLink {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  margin-top: 14px;
+  border-bottom: 1px solid var(--gold);
+  text-decoration: none;
+  font-size: 11px;
+}
+
+.schedule {
+  background: #eee8db;
+}
+
+.timeline {
+  list-style: none;
+  padding: 0;
+  max-width: 560px;
+  margin: 32px auto 0;
+  text-align: left;
+}
+
+.timeline li {
+  display: grid;
+  grid-template-columns: 85px minmax(0, 1fr);
+  gap: 22px;
+  padding: 22px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.timeline li > span {
+  font-size: 11px;
+  padding-top: 4px;
+  color: var(--muted);
+}
+
+.timeline h3 {
+  font-size: 23px;
+}
+
+.timeline p {
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 32px;
+}
+
+.gallery > div {
+  overflow: hidden;
+  aspect-ratio: 4 / 5;
+  background: #e5ded0;
+}
+
+.gallery > div:first-child {
+  grid-column: 1 / -1;
+  aspect-ratio: 16 / 10;
+}
+
+.gallery img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* CSS Modules keep these form styles scoped to this invitation. */
+.rsvpSection {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 40px;
+  text-align: left;
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.rsvpIntro .eyebrow {
+  color: #d6c7a9;
+}
+
+.rsvpIntro > p:not(.eyebrow) {
+  color: #d0d1c9;
+  font-size: 12px;
+  margin-top: 12px;
+}
+
+.rsvpIntro h2 {
+  font-size: clamp(34px, 5cqi, 48px);
+}
+
+.rsvpIntro h2 em {
+  color: #ddc79e;
+}
+
+.rsvpIntro .notice {
+  border-left: 1px solid var(--gold);
+  padding-left: 14px;
+  margin-top: 22px !important;
+  font-size: 11px !important;
+}
+
+.rsvpCard {
+  padding: 28px;
+  border: 1px solid #bc9d6566;
+  min-width: 0;
+  background: linear-gradient(145deg, #ffffff0a, #ffffff02);
+  box-shadow: 0 14px 40px #00000015;
+}
+
+.form {
+  display: grid;
+  gap: 20px;
+  text-align: left;
+}
+
+.form h3 {
+  margin-bottom: 4px;
+}
+
+.form label, .form legend {
+  display: block;
+  font-size: 11px;
+  letter-spacing: .03em;
+}
+
+.form input, .form textarea {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  padding: 12px;
+  margin-top: 8px;
+  background: #fffcf6;
+  color: var(--ink);
+  font-size: 13px;
+}
+
+.form textarea {
+  resize: vertical;
+}
+
+.form fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+
+.choices {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.choices button {
+  background: transparent;
+  border: 1px solid #95988b;
+  color: inherit;
+  font-size: 11px;
+  min-height: 46px;
+  padding: 8px;
+  line-height: 1.5;
+}
+
+.choices button[aria-pressed="true"] {
+  border-color: #ddc79e;
+  background: #ddc79e;
+  color: var(--ink);
+}
+
+.primaryButton {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  border: 1px solid var(--gold);
+  background: #ddc79e;
+  color: var(--ink);
+  padding: 14px 18px;
+  font-size: 12px !important;
+  min-height: 48px;
+}
+
+.primaryButton:hover:not(:disabled) {
+  background: #e9d8b9;
+}
+
+.guestCount {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+}
+
+.guestCount > span:first-child {
+  flex: 1;
+}
+
+.guestCount button {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--gold);
+  color: inherit;
+  background: transparent;
+}
+
+.error {
+  color: #b72c31;
+  font-size: 12px;
+}
+
+.rsvpCard .error {
+  color: #ffbcb6;
+}
+
+.confirmation {
+  text-align: center;
+}
+
+.confirmation > svg {
+  color: #ddc79e;
+  margin: 0 auto 18px;
+}
+
+.confirmation h3 {
+  margin-bottom: 16px;
+}
+
+.confirmation p {
+  font-size: 12px;
+  color: #d0d1c9;
+}
+
+.editButton {
+  display: block;
+  margin: 22px auto 0;
+  padding: 10px;
+  text-decoration: underline;
+  text-underline-offset: 5px;
+  font-size: 11px !important;
+  background: transparent;
+  color: inherit;
+  border: 0;
+}
+
+.wishes {
+  display: grid;
+  gap: 14px;
+  margin-top: 30px;
+  text-align: left;
+}
+
+.wishes blockquote {
+  margin: 0;
+  border-left: 1px solid var(--gold);
+  padding: 16px 22px;
+  background: #eee8db;
+}
+
+.wishes cite {
+  display: block;
+  margin-top: 10px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.footer {
+  text-align: center;
+  padding: 48px 8% 32px;
+  border-top: 1px solid var(--line);
+}
+
+.footer > svg {
+  display: block;
+  margin: auto;
+  color: #806539;
+}
+
+.footerNames {
+  font-size: 30px;
+  line-height: 1.3;
+  margin: 20px 0 10px !important;
+}
+
+.footer > p:not(.footerNames) {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.shareButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 18px;
+  margin-top: 22px;
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--ink);
+  font-size: 11px !important;
+}
+
+.brand {
+  display: inline-block;
+  font-size: 9px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  margin-top: 28px;
+  color: var(--muted) !important;
+}
+
+/* Decorative artwork stays behind the text and never captures clicks. */
+.cornerArtwork {
+  position: absolute;
+  inset: 24px;
+  pointer-events: none;
+  color: #d5b985;
+  opacity: .6;
+}
+
+.cornerArtwork svg {
+  position: absolute;
+  width: clamp(70px, 18cqi, 160px);
+  height: auto;
+}
+
+.cornerTopLeft { top: 0; left: 0; }
+.cornerTopRight { top: 0; right: 0; transform: rotate(90deg); }
+.cornerBottomLeft { bottom: 0; left: 0; transform: rotate(-90deg); }
+.cornerBottomRight { bottom: 0; right: 0; transform: rotate(180deg); }
+
+.halo {
+  position: absolute;
+  width: 72%;
+  aspect-ratio: 1;
+  border: 1px solid #bc9d651a;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.halo::after {
+  content: "";
+  position: absolute;
+  inset: 16px;
+  border: 1px solid #bc9d6512;
+  border-radius: inherit;
+}
+
+.edition, .heroBottom {
+  position: relative;
+}
+
+/* A small seal introduces the personal message like printed stationery. */
+.loveSeal {
+  display: grid;
+  place-items: center;
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  color: #806539;
+  border: 1px solid #c7af81;
+  outline: 1px solid #d9cfbd;
+  outline-offset: 5px;
+  background: linear-gradient(135deg, #f9f0da, #e3cea5, #f9f0da);
+  box-shadow: 0 5px 14px #80653914;
+  margin: 0 auto 32px;
+}
+
+.calendarDate {
+  display: grid;
+  justify-items: center;
+  margin: 0 auto 22px;
+  color: #806539;
+}
+
+.calendarDate span {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .22em;
+}
+
+.calendarDate strong {
+  font-family: var(--font-cormorant, Georgia), serif;
+  font-size: 80px;
+  line-height: 1.1;
+  font-weight: 400;
+}
+
+.venueEmblem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  min-height: 125px;
+  margin-bottom: 22px;
+  color: #806539;
+}
+
+.venueEmblem > svg {
+  box-sizing: content-box;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  padding: 18px;
+}
+
+.venueEmblem span {
+  font-family: Georgia, serif;
+  font-size: 11px;
+  font-style: italic;
+}
+
+.loveNote {
+  text-align: center;
+  padding: 44px 8% 52px;
+  border-block: 1px solid var(--line);
+  background: linear-gradient(115deg, #e9dfcd, #f8f1e5 50%, #e9dfcd);
+}
+
+.loveNote > p {
+  font-family: var(--font-cormorant, Georgia), serif;
+  font-size: clamp(28px, 4.5cqi, 42px);
+  line-height: 1.3;
+  margin: 22px 0 18px;
+}
+
+.loveNote em {
+  color: #806539;
+}
+
+.loveNote > .eyebrow {
+  color: var(--muted);
+  font-size: 9px;
+}
+
+.rings {
+  display: flex;
+  justify-content: center;
+  padding-right: 14px;
+}
+
+.rings span {
+  width: 38px;
+  height: 38px;
+  border: 1px solid #a98a52;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 3px #f3ead9, inset 0 0 0 4px #cbb589;
+}
+
+.rings span + span {
+  margin-left: -14px;
+  transform: translateY(6px);
+}
+
+/* One gentle entrance; respect visitors who prefer reduced motion. */
+@keyframes coverReveal {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heroContent { animation: none; }
+  .discover { transition: none; }
+}
+
+/* Use the invitation width, including inside the editor's narrow preview. */
+@container modern-luxe (max-width: 640px) {
+  .section {
+    padding: 44px 7%;
+  }
+
+  .hero {
+    padding: 30px 8% 24px;
+  }
+
+  .edition {
+    font-size: 7px;
+    letter-spacing: .12em;
+  }
+
+  .edition span:last-child {
+    display: none;
+  }
+
+  .heroContent {
+    padding: 48px 0 36px;
+  }
+
+  .heroBottom {
+    font-size: 7px;
+    letter-spacing: .1em;
+  }
+
+  .heroDate {
+    font-size: 11px;
+  }
+
+  .detailsGrid, .rsvpSection {
+    grid-template-columns: 1fr;
+  }
+
+  .detailCard {
+    padding: 28px 22px;
+  }
+
+  .detailCard + .detailCard {
+    border-left: 1px solid var(--line);
+    border-top: 1px solid var(--line);
+  }
+
+  .rsvpSection {
+    gap: 28px;
+  }
+
+  .rsvpCard {
+    padding: 24px 18px;
+  }
+
+  .timeline li {
+    grid-template-columns: 68px minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .countdown {
+    padding-inline: 6%;
+  }
+
+  .families {
+    gap: 20px;
+    flex-direction: column;
+  }
+
+}
+

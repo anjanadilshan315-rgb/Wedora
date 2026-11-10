@@ -3,6 +3,7 @@
 import FreeArchTemplate from "./templates/FreeArchTemplate";
 import RoyalTemplate from "./templates/RoyalTemplate";
 import FloralTemplate from "./templates/FloralTemplate";
+import ModernTemplate from "./templates/ModernTemplate";
 import type { InvitationInteractions, TemplateProps } from "./types";
 import { freeViewData, type FreeInvitationDetails } from "@/lib/free-invitation";
 
@@ -15,9 +16,9 @@ export function FreeFloralTemplate(props: TemplateProps) {
   return <FloralTemplate {...props} freePlan />;
 }
 
-/** Modern Luxe shares Lotus Arch's layout, with an emerald and gold palette. */
+/** Use the same Modern Luxe design in the gallery, editor and shared links. */
 export function FreeModernTemplate(props: TemplateProps & { whatsapp?: string; localReplies?: boolean }) {
-  return <FreeArchTemplate {...props} theme="jade" />;
+  return <ModernTemplate {...props} freePlan />;
 }
 
 /** Both the editor and shared link use this selector, so their designs match. */

@@ -6,6 +6,9 @@ Free invitation creation now includes a four-step studio, account-saved drafts,
 stable published links and a private guest RSVP dashboard. See
 [Free Studio setup and beginner guide](docs/free-invitation.md).
 
+For the redesigned Modern Luxe invitation, see the
+[Modern Luxe design and beginner editing guide](docs/modern-luxe.md).
+
 Use Node.js 20.9 or newer. On a new laptop, or after pulling dependency updates,
 open a terminal in the project folder and run:
 
