@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 250" role="img" aria-label="Colourful wedding illustration">
+  <rect width="200" height="250" fill="#fbf4e6"/>
+  <circle cx="100" cy="110" r="85" fill="#f9e29a" opacity=".5"/>
+  <!-- bride -->
+  <path d="M18 250 Q22 168 78 158 Q112 170 118 250Z" fill="#f4efd4"/>
+  <path d="M40 250 Q52 190 78 176 L96 250Z" fill="#a9c56a" opacity=".9"/>
+  <rect x="68" y="132" width="20" height="30" rx="8" fill="#e8b48a"/>
+  <circle cx="78" cy="104" r="30" fill="#e8b48a"/>
+  <path d="M46 100 Q50 66 80 68 Q108 70 110 100 Q96 84 78 84 Q60 84 46 100Z" fill="#2a1a14"/>
+  <circle cx="78" cy="64" r="11" fill="#2a1a14"/>
+  <circle cx="78" cy="64" r="4" fill="#2f55a4"/>
+  <circle cx="66" cy="106" r="2.6" fill="#2a1a14"/><circle cx="90" cy="106" r="2.6" fill="#2a1a14"/>
+  <circle cx="78" cy="94" r="2" fill="#b3202a"/>
+  <path d="M68 120 Q78 129 88 120" stroke="#9a3a3a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+  <circle cx="60" cy="116" r="5" fill="#ee9a8a" opacity=".45"/><circle cx="96" cy="116" r="5" fill="#ee9a8a" opacity=".45"/>
+  <path d="M52 168 Q78 182 104 168" stroke="#2f55a4" stroke-width="5" fill="none"/>
+  <!-- groom -->
+  <path d="M92 250 Q100 166 146 156 Q190 166 198 250Z" fill="#f5d838"/>
+  <path d="M120 160 L146 250 L172 160Z" fill="#e0b92a" opacity=".9"/>
+  <path d="M104 180 Q146 202 190 180" stroke="#2f55a4" stroke-width="6" fill="none"/>
+  <rect x="136" y="130" width="20" height="30" rx="8" fill="#d99a6c"/>
+  <circle cx="146" cy="102" r="31" fill="#d99a6c"/>
+  <path d="M112 92 Q114 56 146 54 Q178 56 180 92 Q164 80 146 80 Q128 80 112 92Z" fill="#2f55a4"/><rect x="114" y="82" width="64" height="8" rx="3" fill="#2f55a4"/><circle cx="146" cy="50" r="7" fill="#2f55a4"/>
+  <circle cx="135" cy="104" r="2.6" fill="#241712"/><circle cx="158" cy="104" r="2.6" fill="#241712"/>
+  <path d="M136 120 Q146 128 156 120" stroke="#7a3030" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+  <path d="M126 114 Q146 134 166 114 Q160 128 146 130 Q132 128 126 114Z" fill="#241712" opacity=".85"/>
+  <!-- bouquet -->
+  <g transform="translate(96 206)"><circle r="13" fill="#6fbf5a"/><circle cx="-10" cy="4" r="8" fill="#fff"/><circle cx="10" cy="3" r="8" fill="#fdf2e0"/><circle cx="0" cy="-9" r="7" fill="#fff"/></g>
+  </svg>

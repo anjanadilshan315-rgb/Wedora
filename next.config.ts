@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Runtime databases and local browser QA artifacts must stay out of server bundles.
+  outputFileTracingExcludes: {
+    "/*": ["./.data/**/*"],
+  },
 };
 
 export default nextConfig;

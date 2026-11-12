@@ -1,0 +1,113 @@
+/* A slow aurora and small opal lights behind the invitation content. */
+.atmosphere {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+  contain: paint;
+}
+.ribbon {
+  position: absolute;
+  left: -20%;
+  top: 10%;
+  width: 140%;
+  height: 550px;
+  border-radius: 50%;
+  background: linear-gradient(115deg,transparent 15%,color-mix(in srgb,var(--forest),transparent 55%),color-mix(in srgb,var(--ornament),transparent 85%),transparent 85%);
+  filter: blur(35px);
+  opacity: .45;
+  transform: rotate(-15deg);
+  animation: auroraDrift 24s ease-in-out infinite alternate;
+}
+.ribbon:nth-child(2) { top: 43%; transform: rotate(12deg); animation-delay: -13s; }
+.ribbon:nth-child(3) { top: 77%; animation-delay: -7s; }
+.opal {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: 5px;
+  height: 5px;
+  background: var(--ornament);
+  box-shadow: 0 0 14px color-mix(in srgb,var(--ornament),transparent 40%);
+  transform: rotate(45deg);
+  opacity: 0;
+  animation: opalFloat var(--duration) var(--delay) ease-in-out infinite;
+}
+.opal:nth-child(2n) { width: 3px; height: 3px; border-radius: 50%; }
+@keyframes auroraDrift {
+  from { transform: translate3d(-2%,0,0) rotate(-15deg) scaleY(.8); opacity: .25; }
+  to { transform: translate3d(5%,-45px,0) rotate(3deg) scaleY(1.15); opacity: .5; }
+}
+@keyframes opalFloat {
+  0%,100% { opacity: 0; transform: translate3d(0,35px,0) rotate(45deg) scale(.6); }
+  35% { opacity: .4; }
+  70% { opacity: .2; transform: translate3d(20px,-110px,0) rotate(100deg) scale(1.1); }
+}
+/* A separate, faint layer keeps petals visible across painted page sections. */
+.particles {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+  contain: paint;
+}
+.particles * { pointer-events: none; }
+.petal {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--size);
+  height: calc(var(--size) * 1.45);
+  opacity: 0;
+  animation: petalDescent var(--duration) var(--delay) linear infinite;
+}
+.petal>i {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 85% 12% 75% 18%;
+  background: linear-gradient(135deg,color-mix(in srgb,var(--ornament),white 25%),color-mix(in srgb,var(--ornament),transparent 68%));
+  border-left: 1px solid color-mix(in srgb,var(--ornament),white 25%);
+  box-shadow: 0 0 8px color-mix(in srgb,var(--ornament),transparent 84%);
+  animation: petalTurn 5s var(--delay) ease-in-out infinite;
+}
+.petal:nth-child(3n)>i { border-radius: 15% 80% 20% 75%; }
+.petal:nth-child(4n)>i { background: linear-gradient(135deg,#e7e1f3,color-mix(in srgb,var(--forest),transparent 45%)); }
+.shootingStar {
+  position: absolute;
+  top: var(--y);
+  left: 88%;
+  width: 110px;
+  height: 1px;
+  background: linear-gradient(90deg,transparent,#f6e9d4);
+  box-shadow: 4px 0 7px #eddbbd55;
+  opacity: 0;
+  transform: rotate(-32deg);
+  animation: lightTrail var(--duration) var(--delay) ease-in-out infinite;
+}
+@keyframes petalDescent {
+  0% { transform: translate3d(0,-60px,0) rotate(-20deg); opacity: 0; }
+  12% { opacity: .28; }
+  50% { transform: translate3d(var(--sway),300px,0) rotate(50deg); opacity: .22; }
+  88% { opacity: .16; }
+  100% { transform: translate3d(5px,680px,0) rotate(125deg); opacity: 0; }
+}
+@keyframes petalTurn {
+  0%,100% { transform: rotateY(0deg) rotate(-8deg); }
+  50% { transform: rotateY(55deg) rotate(12deg); }
+}
+@keyframes lightTrail {
+  0%,65%,100% { opacity: 0; transform: translate3d(0,0,0) rotate(-32deg); }
+  68% { opacity: .45; }
+  80% { opacity: 0; transform: translate3d(-400px,245px,0) rotate(-32deg); }
+}
+@media(max-width:600px) {
+  .petal:nth-child(3n) { display: none; }
+  .petal { width: calc(var(--size) * .8); height: var(--size); }
+  .shootingStar { width: 75px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .atmosphere,.particles { display: none; }
+}

@@ -1,5 +1,8 @@
+import EvermorePackageCard from "@/components/premium/evermore/EvermorePackageCard";
+import WalawwaPackageCard from "@/components/premium/walawwa/WalawwaPackageCard";
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import {
   ArrowRight,
   Check,
@@ -17,9 +20,9 @@ import { BASIC_PLAN, BASIC_TEMPLATES } from "@/lib/basic-invitation";
 import { STANDARD_PLAN } from "@/lib/standard-invitation";
 
 export const metadata: Metadata = {
-  title: "Wedding Invitation Packages | Forever",
+  title: "Wedding Invitation Packages | Liora",
   description:
-    "Compare Forever Free, Basic, Standard and Premium digital wedding invitation packages.",
+    "Compare Liora Free, Basic, Standard and Premium digital wedding invitation packages.",
 };
 
 // Add each plan's own features here. Higher plans automatically include lower plans.
@@ -129,15 +132,15 @@ const packagePlans = [
       "Priority customer support",
       "No platform branding",
     ],
-    buttonText: "Plan my Premium invitation",
-    href: "whatsapp",
+    buttonText: "Create Premium invitation",
+    href: "/premium-invitation",
     highlighted: false,
   },
 ];
 
 function getInquiryLink(packageName: string) {
   const message = encodeURIComponent(
-    `Hi Forever! I'd like to know more about the ${packageName} wedding invitation package.`,
+    `Hi Liora! I'd like to know more about the ${packageName} wedding invitation package.`,
   );
   return `https://wa.me/94757115645?text=${message}`;
 }
@@ -160,7 +163,7 @@ export default function PackagesPage() {
               <span className="h-px w-10 bg-[#C59B48]" />
             </div>
             <h1 className="font-serif-luxury text-4xl font-semibold leading-tight text-[#29221D] sm:text-5xl lg:text-6xl">
-              Find your <span className="text-[#B88737]">Forever plan</span>
+              Find your <span className="text-[#B88737]">Liora plan</span>
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-[#7D736A] sm:text-base">
               Start with the essentials or create a fully tailored celebration. Compare what is included in each plan and choose what feels right for you.
@@ -240,13 +243,20 @@ export default function PackagesPage() {
                   {plan.name === "Standard" && (
                     <div className="mt-5 overflow-hidden rounded-xl border border-[#D8CEB4] bg-[#762847] text-[#FFF4F8]">
                       <div className="relative grid grid-cols-[1fr_88px] items-center gap-4 overflow-hidden px-4 py-4 sm:grid-cols-[1fr_108px]">
-                        <div className="relative z-10"><p className="text-[7px] uppercase tracking-[.2em] text-[#F0C6B8]">The Standard Collection</p><h4 className="mt-1 font-serif-luxury text-3xl">The Vow</h4><p className="mt-1 font-serif-luxury text-base italic text-[#F0C6B8]">Your love, in motion.</p><p className="mt-2 text-[10px] leading-5 text-[#F4DDE5]">3 designs. Your colours. Your signature style.</p></div>
+                        <div className="relative z-10"><p className="text-[7px] uppercase tracking-[.2em] text-[#F0C6B8]">The Standard Collection</p><h4 className="mt-1 font-serif-luxury text-3xl">The Vow</h4><p className="mt-1 font-serif-luxury text-base italic text-[#F0C6B8]">Your love, in motion.</p><p className="mt-2 text-[10px] leading-5 text-[#F4DDE5]">6 designs. Your colours. Your signature style.</p></div>
                         <div className="relative h-28 overflow-hidden rounded-t-full border border-[#BDA16A]/60 sm:h-32">{/* eslint-disable-next-line @next/next/no-img-element */}<img src="/assets/standard/couple.jpg" alt="A romantic wedding celebration in The Vow collection" className="absolute inset-0 h-full w-full object-cover" loading="lazy" /></div>
                       </div>
                       <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-t border-white/15 px-4 py-3 text-[10px] leading-5"><p className="text-[#F4DDE5]">4 animation styles · {STANDARD_PLAN.guestLimit} guests</p><Link href="/standard-invitation/preview" className="inline-flex items-center gap-2 font-semibold text-[#FFE1CD]">Explore the designs <ArrowRight size={12} /></Link></div>
                     </div>
                   )}
-                  {premium && <p className="mt-4 text-[11px] leading-5 text-white/60">*Unlimited invitations are subject to fair-use terms. Please confirm details with our team.</p>}
+                  {plan.name === "Standard" && <div className="mt-3 grid grid-cols-[1fr_100px] overflow-hidden rounded-xl border border-[#39372F] bg-[#F8F3E6] text-[#302C28]"><div className="p-4"><p className="text-[7px] uppercase tracking-[.2em] text-[#93421F]">New · For the good things</p><h4 className="mt-1 text-3xl font-semibold tracking-tight">Saffron</h4><p className="mt-2 text-[10px] leading-5">Marigold stationery, a sliding letter and your own photo journal.</p><div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-[10px]"><Link href="/standard-invitation/saffron" className="inline-flex items-center gap-2 font-semibold">Experience Saffron <ArrowRight size={12} /></Link><Link href="/standard-invitation?layout=saffron" className="underline underline-offset-4">Make it yours</Link></div></div><div className="relative min-h-36 border-l-8 border-[#ECC04B]">{/* eslint-disable-next-line @next/next/no-img-element */}<img src="/assets/saffron/cover.jpg" alt="Saffron, the editorial Standard invitation" className="absolute inset-0 h-full w-full object-cover" loading="lazy" /></div></div>}
+                  {plan.name === "Standard" && <div className="mt-3 overflow-hidden rounded-xl border border-[#AEC4BB] bg-[#145C61] text-[#FFFCF3]"><div className="grid grid-cols-[1fr_105px] items-stretch"><div className="p-4"><p className="text-[7px] uppercase tracking-[.2em] text-[#F1CD9A]">New · A sunlit celebration</p><h4 className="mt-1 font-serif-luxury text-3xl">Solstice</h4><p className="mt-1 text-[10px] leading-5 text-[#DBE7DB]">Coastal colours, a folding wedding folio and your next great adventure.</p><div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-[10px] text-[#F1CD9A]"><Link href="/standard-invitation/solstice" className="inline-flex items-center gap-2 font-semibold">Experience Solstice <ArrowRight size={12} /></Link><Link href="/standard-invitation?layout=solstice" className="underline underline-offset-4">Make it yours</Link></div></div><div className="relative min-h-36">{/* eslint-disable-next-line @next/next/no-img-element */}<img src="/assets/solstice/cover.jpg" alt="The new Solstice wedding invitation" className="absolute inset-0 h-full w-full object-cover" loading="lazy" /></div></div></div>}
+                  {plan.name === "Standard" && <div className="mt-3 grid grid-cols-[1fr_95px] overflow-hidden rounded-xl border border-[#7183A1] bg-[#131F36] text-[#EDF2FF]"><div className="p-4"><p className="text-[7px] uppercase tracking-[.2em] text-[#BFCFE6]">New · An evening to remember</p><h4 className="mt-1 font-serif-luxury text-3xl">Moonlit</h4><p className="mt-1 text-[10px] leading-5 text-[#CDDAEE]">Pearl, midnight, and a thousand little forevers.</p><div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-[10px]"><Link href="/standard-invitation/moonlit" className="inline-flex items-center gap-2 font-semibold">Experience Moonlit <ArrowRight size={12} /></Link><Link href="/standard-invitation?layout=moonlit" className="underline underline-offset-4">Make it yours</Link></div></div><div className="relative min-h-36">{/* eslint-disable-next-line @next/next/no-img-element */}<img src="/assets/moonlit/cover.jpg" alt="Moonlit, the new cinematic Standard invitation" className="absolute inset-0 h-full w-full object-cover" loading="lazy" /></div></div>}
+                  {premium && <div className="mt-5 overflow-hidden rounded-2xl border border-[#B8C9CE] bg-[#EDF4F7] text-[#614136]"><div className="grid grid-cols-[1fr_115px] items-stretch"><div className="p-5"><p className="text-[7px] uppercase tracking-[.2em] text-[#5B7581]">New · A wedding journey</p><h4 className="mt-2 font-serif-luxury text-3xl">Aureline</h4><p className="mt-2 text-[10px] leading-5">A mandala beginning. A cinematic drive. Your own beautiful tradition.</p><div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-[10px]"><Link href="/premium-invitation/aureline" className="inline-flex items-center gap-2 font-semibold">Experience Aureline <ArrowRight size={12} /></Link><Link href="/premium-invitation?template=aureline" className="underline underline-offset-4">Make it yours</Link></div></div><div className="relative min-h-48"><Image src="/assets/aureline/journey.webp" alt="Aureline's illustrated vintage-car wedding journey" fill sizes="115px" className="object-cover object-bottom" /></div></div></div>}
+                  {premium && <WalawwaPackageCard />}
+                  {premium && <EvermorePackageCard />}
+                  {premium && <div className="mt-5 overflow-hidden rounded-2xl border border-[#CFB7AA] bg-[#F7E9EC] text-[#65283B]"><div className="grid grid-cols-[1fr_110px] items-center gap-4 p-5"><div><p className="text-[7px] uppercase tracking-[.2em] text-[#8A5C65]">The Premium Atelier</p><h4 className="mt-2 font-serif-luxury text-3xl">Rosé Atelier</h4><p className="mt-2 text-[10px] leading-5">Floral stationery. A wax-sealed beginning. Every detail, yours.</p></div><div className="relative flex h-28 items-center justify-center overflow-hidden rounded-xl bg-cover bg-center" style={{ backgroundImage: "url(/assets/premium/rose-floral-paper.webp)" }}><Image src="/assets/premium/rose-envelope.webp" width={180} height={120} alt="Embossed crimson floral envelope with a red wax seal" className="relative w-full -rotate-6 drop-shadow-lg" /></div></div><div className="flex flex-wrap justify-between gap-3 border-t border-[#DCC4C9] px-5 py-4 text-[10px]"><Link href="/premium-invitation/preview" className="inline-flex items-center gap-2 font-semibold">Experience Rosé Atelier <ArrowRight size={12} /></Link><Link href="/premium-invitation" className="underline underline-offset-4">Make it yours</Link></div></div>}
+                  {premium && <p className="mt-4 text-[11px] leading-5 text-white/60">*Unlimited guest invitations under fair use. Media uploads have separate storage limits. Priority support requests can be saved in your studio; response times are arranged with the team.</p>}
 
                   <a
                     href={buttonHref}
@@ -263,7 +273,7 @@ export default function PackagesPage() {
           </div>
 
           <p className="mt-7 text-center text-xs leading-5 text-[#8A7F74]">
-            Features are shown as described for each plan. Contact Forever to confirm current availability, pricing and any usage limits.
+            Features are shown as described for each plan. Contact Liora to confirm current availability, pricing and any usage limits.
           </p>
         </section>
 

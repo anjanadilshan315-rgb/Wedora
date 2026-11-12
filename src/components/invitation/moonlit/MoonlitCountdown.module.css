@@ -1,0 +1,172 @@
+/* A pearl stationery keepsake, with four softly illuminated time cards. */
+.countdown {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 8%;
+  align-items: center;
+  padding: 70px 8%;
+  border-block: 1px solid var(--line);
+  background: var(--background);
+}
+
+.heading {
+  text-align: center;
+}
+
+.emblem {
+  display: grid;
+  place-items: center;
+  width: 45px;
+  height: 45px;
+  margin: 0 auto 20px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--gold);
+}
+
+.eyebrow {
+  font-size: 6px;
+  letter-spacing: .19em;
+  line-height: 1.9;
+  color: var(--muted);
+}
+
+.heading h2 {
+  margin: 20px 0!important;
+}
+
+.heading h2 em {
+  font-family: var(--font-cormorant),serif;
+  font-style: italic!important;
+}
+
+.date {
+  font-size: 10px;
+  line-height: 1.8;
+}
+
+.date>span {
+  display: block;
+  font-size: 8px;
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+.keepsake {
+  position: relative;
+  text-align: center;
+  padding: 37px 22px 30px;
+  background: linear-gradient(135deg,color-mix(in srgb,var(--forest),transparent 90%),transparent),var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 120px 120px 12px 12px;
+  box-shadow: 0 15px 40px #0001;
+}
+
+.keepsake:before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border: 1px solid var(--line);
+  border-radius: 115px 115px 7px 7px;
+  pointer-events: none;
+  opacity: .6;
+}
+
+.label {
+  position: relative;
+  font-size: 5px;
+  letter-spacing: .2em;
+  color: var(--gold);
+  margin-bottom: 30px!important;
+}
+
+.clock {
+  display: grid;
+  grid-template-columns: repeat(4,minmax(0,1fr));
+  gap: 9px;
+  position: relative;
+}
+
+.clock>div {
+  min-width: 0;
+  padding: 24px 3px 18px;
+  border: 1px solid var(--line);
+  border-radius: 40px 40px 6px 6px;
+  background: color-mix(in srgb,var(--paper),var(--forest) 8%);
+}
+
+.clock strong {
+  display: block;
+  font-family: var(--font-cormorant),Georgia,serif;
+  font-size: clamp(30px,4.6cqw,58px);
+  font-weight: 400;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+.clock span {
+  display: block;
+  font-size: 5px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  margin-top: 15px;
+  color: var(--muted);
+}
+
+.footnote {
+  font-family: var(--font-cormorant),serif;
+  font-size: 18px;
+  font-style: italic;
+  margin-top: 23px!important;
+  color: var(--muted);
+}
+
+.today {
+  font-family: var(--font-cormorant),serif;
+  font-size: 29px;
+  padding: 25px 0;
+}
+
+@container(max-width:700px) {
+  .countdown {
+    gap: 5%;
+    padding: 55px 6%;
+  }
+  .keepsake {
+    padding: 35px 16px 25px;
+  }
+  .clock {
+    gap: 6px;
+  }
+  .clock strong {
+    font-size: 36px;
+  }
+  .clock span {
+    font-size: 4px;
+    letter-spacing: .06em;
+  }
+}
+
+@container(max-width:480px) {
+  .countdown {
+    grid-template-columns: 1fr;
+    padding: 45px 7%;
+    gap: 30px;
+  }
+  .heading h2 {
+    font-size: 44px;
+  }
+  .heading h2 br {
+    display: none;
+  }
+  .clock strong {
+    font-size: 43px;
+  }
+  .clock span {
+    font-size: 5px;
+  }
+  .keepsake {
+    padding: 37px 22px 25px;
+  }
+}
+

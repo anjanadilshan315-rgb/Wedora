@@ -11,7 +11,7 @@ The Standard package card at `/packages` opens the editor and includes a full-sc
 
 ## Create and share
 
-1. Open the editor and choose The Vow, Secret Garden or Modern Muse. Select a colour theme or open **Make your own colour palette** to choose main, accent and paper colours. Choose one of four signature fonts and cinematic, romantic, enchanted or minimal animation. The live preview updates immediately. Accent text contrast adjusts automatically; the chosen colours, font and design are saved with your invitation. Existing invitations default to The Vow and Classic Romance.
+1. Open the editor and choose The Vow, Secret Garden, Modern Muse, [Solstice](solstice-invitation.md), [Moonlit](moonlit-invitation.md) or [Saffron](saffron-invitation.md). Select a colour theme or open **Make your own colour palette** to choose main, accent and paper colours. Choose one of four signature fonts and an animation style. Solstice has its own coastal palettes and Horizon, Sea Breeze, Sunlight and Still animations. The live preview updates immediately. Accent text contrast adjusts automatically; the chosen colours, font and design are saved with your invitation. Existing invitations default to The Vow and Classic Romance.
 2. Add names, families, wedding date/time, venue and reply deadline. Times use Asia/Colombo.
 3. Upload the cover photograph and up to six slideshow photos. Preview photographs are illustrative samples; they are never saved as the couple's photos or included in a published invitation.
 4. Add a welcome message, optional custom slug, and direct HTTPS links for music, the invitation film and the background video. YouTube and Spotify page links cannot play in these media elements.

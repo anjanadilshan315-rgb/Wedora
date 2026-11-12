@@ -14,6 +14,7 @@
     "test:basic": "node --test tests/basic-invitation.test.cjs",
     "test:basic:integration": "node --test tests/basic-studio.integration.test.cjs",
     "test:standard": "node --test tests/standard-invitation.test.cjs tests/standard-studio.integration.test.cjs",
+    "test:premium": "node --test tests/premium-invitation.test.cjs tests/premium-studio.integration.test.cjs",
     "test:free": "node --test tests/free-invitation.test.cjs",
     "test:free:integration": "node --test tests/free-studio.integration.test.cjs"
   },

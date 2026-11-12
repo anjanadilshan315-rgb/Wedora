@@ -21,8 +21,9 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "Forever | Digital Wedding Invitations",
-  description: "Create beautiful wedding invitations with Forever, share with your loved ones and celebrate together.",
+  icons: { icon: "/assets/liora-logo-mark.svg" },
+  title: "Liora | Digital Wedding Invitations",
+  description: "Create beautiful wedding invitations with Liora, share with your loved ones and celebrate together.",
 };
 
 export default function RootLayout({

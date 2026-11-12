@@ -10,7 +10,7 @@ const load = require("./load-typescript.cjs");
 const studio = load("src/lib/server/standard-studio.ts");
 const basic = load("src/lib/server/basic-studio.ts");
 const { freeDatabase } = load("src/lib/server/free-database.ts");
-const { STANDARD_SAMPLE } = load("src/lib/standard-invitation.ts");
+const { STANDARD_SAMPLE, SOLSTICE_SAMPLE, MOONLIT_SAMPLE, SAFFRON_SAMPLE } = load("src/lib/standard-invitation.ts");
 
 test("Standard persists drafts, protects publication, enforces URL uniqueness, tracks replies and caps total party places at 500", async () => {
   await fs.mkdir(path.dirname(databasePath), { recursive: true });
@@ -52,6 +52,36 @@ test("Standard persists drafts, protects publication, enforces URL uniqueness, t
     await studio.publishInvitation(user, changed.invitation.version, false);
     await assert.rejects(studio.publicInvitation(details.customSlug), (error) => error.status === 404);
     await studio.saveDraft(user, { ...details, customSlug: "changed-url" });
+    // The new design uses the same private ownership, publication and RSVP path.
+    const solstice = await studio.saveDraft(other, { ...SOLSTICE_SAMPLE, customSlug: "solstice-wedding", weddingDate: "2099-08-14", rsvpDeadline: "2099-08-01" });
+    await studio.publishInvitation(other, solstice.invitation.version, true);
+    const solsticeGuest = (await studio.addGuest(other, "Solstice guest")).guests[0];
+    await studio.replyToInvitation("solstice-wedding", { attending: true, headCount: 2, events: ["wedding", "homecoming"], dietary: "No nuts", message: "See you by the sea" }, solsticeGuest.token);
+    const liveSolstice = await studio.publicInvitation("solstice-wedding", solsticeGuest.token);
+    assert.equal(liveSolstice.details.standardLayout, "solstice");
+    assert.equal(liveSolstice.guest.reply.headCount, 2);
+    assert.equal(liveSolstice.guest.reply.events.length, 2);
+    assert.equal((await studio.snapshot(user)).invitation.details.standardLayout, "garden");
+    await studio.publishInvitation(other, solstice.invitation.version, false);
+    const moonlit = await studio.saveDraft(other, { ...MOONLIT_SAMPLE, customSlug: "moonlit-evening", weddingDate: "2099-12-04", rsvpDeadline: "2099-11-20" });
+    await studio.publishInvitation(other, moonlit.invitation.version, true);
+    await studio.replyToInvitation("moonlit-evening", { attending: true, headCount: 4, events: ["wedding", "homecoming"], dietary: "Vegetarian", message: "A beautiful evening ahead" }, solsticeGuest.token);
+    const moonlitReply = await studio.publicInvitation("moonlit-evening", solsticeGuest.token);
+    assert.equal(moonlitReply.details.standardLayout, "moonlit");
+    assert.equal(moonlitReply.guest.reply.headCount, 4);
+    assert.equal(moonlitReply.guest.reply.events.length, 2);
+    await assert.rejects(studio.publicInvitation("solstice-wedding"), (error) => error.status === 404);
+    await studio.publishInvitation(other, moonlit.invitation.version, false);
+    const saffron = await studio.saveDraft(other, { ...SAFFRON_SAMPLE, customSlug: "saffron-celebration", weddingDate: "2099-09-18", rsvpDeadline: "2099-09-01" });
+    await studio.publishInvitation(other, saffron.invitation.version, true);
+    await studio.replyToInvitation("saffron-celebration", { attending: true, headCount: 3, events: ["homecoming"], dietary: "Vegan", message: "Save us a dance" }, solsticeGuest.token);
+    const liveSaffron = await studio.publicInvitation("saffron-celebration", solsticeGuest.token);
+    assert.equal(liveSaffron.details.standardLayout, "saffron");
+    assert.equal(liveSaffron.details.font, "modern");
+    assert.equal(liveSaffron.guest.reply.headCount, 3);
+    assert.deepEqual(liveSaffron.guest.reply.events, ["homecoming"]);
+    assert.equal(liveSaffron.guest.reply.dietary, "Vegan");
+    assert.equal((await studio.snapshot(user)).invitation.details.standardLayout, "garden");
   } finally {
     db.close();
     // libSQL can retain a native Windows file handle until this worker exits.

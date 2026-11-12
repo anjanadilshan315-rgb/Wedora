@@ -1,9 +1,32 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+**New: Evermore · Premium Plan** adapts the updated ZIP into a supplied-video welcome, romantic amethyst/peach arch, alternating photo story, family cards and luminous background animation. Photos and video are stored separately in `public/assets/evermore/`. Preview `/premium-invitation/evermore`, customize `/premium-invitation?template=evermore`. See the [Evermore beginner guide](docs/evermore-invitation.md).
+
+**New: Walawwa · Premium Plan** adapts the supplied ZIP into carved timber doors, daytime floral scenery, a lantern-lit courtyard at night, falling petals and illustrated arch galleries. Includes all shared Premium guest tools. Preview `/premium-invitation/walawwa`, customize `/premium-invitation?template=walawwa`. See the [Walawwa editing and feature guide](docs/walawwa-invitation.md).
+
 ## Getting Started
 
+**New: Aureline · Premium Plan**, a second Premium invitation inspired by the mandala/vintage-car reference. It has porcelain-blue and copper palettes, a cinematic illustrated journey, ceremonial borders, seed-light/silk animations and the full Premium guest tools. Preview `/premium-invitation/aureline`, customize `/premium-invitation?template=aureline`. See the [Aureline beginner guide and artwork prompts](docs/aureline-invitation.md).
+
+**New: Rosé Atelier · Premium Plan** follows the reference video's blush-and-burgundy floral stationery, wax-sealed opening and falling petals. Includes a separate saved Premium editor, uploads, multiple galleries, custom RSVP questions, seating, analytics, password protection and guest links without the Standard 500-place limit. Preview `/premium-invitation/preview`, create `/premium-invitation`, manage guests `/premium-invitation/dashboard`. See the [Premium setup and editing guide](docs/premium-invitation.md).
+
+
+**New: Saffron**, an editorial Standard template with marigold stationery, a sliding-envelope opening, photo journal, paper-confetti motion and all 17 Standard features. Preview `/standard-invitation/saffron`, customize `/standard-invitation?layout=saffron`. See the [Saffron beginner guide](docs/saffron-invitation.md).
+
+**New: Moonlit**, an additional Standard invitation in pearl and midnight with
+a lunar envelope, a cinematic cover, mosaic slideshow, orbital countdown and
+its own invitation film. Preview `/standard-invitation/moonlit` or create at
+`/standard-invitation?layout=moonlit`. See the
+[Moonlit beginner guide](docs/moonlit-invitation.md).
+
+**New: Solstice**, a separate Standard Plan template with coastal palettes,
+panoramic photos, a folding wedding folio, photo-led motion and all Standard
+guest tools. Preview `/standard-invitation/solstice` or create at
+`/standard-invitation?layout=solstice`. See the
+[Solstice beginner editing guide](docs/solstice-invitation.md).
+
 Standard Plan now includes **The Vow**, an animated invitation with a wax-seal
-envelope, three layouts, four animation styles, four fonts, colour themes and custom palettes, slideshow, music controls,
+envelope, six layouts, four animation styles, four fonts, colour themes and custom palettes, slideshow, music controls,
 video backgrounds, wedding/homecoming events and advanced RSVP for up to 500
 guest places. Explore `/standard-invitation/preview`, personalize it at
 `/standard-invitation`, and manage replies at `/standard-invitation/dashboard`.

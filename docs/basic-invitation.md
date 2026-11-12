@@ -27,7 +27,7 @@ Open `/packages` and choose **Create Basic invitation**, or visit
 | WhatsApp and email | Opens WhatsApp or the guest's configured email app with invitation text and link |
 | Invitation QR | Locally generated downloadable PNG, including personal guest links |
 | Guest counts | Total, attending, declined and awaiting reply |
-| No watermark | Shared invitation has no Forever branding |
+| No watermark | Shared invitation has no Liora branding |
 | Up to 100 guests | Enforced on the server for both owner additions and public replies, including concurrent requests |
 | Free essentials | Couple/family details, venue, date/time, preview, saved drafts, permanent links and private RSVP inbox |
 

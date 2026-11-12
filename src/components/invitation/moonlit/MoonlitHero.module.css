@@ -1,0 +1,330 @@
+/* Framed evening portrait. All stationery colours follow the customer's palette. */
+.hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 8%;
+  padding: 80px 10% 100px;
+  background: radial-gradient(ellipse at 80% 45%,color-mix(in srgb,var(--forest),transparent 77%),transparent 65%),var(--paper);
+  overflow: hidden;
+}
+
+.copy {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  min-width: 0;
+}
+
+.flourish {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 17px;
+  color: var(--gold);
+  margin-bottom: 25px;
+}
+
+.flourish>span {
+  width: 45px;
+  height: 1px;
+  background: var(--line);
+}
+
+.eyebrow {
+  font-size: 7px;
+  letter-spacing: .23em;
+  line-height: 1.9;
+  color: var(--muted);
+}
+
+.copy h1 {
+  font-family: var(--names-font),Georgia,serif;
+  font-size: clamp(46px,7.4cqw,98px);
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -.045em;
+  margin: 30px 0!important;
+  overflow-wrap: anywhere;
+}
+
+.copy h1>span {
+  display: block;
+  animation: nameUnveil 1.4s both;
+}
+
+.copy h1>span:last-child {
+  animation-delay: .2s;
+}
+
+.copy h1 i {
+  display: block;
+  font-family: var(--font-cormorant),serif;
+  font-size: .48em;
+  line-height: 1.4;
+  font-weight: 400;
+  color: var(--gold);
+}
+
+.note {
+  font-size: 10px;
+  line-height: 2;
+  color: var(--muted);
+}
+
+.note em {
+  font-family: var(--font-cormorant),serif;
+  font-size: 21px;
+  color: var(--ink);
+}
+
+.rsvp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 25px;
+  min-height: 45px;
+  border: 1px solid var(--line);
+  padding: 14px 25px;
+  margin-top: 28px;
+  border-radius: 50px;
+  font-size: 10px;
+  background: var(--background);
+  transition: border-color .3s,transform .3s;
+}
+
+.rsvp:hover {
+  border-color: var(--gold);
+  transform: translateY(-3px);
+}
+
+.explore {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 25px;
+  font-size: 6px;
+  letter-spacing: .15em;
+  color: var(--muted)!important;
+}
+
+.portraitStage {
+  position: relative;
+  min-width: 0;
+  z-index: 2;
+  padding-bottom: 35px;
+}
+
+.outline {
+  position: absolute;
+  inset: -15px 15px 0 -15px;
+  border: 1px solid var(--line);
+  border-radius: 260px 260px 12px 12px;
+  pointer-events: none;
+}
+
+.portrait {
+  position: relative;
+  height: 540px;
+  border-radius: 260px 260px 8px 8px;
+  overflow: hidden;
+  background: var(--background);
+  border: 1px solid color-mix(in srgb,var(--ornament),transparent 60%);
+  box-shadow: 0 25px 60px #0003;
+  animation: portraitUnveil 1.5s both;
+}
+
+.portrait>img,.portrait>video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 40%;
+}
+
+.portrait:after {
+  content: "";
+  position: absolute;
+  inset: 50% 0 0;
+  background: linear-gradient(transparent,#081020b3);
+  pointer-events: none;
+}
+
+.placeholder {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  color: var(--gold);
+}
+
+.photoCaption {
+  position: absolute;
+  left: 15px;
+  right: 15px;
+  bottom: 73px;
+  z-index: 1;
+  text-align: center;
+  color: #fff9ef;
+  font-size: 6px;
+  letter-spacing: .17em;
+}
+
+.dateCard {
+  position: relative;
+  z-index: 2;
+  width: calc(100% - 35px);
+  margin: -47px auto 0;
+  padding: 22px 15px;
+  text-align: center;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  box-shadow: 0 12px 30px #0002;
+}
+
+.dateCard>span {
+  font-size: 5px;
+  letter-spacing: .18em;
+  color: var(--gold);
+}
+
+.dateCard strong {
+  display: block;
+  font-family: var(--font-cormorant),serif;
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 1.3;
+  margin: 9px 0;
+}
+
+.dateCard small {
+  display: block;
+  font-size: 8px;
+  color: var(--muted);
+}
+
+.sideNote {
+  position: absolute;
+  right: -30px;
+  top: 20%;
+  writing-mode: vertical-rl;
+  font-size: 5px;
+  letter-spacing: .22em;
+  color: var(--muted);
+}
+
+.videoControl {
+  position: absolute;
+  right: 17px;
+  bottom: 115px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid #fff8;
+  border-radius: 50%;
+  background: #0a102c99;
+  color: white;
+}
+
+@keyframes nameUnveil {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes portraitUnveil {
+  from {
+    opacity: .3;
+    clip-path: inset(8% 0 0);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0);
+  }
+}
+
+@container(max-width:700px) {
+  .hero {
+    padding: 65px 7% 70px;
+    gap: 7%;
+  }
+  .portrait {
+    height: 440px;
+  }
+  .copy h1 {
+    font-size: 59px;
+  }
+  .dateCard strong {
+    font-size: 21px;
+  }
+  .eyebrow {
+    font-size: 5px;
+  }
+}
+
+@container(max-width:480px) {
+  .hero {
+    grid-template-columns: 1fr;
+    padding: 42px 10% 50px;
+    gap: 45px;
+  }
+  .copy h1 {
+    font-size: 65px;
+    margin: 21px 0!important;
+  }
+  .flourish {
+    margin-bottom: 20px;
+  }
+  .eyebrow {
+    font-size: 6px;
+  }
+  .note {
+    font-size: 9px;
+  }
+  .rsvp {
+    margin-top: 20px;
+    font-size: 9px;
+  }
+  .explore {
+    margin-top: 20px;
+  }
+  .portraitStage {
+    width: 100%;
+    max-width: 340px;
+    margin: auto;
+    padding-bottom: 10px;
+  }
+  .portrait {
+    height: 390px;
+  }
+  .dateCard {
+    width: calc(100% - 24px);
+    padding: 19px 12px;
+  }
+  .dateCard strong {
+    font-size: 22px;
+  }
+  .sideNote {
+    right: -20px;
+  }
+  .photoCaption {
+    font-size: 5px;
+  }
+}
+
+@media(prefers-reduced-motion:reduce) {
+  .hero * {
+    animation: none!important;
+    transition: none!important;
+  }
+}
+

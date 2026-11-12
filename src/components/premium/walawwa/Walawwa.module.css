@@ -1,0 +1,161 @@
+/* WALAWWA — the supplied doorway / day-to-night design, with shared Premium tools.
+   1. Illustrated world  2. Timber doorway  3. Glass stationery  4. Galleries/motion */
+.invitation {
+  composes: invitation from "../PremiumInvitation.module.css";
+  overflow: clip;
+  background: var(--background);
+  color: var(--ink);
+}
+.invitation h1,.invitation h2,.invitation h3 { font-family: var(--names-font); }
+.interior { position: relative; z-index: 1; background: transparent; padding-bottom: 80px; }
+.world { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.worldCanvas { position: sticky; top: 0; height: 100svh; overflow: hidden; background: #f0dfc6; }
+.scenery,.dayScene,.nightScene,.bulbLights,.customBackground,.atmosphere { position: absolute; inset: 0; width: 100%; height: 100%; }
+.dayScene,.nightScene,.bulbLights { object-fit: cover; object-position: center 44%; }
+.nightScene,.bulbLights { opacity: var(--night); }
+.scenery:after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg,#2c170b1a,transparent 30% 70%,#2c170b1a); }
+.customBackground { object-fit: cover; }
+.backgroundControl { position: absolute; top: 65px; right: 18px; z-index: 5; pointer-events: auto; border: 1px solid #fff8; color: #fff; background: #251a18a6; padding: 12px; border-radius: 50%; }
+.lanterns { position: absolute; inset: 0; opacity: var(--night); }
+.lanterns>span { position: absolute; top: 0; left: var(--x); transform-origin: top; animation: lanternSway 5s var(--delay) ease-in-out infinite; }
+.lanterns i { display: block; width: 1px; height: var(--length); background: #f8dd9c99; margin: auto; }
+.lanterns b { display: block; width: 29px; height: 42px; border-radius: 12px 12px 16px 16px; border: 1px solid #ffe8aa; background: radial-gradient(circle,#fff1c2,#ffc864 50%,#c2761f); box-shadow: 0 0 30px 8px #ffbe5a77; }
+.petal { position: absolute; top: -25px; left: var(--x); width: var(--size); height: calc(var(--size) * 1.5); background: #ffe8e6; border: 1px solid #e8b1ac88; border-radius: 85% 15% 75% 25%; animation: petalFall var(--duration) var(--delay) linear infinite; opacity: .8; }
+.petal:nth-child(3n) { background: #fff8e6; }
+.firefly { position: absolute; top: var(--y); left: var(--x); width: 6px; height: 6px; border-radius: 50%; color: #ffe2a0; background: currentColor; box-shadow: 0 0 15px 5px #ffd17766; opacity: var(--night); animation: fireflyFloat 7s var(--delay) ease-in-out infinite; }
+
+/* Door leaves, brass handles and floral arrangements are separate from the content. */
+.welcome { position: relative; z-index: 2; min-height: 860px; height: calc(100svh - 58px); max-height: 1200px; overflow: hidden; background: url('/assets/walawwa/ceremony-floral-day.webp') center 44%/cover; color: #fff3db; perspective: 1500px; }
+.welcome:before { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse at center,#8a5127,#21100a 85%); }
+.welcome[data-opening=true]:before { animation: doorwayFade 3.3s both; }
+.welcomeHeading { position: absolute; z-index: 2; top: 4%; left: 8%; right: 8%; text-align: center; }
+.welcomeHeading>span,.welcomeReply>span { display: block; font-size: 8px; line-height: 1.8; letter-spacing: .22em; }
+.welcomeHeading strong { display: block; margin: 12px 0; font-family: var(--names-font); font-weight: 400; font-size: clamp(30px,4cqw,54px); }
+.welcomeHeading i { color: #e8c27a; font-weight: 400; }
+.welcomeHeading p { max-width: 460px; margin: auto; font-size: 10px; line-height: 1.9; color: #e8d9bc; }
+.doorway { position: absolute; top: 25%; bottom: 19%; width: min(66%,390px); left: 50%; transform: translateX(-50%); border: 10px solid #492a18; outline: 1px solid #a67c4e; box-shadow: 0 0 0 3px #25130c,inset 0 0 20px #0009,0 18px 55px #110805bb; perspective: 1200px; background: url('/assets/walawwa/ceremony-floral-day.webp') center 38%/cover; }
+.doorLight { position: absolute; inset: 0; background: radial-gradient(ellipse,#fff6db,#ffe4ab99,transparent); opacity: 0; transition: opacity 1.6s; }
+.doorLeaf { position: absolute; top: 0; bottom: 0; width: 50%; overflow: hidden; background: #55301d; backface-visibility: hidden; transition: transform 2.6s cubic-bezier(.5,0,.2,1); }
+.doorLeaf>img { position: absolute; top: 0; left: 0; display: block; width: 200%; max-width: none; height: 100%; object-fit: fill; }
+.doorLeaf[data-side=left] { left: 0; transform-origin: left; }
+.doorLeaf[data-side=right] { right: 0; transform-origin: right; }
+.doorLeaf[data-side=right]>img { left: -100%; }
+.doorLeaf:after { content: ""; position: absolute; inset: 0; pointer-events: none; box-shadow: inset 0 0 8px #160a0799; background: linear-gradient(110deg,#fff1,transparent 35%,#0002); }
+.gatePillar { position: absolute; top: -15px; bottom: -12px; width: 26px; z-index: 2; filter: drop-shadow(3px 4px 5px #160a0777); }
+.gatePillar[data-side=left] { left: -34px; }.gatePillar[data-side=right] { right: -34px; }
+/* Fluted limestone shaft, a moulded capital and rounded base match the reference. */
+.columnShaft { position: absolute; inset: 18px 0 24px; clip-path: polygon(6% 0,94% 0,100% 100%,0 100%); background: linear-gradient(90deg,#57482e55,transparent 25%,#fff2 40%,transparent 65%,#45361d66),repeating-linear-gradient(0deg,transparent 0 94px,#84734e66 95px,#f8edcc55 96px,transparent 97px),repeating-linear-gradient(90deg,#a79873 0,#d1c29b 1px,#f0e4c3 2px,#d4c69f 3px,#9c8a63 4px,#c1b18a 5px); box-shadow: inset 1px 0 2px #fff5,inset -2px 0 3px #57452866; }
+.gatePillar:before { content: ""; position: absolute; top: -9px; left: -7px; right: -7px; height: 30px; border-radius: 0 0 38% 38%; background: linear-gradient(180deg,#f1e4c1 0 9%,#b5a17b 10% 16%,#dbcca6 17% 27%,transparent 28% 75%,#a28e65 76% 80%,#e1d2ac 81% 92%,#9c875e 93%),linear-gradient(90deg,#a18b61,#e5d6b2 35%,#c4b18a 75%,#8f7953); box-shadow: inset 0 1px #fff7,0 2px 2px #32230c66; }
+.gatePillar:after { content: ""; position: absolute; bottom: -4px; left: -8px; right: -8px; height: 31px; border-radius: 40% 40% 3px 3px; background: linear-gradient(180deg,transparent 0 7%,#e2d4b1 8% 17%,#a28b60 18% 23%,#eddfbc 24% 39%,#b19c74 40% 45%,#e5d6b0 46% 64%,#9e875c 65% 71%,#e4d5b0 72% 92%,#a38c64 93%),linear-gradient(90deg,#9c855c,#e8d9b7 35%,#c4b08a 75%,#8f7851); border-bottom: 2px solid #a18a60; box-shadow: 0 3px 3px #24170866; }
+.doorMonogram { position: absolute; z-index: 3; top: -28px; left: 50%; transform: translateX(-50%); font-family: var(--names-font); color: #f4deb0; background: linear-gradient(135deg,#ba9157,#67421e); border: 1px solid #d9b77c; box-shadow: 0 3px 8px #0008,inset 0 0 0 3px #67421e; border-radius: 45%; padding: 12px; font-style: italic; white-space: nowrap; }
+.doorSteps { position: absolute; top: 81%; left: 50%; width: min(76%,490px); transform: translateX(-50%); }
+.doorSteps i { display: block; height: 13px; background: linear-gradient(#eddfc5,#b4a58e); box-shadow: 0 3px 5px #0005; }
+.doorSteps i:nth-child(2) { margin: 0 -16px; }.doorSteps i:nth-child(3) { margin: 0 -32px; }
+.flowersLeft,.flowersRight { position: absolute; display: block; width: clamp(110px,20%,220px); height: auto; bottom: 15%; pointer-events: none; filter: drop-shadow(0 10px 8px #120b0666); }
+.flowersLeft { left: max(0px,calc(50% - 380px)); }.flowersRight { right: max(0px,calc(50% - 380px)); transform: scaleX(-1); }
+.welcomeReply { position: absolute; bottom: 4%; left: 4%; right: 4%; text-align: center; }
+.welcomeReply button { display: inline-flex; align-items: center; justify-content: center; gap: 12px; margin-top: 14px; padding: 15px 25px; border: 1px solid #f8dcaa99; background: #fff3dc14; border-radius: 50px; color: #fff3dc; font-family: var(--names-font); font-size: 19px; animation: doorPulse 3s ease-in-out infinite; }
+.welcome[data-opening=true] .doorLeaf[data-side=left] { transform: rotateY(-110deg); }
+.welcome[data-opening=true] .doorLeaf[data-side=right] { transform: rotateY(110deg); }
+.welcome[data-opening=true] .doorLight { opacity: 1; }
+.welcome[data-opening=true] .doorway { animation: doorwayEnter 3.3s cubic-bezier(.5,0,.3,1) both; }
+.welcome[data-opening=true] .welcomeHeading,.welcome[data-opening=true] .flowersLeft,.welcome[data-opening=true] .flowersRight,.welcome[data-opening=true] .doorSteps { animation: doorwayFade 3.3s both; }
+.welcome[data-effect=courtyard][data-opening=true] .doorway { animation: courtyardEnter 3.3s both; }
+.welcome[data-effect=lamplight][data-opening=true] .doorLight { animation: lampGlow 3.3s both; }
+.skipIntro { position: absolute; top: 12px; right: 12px; z-index: 5; background: #24130db3; border: 1px solid #f8dcaa66; color: #fff3dc; border-radius: 25px; padding: 10px 15px; }
+
+/* Glass panels retain the reference's spacious, single-column invitation. */
+.topbar { composes: topbar from "../PremiumInvitation.module.css"; position: relative; z-index: 2; background: color-mix(in srgb,var(--paper),transparent 15%); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+.hero { position: relative; min-height: 95svh; display: flex; align-items: flex-end; justify-content: center; padding: 160px 24px 90px; text-align: center; }
+.heroLetter { width: min(100%,560px); padding: 40px 25px; border-radius: 180px 180px 26px 26px; background: color-mix(in srgb,var(--paper),transparent 12%); border: 1px solid #fff8; backdrop-filter: blur(7px); box-shadow: 0 20px 70px #39230e1a; animation: letterArrive 1.3s both; }
+.heroLetter h1 { display: flex; flex-direction: column; font-size: calc(clamp(54px,8cqw,98px) * var(--heading-scale)); font-style: italic; line-height: .98; color: var(--primary-text); padding: 30px 0; letter-spacing: var(--tracking); font-weight: 400; }
+.heroLetter h1 i { font-size: .45em; padding: 8px; color: var(--gold); }
+.heroLetter>strong { font-weight: 400; font-size: 12px; text-transform: uppercase; letter-spacing: .14em; }
+.heroLetter p { font-size: 11px; padding: 16px 0 24px; }
+.heroLetter>a { display: inline-flex; gap: 12px; align-items: center; border-bottom: 1px solid var(--line); padding-bottom: 8px; font-size: 9px; text-transform: uppercase; letter-spacing: .18em; }
+.heroFootnote { position: absolute; bottom: 30px; font-size: 7px; letter-spacing: .2em; color: var(--ink); background: var(--paper); padding: 9px 14px; border-radius: 20px; }
+.customerPortrait { width: min(36%,300px); max-height: 440px; object-fit: contain; border-radius: 150px 150px 15px 15px; margin-left: 25px; background: var(--paper); border: 8px solid var(--paper); }
+.eyebrow { display: block; font-size: 8px; letter-spacing: .25em; line-height: 2; color: var(--gold); }
+.story,.countdown { width: min(86%,560px); position: relative; margin: 140px auto; padding: 50px 35px; text-align: center; border-radius: 26px; background: color-mix(in srgb,var(--paper),transparent 12%); backdrop-filter: blur(12px); border: 1px solid #fff9; box-shadow: 0 20px 50px #5c381a26; }
+.story h2,.countdown h2 { font-size: clamp(34px,5cqw,50px); margin: 22px 0; }
+.story>p { line-height: 2.1; font-size: 12px; }
+.families { composes: families from "../PremiumInvitation.module.css"; flex-direction: column; gap: 12px; font-family: var(--names-font); font-size: 23px; margin: 30px 0 0; }
+.personalNote { font-style: italic; padding-top: 28px; color: var(--primary-text); }
+.clock { composes: clock from "../PremiumInvitation.module.css"; margin-top: 30px; gap: 18px; }
+.clock strong { font-size: 42px; }.clock span { font-size: 7px; }
+.events { position: relative; padding: 10px 0; }
+.eventCard { display: flex; flex-direction: column; align-items: center; gap: 18px; width: min(86%,560px); margin: 120px auto 240px; padding: 52px 30px; text-align: center; border-radius: 26px; color: var(--ink); border: 1px solid #fff8; background: color-mix(in srgb,var(--paper),transparent 10%); backdrop-filter: blur(12px); box-shadow: 0 20px 60px #0002; scroll-margin-top: 40px; }
+.eventCard h2 { font-size: clamp(40px,6cqw,58px); }.eventCard h3 { font-size: 25px; font-weight: 400; }.eventCard p { font-size: 12px; line-height: 1.8; }.eventTime { font-family: var(--names-font); font-size: 36px; font-weight: 400; }
+.rule { width: 64px; height: 1px; background: currentColor; opacity: .3; }
+.eventOrnament { color: var(--gold); margin-bottom: 12px; }
+.eventActions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 12px; }
+.eventActions a { display: inline-flex; gap: 7px; align-items: center; padding: 11px 15px; border: 1px solid currentColor; border-radius: 25px; font-size: 9px; }
+.eventCard[data-evening=true] { background: #101832d9; border-color: #f4d5a14d; color: #f8ecd6; }
+.eventCard[data-evening=true] .eyebrow,.eventCard[data-evening=true] .eventOrnament { color: #ebc785; }
+.gallery { position: relative; padding: 40px 24px 70px; max-width: 900px; width: 92%; margin: 80px auto; color: #fff3db; background: #101832cc; border: 1px solid #e6c89044; border-radius: 26px; }
+.sectionHeading { text-align: center; padding-bottom: 30px; }.sectionHeading>span { font-size: 8px; letter-spacing: .25em; color: #ebc785; }.sectionHeading h2 { margin: 18px 0; font-size: clamp(36px,5cqw,56px); }.sectionHeading h2 em { color: #ebc785; }.sectionHeading p { font-size: 12px; line-height: 2; }.sectionHeading small { display: block; font-size: 8px; margin-top: 20px; }
+.archTrack { position: relative; display: flex; gap: 22px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 10px 10px 25px; scrollbar-width: thin; scrollbar-color: #edce8b66 transparent; }
+.archPhoto { flex: 0 0 min(68cqw,250px); scroll-snap-align: center; border-radius: 150px 150px 20px 20px; background: #fff7ea; padding: 10px; color: #55301d; border: 1px solid #ddc295; transition: box-shadow .4s; }
+.archPhoto[data-active=true] { box-shadow: 0 0 0 3px #d5b67c55,0 15px 35px #0005; }
+.archPhoto img { display: block; width: 100%; height: 320px; border-radius: 140px 140px 8px 8px; object-fit: cover; object-position: center 45%; }
+.archPhoto figcaption { font-family: var(--names-font); font-size: 16px; text-align: center; padding: 15px 0 8px; font-style: italic; }
+.galleryControls { display: flex; justify-content: center; gap: 12px; margin-top: 14px; }
+.galleryControls button { display: grid; place-items: center; width: 38px; height: 38px; border: 1px solid #e3c99b99; border-radius: 50%; color: #fff2d8; background: #101832b3; }
+
+/* The second gallery opens like a contemporary paper photo journal. */
+.storyAlbum { background: var(--paper); color: var(--ink); border-radius: 6px; padding: 45px 30px 30px; box-shadow: 0 25px 70px #0003; }
+.storyAlbum .sectionHeading>span { color: var(--gold); }
+.storyAlbum .sectionHeading { text-align: left; padding: 0 0 30px; border-bottom: 1px solid var(--line); margin-bottom: 28px; }
+.storyAlbum .sectionHeading h2 { font-size: clamp(35px,4.5cqw,52px); max-width: 540px; }
+.albumSpread { display: grid; grid-template-columns: minmax(0,1fr) 115px; gap: 20px; }
+.albumLead { min-width: 0; }
+.albumLead>img { display: block; width: 100%; height: 390px; object-fit: cover; object-position: center 30%; border-radius: 3px; animation: albumReveal .7s ease both; }
+.albumLead figcaption { display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: end; border-bottom: 1px solid var(--line); padding: 22px 0; }
+.albumLead figcaption>span { font-size: 7px; letter-spacing: .14em; color: var(--muted); }
+.albumLead figcaption>span:first-child { grid-column: 1 / -1; }
+.albumLead figcaption strong { font-family: var(--names-font); font-size: clamp(23px,3cqw,32px); font-weight: 400; line-height: 1.25; }
+.albumLead figcaption em { color: var(--primary-text); }
+.albumRail { display: flex; flex-direction: column; gap: 14px; }
+.albumRail button { position: relative; padding: 5px; background: transparent; border: 1px solid var(--line); border-radius: 3px; transition: border-color .3s,box-shadow .3s; }
+.albumRail button[aria-pressed=true] { border-color: var(--gold); box-shadow: 0 0 0 2px var(--line); }
+.albumRail img { display: block; width: 100%; height: 115px; object-fit: cover; object-position: center 55%; }
+.albumRail button>span { position: absolute; bottom: 9px; right: 9px; background: #22190db3; color: #fff7ea; font-size: 8px; padding: 4px 6px; }
+.storyAlbum .galleryControls { justify-content: flex-start; }
+.storyAlbum .galleryControls button { color: var(--primary-text); border-color: var(--line); background: transparent; }
+@keyframes albumReveal { from { opacity: .3; translate: 0 8px; } to { opacity: 1; translate: 0 0; } }
+@media(max-width:650px) { .storyAlbum { padding: 30px 20px; }.albumSpread { grid-template-columns: minmax(0,1fr); gap: 20px; }.albumLead>img { height: 310px; }.albumRail { flex-direction: row; gap: 10px; }.albumRail button { flex: 1; min-width: 0; }.albumRail img { height: 85px; }.albumLead figcaption strong { font-size: 26px; } }
+.filmSection { composes: filmSection from "../PremiumInvitation.module.css"; position: relative; max-width: 860px; margin: 100px auto; background: #101832e6; border: 1px solid #e6c89066; border-radius: 26px; color: #f8ecd6; }
+.filmSection h2 em { color: #ebc785; }.filmSection p,.filmSection small { color: #f8ecd6ba; }.filmSection .eyebrow { color: #ebc785; }
+.filmCover { composes: filmCover from "../PremiumInvitation.module.css"; border-radius: 140px 140px 10px 10px; background: #fff7ea; }
+.filmCover>img { object-fit: contain; opacity: .8; }
+.rsvp { composes: rsvp from "../PremiumInvitation.module.css"; position: relative; width: min(88%,600px); margin: 160px auto 100px; padding: 45px 30px; border-radius: 26px; color: #f8ecd6; background: #101832e6; border: 1px solid #f4d5a14d; backdrop-filter: blur(12px); }
+.rsvpForm { composes: rsvpForm from "../PremiumInvitation.module.css"; max-width: 100%; padding: 0; background: transparent; border: 0; box-shadow: none; border-radius: 0; }
+.rsvpForm input:not([type=checkbox]):not([type=radio]),.rsvpForm select,.rsvpForm textarea { color: #fff4df; background: #ffffff12; border-color: #ead6a766; border-radius: 12px; }.rsvpForm select option { color: #24180f; background: #fff7ea; }.rsvpForm label,.rsvpForm legend { color: #f8ecd6; }
+.primaryButton { composes: primaryButton from "../PremiumInvitation.module.css"; color: #fff; background: var(--forest); border: 1px solid var(--gold); border-radius: 30px; }
+.secondaryButton { composes: secondaryButton from "../PremiumInvitation.module.css"; color: #f8ecd6; border-color: #f8ecd666; border-radius: 30px; }
+.seatNote { composes: seatNote from "../PremiumInvitation.module.css"; color: #f8ecd6; background: #ffffff12; }
+.share { composes: share from "../PremiumInvitation.module.css"; color: #fff0d9; background: #101832d9; position: relative; }.share h2 em { color: #ebc785; }
+.footer { composes: footer from "../PremiumInvitation.module.css"; background: #101832e6; position: relative; color: #f8ecd6; }.footer strong,.footer button { color: #ebc785; }
+.bottomNav { composes: bottomNav from "../PremiumInvitation.module.css"; background: #fff7eaed; backdrop-filter: blur(12px); border-color: #c2a479; }
+.invitation[data-layout=portrait] .hero { align-items: center; }.invitation[data-layout=portrait] .heroLetter { border-radius: 200px 200px 26px 26px; max-width: 470px; }
+.invitation[data-layout=letter] .heroLetter { border-radius: 8px; padding: 60px 30px; transform: rotate(-1deg); }
+.invitation[data-animation=romantic] .petal { animation-duration: 24s; }.invitation[data-animation=romantic] .petal:nth-child(2n) { display: none; }
+.invitation[data-animation=enchanted] .firefly { animation-duration: 4s; }
+.invitation[data-motion=off] * { animation: none!important; transition: none!important; }
+.invitation[data-embedded=true] .worldCanvas { height: 720px; }.invitation[data-embedded=true] .hero { min-height: 720px; }
+@keyframes lanternSway { 0%,100% { transform: rotate(-3deg); }50% { transform: rotate(3deg); } }
+@keyframes petalFall { from { transform: translate(0,-30px) rotate(0); }50% { transform: translate(45px,50svh) rotate(140deg); }to { transform: translate(-25px,105svh) rotate(290deg); } }
+@keyframes fireflyFloat { 0%,100% { transform: translate(0,0) scale(.6); }50% { transform: translate(20px,-45px) scale(1.2); } }
+@keyframes doorPulse { 0%,100% { box-shadow: 0 0 0 0 #ffe2a02e; }50% { box-shadow: 0 0 0 10px #ffe2a000; } }
+@keyframes doorwayEnter { 0%,40% { transform: translateX(-50%) scale(1); }100% { transform: translateX(-50%) scale(3.5); opacity: 0; } }
+@keyframes doorwayFade { 0%,40% { opacity: 1; }100% { opacity: 0; } }
+@keyframes courtyardEnter { 0%,45% { clip-path: inset(0); }100% { clip-path: inset(0 50%); opacity: 0; } }
+@keyframes lampGlow { 0% { opacity: 0; }70% { opacity: 1; }100% { opacity: 0; } }
+@keyframes letterArrive { from { opacity: 0; translate: 0 25px; }to { opacity: 1; translate: 0 0; } }
+@media(min-width:1000px) { .dayScene,.nightScene,.bulbLights { object-fit: fill; } }
+@media(max-width:650px) {
+  .welcome { min-height: 760px; height: calc(100svh - 107px); }.welcomeHeading { top: 5%; }.welcomeHeading strong { font-size: 35px; }.welcomeHeading p { font-size: 9px; }.doorway { top: 27%; bottom: 21%; width: 66%; border-width: 9px; }.doorLeaf { padding: 12px; gap: 10px; }.doorSteps { top: 79%; width: 74%; }.flowersLeft,.flowersRight { bottom: 18%; width: 31%; }.welcomeReply { bottom: 4%; }.welcomeReply>span { font-size: 7px; }
+  .hero { min-height: 95svh; flex-direction: column; align-items: center; justify-content: flex-end; padding: 180px 24px 90px; gap: 25px; }.heroLetter { padding: 40px 18px; }.heroLetter h1 { font-size: calc(64px * var(--heading-scale)); }.heroLetter .eyebrow { font-size: 7px; }.customerPortrait { width: 65%; max-height: 300px; margin: 0; }.heroFootnote { font-size: 6px; }
+  .story,.countdown { margin: 100px auto; padding: 35px 24px; }.clock { gap: 12px; }.clock strong { font-size: 32px; }.clock span { font-size: 6px; }.eventCard { margin-bottom: 180px; padding: 40px 22px; }.eventActions { gap: 10px; }.eventActions a { font-size: 8px; }.gallery { padding: 30px 16px; }.filmSection { width: 88%; padding: 35px 24px; }.rsvp { padding: 35px 22px; }.petal:nth-child(3n) { display: none; }
+}
+@media(prefers-reduced-motion:reduce) { .invitation * { animation: none!important; transition: none!important; }.atmosphere { display: none; } }

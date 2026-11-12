@@ -1,0 +1,1355 @@
+/* AURELINE
+   Shared forms/media controls are composed from Premium. The visual design below
+   uses copper, porcelain, mandalas, a ceremonial border and a cinematic journey. */
+.invitation {
+  composes: invitation from "../PremiumInvitation.module.css";
+  background: var(--background);
+}
+
+.interior {
+  composes: interior from "../PremiumInvitation.module.css";
+  background: var(--paper);
+}
+
+.interior:before {
+  background-image: repeating-linear-gradient(115deg,transparent 0 90px,color-mix(in srgb,var(--ornament),transparent 94%) 90px 92px,transparent 92px 180px),radial-gradient(ellipse at 90% 20%,color-mix(in srgb,var(--ornament),transparent 80%),transparent 55%);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  opacity: 1;
+  mix-blend-mode: normal;
+}
+
+.topbar {
+  composes: topbar from "../PremiumInvitation.module.css";
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+}
+
+.monogram {
+  composes: monogram from "../PremiumInvitation.module.css";
+  font-size: 24px;
+  letter-spacing: .08em;
+}
+
+.story {
+  composes: story from "../PremiumInvitation.module.css";
+}
+
+.interior .story {
+  margin: 0 auto;
+  max-width: 900px;
+  padding: 70px 10%;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.interior .story h2 {
+  font-size: clamp(36px,4.2cqw,60px);
+}
+
+.interior .story>p {
+  font-family: var(--font-cormorant),serif;
+  font-size: 22px;
+  line-height: 1.9;
+}
+
+.countdown {
+  composes: countdown from "../PremiumInvitation.module.css";
+}
+
+.interior .countdown {
+  margin: 20px 8% 30px;
+  padding: 40px 5%;
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  box-shadow: none;
+}
+
+.interior .countdown .eyebrow {
+  color: var(--gold);
+}
+
+.clock {
+  composes: clock from "../PremiumInvitation.module.css";
+  display: grid;
+  grid-template-columns: repeat(4,minmax(0,1fr));
+  gap: 15px;
+  max-width: 650px;
+  margin: 30px auto 0;
+}
+
+.clock>div {
+  border: 1px solid var(--line);
+  padding: 20px 10px;
+  background: var(--background);
+  position: relative;
+}
+
+.clock>div:before,.clock>div:after {
+  content: "";
+  width: 5px;
+  height: 5px;
+  position: absolute;
+  border: 1px solid var(--gold);
+  transform: rotate(45deg);
+  top: -3px;
+  left: -3px;
+  background: var(--paper);
+}
+
+.clock>div:after {
+  top: auto;
+  left: auto;
+  bottom: -3px;
+  right: -3px;
+}
+
+.clock strong {
+  font-size: 57px;
+  font-family: var(--font-cormorant),serif;
+  color: var(--primary-text);
+}
+
+.events {
+  composes: events from "../PremiumInvitation.module.css";
+}
+
+.interior .events {
+  padding: 60px 12%;
+  background: transparent;
+}
+
+.sectionHeading {
+  composes: sectionHeading from "../PremiumInvitation.module.css";
+}
+
+.interior .sectionHeading {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.eventGrid {
+  composes: eventGrid from "../PremiumInvitation.module.css";
+  grid-template-columns: 1fr;
+  gap: 0;
+  max-width: 760px;
+  margin: auto;
+}
+
+.eventCard {
+  composes: eventCard from "../PremiumInvitation.module.css";
+}
+
+.interior .eventCard {
+  display: grid;
+  grid-template-columns: 65px 1fr;
+  column-gap: 25px;
+  text-align: left;
+  border: 0;
+  border-left: 1px solid var(--line);
+  border-radius: 0;
+  padding: 25px 0 35px 30px;
+  background: transparent;
+}
+
+.eventCard>svg {
+  grid-column: 1;
+  grid-row: 1/4;
+  width: 55px;
+  height: 55px;
+  margin: 0;
+  padding: 15px;
+  border-radius: 50%;
+  background: var(--forest);
+  color: var(--on-primary);
+}
+
+.eventCard h3,.eventCard>p,.eventCard h4,.eventCard>a {
+  grid-column: 2;
+}
+
+.eventCard h3 {
+  margin: 0 0 12px;
+  font-size: 31px;
+}
+
+.eventCard>p {
+  font-size: 10px;
+}
+
+.eventCard strong {
+  font-size: 24px;
+  margin-top: 4px;
+}
+
+.eventCard h4 {
+  margin-top: 15px;
+}
+
+.eventCard>a {
+  justify-self: start;
+}
+
+.eventNumber {
+  composes: eventNumber from "../PremiumInvitation.module.css";
+  top: 42px;
+  left: -30px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 10px;
+  transform: none;
+}
+
+.eventLine {
+  composes: eventLine from "../PremiumInvitation.module.css";
+  display: none;
+}
+
+.filmSection {
+  composes: filmSection from "../PremiumInvitation.module.css";
+}
+
+.interior .filmSection {
+  padding: 60px 12%;
+  background: var(--background);
+}
+
+.interior .filmSection>div {
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  backdrop-filter: none;
+}
+
+.filmCover {
+  composes: filmCover from "../PremiumInvitation.module.css";
+  border: 5px solid var(--paper);
+  border-radius: 160px 160px 5px 5px;
+}
+
+.rsvp {
+  composes: rsvp from "../PremiumInvitation.module.css";
+}
+
+.interior .rsvp {
+  padding: 70px 8%;
+  background: transparent;
+}
+
+.rsvpForm {
+  composes: rsvpForm from "../PremiumInvitation.module.css";
+  border-radius: 3px;
+  box-shadow: 10px 10px 0 color-mix(in srgb,var(--ornament),transparent 86%);
+  padding: 35px;
+}
+
+.rsvpForm input:not([type=checkbox]):not([type=radio]),.rsvpForm select,.rsvpForm textarea {
+  border-radius: 0;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: transparent;
+}
+
+.share {
+  composes: share from "../PremiumInvitation.module.css";
+}
+
+.interior .share {
+  margin: 0 8% 40px;
+  background: transparent;
+  border-radius: 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+  padding: 40px 0;
+  backdrop-filter: none;
+}
+
+.footer {
+  composes: footer from "../PremiumInvitation.module.css";
+}
+
+.interior .footer {
+  background: var(--background);
+}
+
+.bottomNav {
+  composes: bottomNav from "../PremiumInvitation.module.css";
+  border-radius: 5px;
+}
+
+.primaryButton {
+  composes: primaryButton from "../PremiumInvitation.module.css";
+  border-radius: 30px;
+}
+
+.music {
+  composes: music from "../PremiumInvitation.module.css";
+  border-radius: 6px;
+}
+
+/* Ornamental opening: the journey scene appears only after a deliberate tap. */
+.welcome {
+  position: relative;
+  min-height: 900px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 320px 8% 130px;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 20%,var(--paper),transparent 70%),var(--background);
+}
+
+.mandala {
+  position: absolute;
+  width: min(750px,100cqw);
+  top: -430px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--primary-text);
+  opacity: .58;
+  animation: mandalaArrive 2s both;
+}
+
+.silkLines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.silkLines i {
+  position: absolute;
+  width: 60%;
+  height: 140%;
+  border: 1px solid var(--line);
+  transform: rotate(-25deg);
+  top: -20%;
+  left: -25%;
+  border-radius: 50%;
+  animation: silkDrift 18s ease-in-out infinite alternate;
+}
+
+.silkLines i:nth-child(2) {
+  left: auto;
+  right: -25%;
+  animation-delay: -9s;
+}
+
+.silkLines i:nth-child(3) {
+  left: 20%;
+  opacity: .3;
+  animation-delay: -4s;
+}
+
+.welcomeLetter {
+  position: relative;
+  text-align: center;
+  max-width: 700px;
+  z-index: 1;
+}
+
+.kicker {
+  display: block;
+  font-size: 7px;
+  letter-spacing: .3em;
+  color: var(--gold);
+  line-height: 1.9;
+}
+
+.welcomeLetter h1 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  font-family: var(--names-font),serif;
+  font-size: calc(clamp(43px,6cqw,84px) * var(--heading-scale));
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: var(--tracking);
+  color: var(--primary-text);
+  margin: 27px 0 20px!important;
+  overflow-wrap: anywhere;
+}
+
+.welcomeLetter h1 i {
+  font-family: var(--font-cormorant),serif;
+  font-size: .55em;
+}
+
+.welcomeDate {
+  font-family: var(--font-cormorant),serif;
+  font-size: 23px;
+}
+
+.welcomeLetter>p {
+  font-size: 10px;
+  line-height: 2;
+  color: var(--muted);
+  max-width: 380px;
+  margin: 25px auto 0!important;
+}
+
+.welcomeLetter>button {
+  display: inline-flex;
+  align-items: center;
+  gap: 30px;
+  min-height: 46px;
+  border: 1px solid var(--forest);
+  border-radius: 30px;
+  background: transparent;
+  color: var(--primary-text);
+  font-size: 9px;
+  padding: 13px 23px;
+  margin-top: 28px;
+  transition: background .3s,color .3s;
+}
+
+.welcomeLetter>button:hover {
+  background: var(--forest);
+  color: var(--on-primary);
+}
+
+.recipient {
+  margin-top: 38px;
+}
+
+.recipient>span {
+  display: block;
+  font-size: 5px;
+  letter-spacing: .23em;
+  color: var(--muted);
+}
+
+.recipient strong {
+  display: block;
+  font-family: var(--font-cormorant),serif;
+  font-size: 28px;
+  font-weight: 400;
+  margin-top: 10px;
+  overflow-wrap: anywhere;
+}
+
+.procession {
+  position: absolute;
+  bottom: 18px;
+  left: 5%;
+  width: 90%;
+  height: 85px;
+  color: var(--gold);
+  opacity: .75;
+}
+
+.journeyScene {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  overflow: hidden;
+  background: var(--background);
+  animation: sceneReveal .25s both;
+}
+
+.welcome[data-opening=true] {
+  height: calc(100svh - 58px);
+  min-height: 440px;
+  padding: 0;
+}
+
+.journeyScene>img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 75%;
+  animation: journeyDrive 3.6s both;
+}
+
+.journeyScene:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg,#f1f7f9b8,transparent 48%);
+  pointer-events: none;
+}
+
+.sceneTitle {
+  position: absolute;
+  z-index: 1;
+  top: 9%;
+  left: 6%;
+  right: 6%;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 16px;
+  text-align: center;
+  color: #253e52;
+  text-shadow: 0 2px 15px #fff;
+}
+
+.sceneTitle>span {
+  font-size: 7px;
+  letter-spacing: .26em;
+}
+
+.sceneTitle>strong {
+  font-family: var(--font-cormorant),serif;
+  font-size: clamp(35px,5cqw,67px);
+  font-weight: 400;
+}
+
+.petalBurst {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.petalBurst i {
+  position: absolute;
+  left: calc(50% - 20px);
+  top: calc(50% - 30px);
+  width: 45px;
+  height: 60px;
+  border-radius: 85% 15% 75% 20%;
+  background: #fffaf0;
+  opacity: 0;
+  animation: openingBloom 1.3s calc(2.1s + var(--delay)) ease-out both;
+  transform-origin: center;
+}
+
+.welcome[data-effect=iris] .journeyScene {
+  animation: irisReveal 1s both;
+}
+
+.welcome[data-effect=unfurl] .journeyScene {
+  animation: parchmentReveal 1s both;
+}
+
+.skip {
+  position: absolute;
+  top: 25px;
+  right: 25px;
+  z-index: 8;
+  border: 1px solid #fff9;
+  background: #edf4f7cc;
+  color: #344d5b;
+  font-size: 8px;
+  padding: 10px 15px;
+  border-radius: 30px;
+}
+
+/* A traditional names/date layout with an illustrated couple, as in the reference. */
+.hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  padding: 65px 10% 130px;
+  gap: 5%;
+  overflow: hidden;
+}
+
+.heroMandala {
+  position: absolute;
+  width: 520px;
+  top: -300px;
+  left: -180px;
+  color: var(--primary-text);
+  opacity: .12;
+}
+
+.heroCopy {
+  position: relative;
+  text-align: center;
+  z-index: 1;
+  min-width: 0;
+}
+
+.heroCopy h1 {
+  font-family: var(--names-font),serif;
+  font-size: calc(clamp(42px,6.3cqw,86px) * var(--heading-scale));
+  font-weight: 400;
+  line-height: 1;
+  color: var(--primary-text);
+  letter-spacing: var(--tracking);
+  margin: 30px 0!important;
+  overflow-wrap: anywhere;
+}
+
+.heroCopy h1 i {
+  display: block;
+  font-family: var(--font-cormorant),serif;
+  font-size: .5em;
+  line-height: 1.5;
+}
+
+.heroCopy>p {
+  font-family: var(--font-cormorant),serif;
+  font-size: 23px;
+  font-style: italic;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.dateRibbon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  padding: 20px 0;
+  margin: 28px 0;
+  border-block: 1px solid var(--line);
+}
+
+.dateRibbon>span {
+  font-size: 8px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.dateRibbon strong {
+  font-family: var(--font-cormorant),serif;
+  font-weight: 400;
+  font-size: 60px;
+  line-height: 1;
+  color: var(--primary-text);
+}
+
+.heroCopy .venue {
+  font-size: 25px;
+  font-style: normal;
+  color: var(--ink);
+}
+
+.venue>span {
+  display: block;
+  font-family: var(--font-montserrat),sans-serif;
+  font-size: 8px;
+  font-style: normal;
+  line-height: 1.8;
+  color: var(--muted);
+  margin-top: 10px;
+}
+
+.heroCopy>a {
+  display: inline-flex;
+  align-items: center;
+  gap: 22px;
+  font-size: 6px;
+  letter-spacing: .16em;
+  padding: 12px 0;
+  margin-top: 25px;
+  border-bottom: 1px solid var(--line);
+}
+
+.coupleStage {
+  position: relative;
+  min-width: 0;
+  height: 650px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 50px;
+}
+
+.coupleIllustration {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  position: relative;
+  z-index: 1;
+  animation: coupleReveal 1.5s both;
+}
+
+.customerPortrait,.coupleStage>video {
+  width: 90%;
+  height: 90%;
+  object-fit: cover;
+  border-radius: 5px;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 20px 40px #0001;
+}
+
+.portraitHalo {
+  position: absolute;
+  width: 100%;
+  height: 80%;
+  border: 1px solid var(--line);
+  border-radius: 50% 50% 0 0;
+  background: radial-gradient(ellipse at center,color-mix(in srgb,var(--ornament),transparent 75%),transparent 68%);
+}
+
+.heroCaption {
+  position: absolute;
+  z-index: 2;
+  bottom: 12px;
+  font-family: var(--font-cormorant),serif;
+  font-size: 19px;
+  text-align: center;
+}
+
+.heroCaption i {
+  display: block;
+  font-family: var(--font-montserrat),sans-serif;
+  font-size: 5px;
+  letter-spacing: .23em;
+  margin-top: 10px;
+  font-style: normal;
+  color: var(--muted);
+}
+
+.heroProcession {
+  position: absolute;
+  left: 6%;
+  bottom: 20px;
+  width: 88%;
+  height: 70px;
+  color: var(--gold);
+  opacity: .6;
+}
+
+.invitation[data-layout=portrait] .heroCopy {
+  order: 2;
+}
+
+.invitation[data-layout=portrait] .coupleStage {
+  order: 1;
+}
+
+.invitation[data-layout=letter] .hero {
+  grid-template-columns: 1fr;
+  max-width: 900px;
+  margin: auto;
+}
+
+.invitation[data-layout=letter] .coupleStage {
+  height: 500px;
+  max-width: 420px;
+  width: 100%;
+  margin: auto;
+}
+
+.backgroundControl {
+  position: absolute;
+  z-index: 3;
+  bottom: 80px;
+  right: 10%;
+  width: 37px;
+  height: 37px;
+  border: 1px solid var(--line);
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+/* Mosaic memories keep each photo accessible without opening a modal. */
+.mosaicSection {
+  padding: 60px 10%;
+  border-block: 1px solid var(--line);
+}
+
+.mosaicHeading {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.mosaicHeading h2 {
+  margin-top: 18px!important;
+}
+
+.mosaicHeading>i {
+  display: block;
+  font-size: 17px;
+  font-style: normal;
+  color: var(--gold);
+  margin-top: 20px;
+}
+
+.mosaic {
+  display: grid;
+  grid-template-columns: 1.45fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.mosaicLead {
+  position: relative;
+  display: grid;
+  grid-template-rows: minmax(0,1fr) auto;
+  height: 560px;
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 45%,color-mix(in srgb,var(--ornament),transparent 87%),transparent 75%),var(--paper);
+  box-shadow: 0 16px 40px color-mix(in srgb,var(--forest),transparent 94%);
+}
+
+.mosaicLead img {
+  display: block;
+  min-height: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  animation: mosaicUnveil .9s both;
+}
+
+.mosaicLead figcaption {
+  position: relative;
+  margin-top: 14px;
+  border-top: 1px solid var(--line);
+  padding: 15px 5px 2px;
+  color: var(--muted);
+  text-align: center;
+  font-size: 7px;
+  line-height: 1.8;
+  letter-spacing: .12em;
+}
+
+.mosaicRail {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  align-content: start;
+}
+
+.mosaicRail button {
+  padding: 7px;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--paper);
+  height: 240px;
+  transition: border-color .3s,box-shadow .3s;
+}
+
+.mosaicRail button:nth-child(2n) {
+  margin-top: 25px;
+}
+
+.mosaicRail button[aria-pressed=true] {
+  border-color: var(--gold);
+}
+
+.mosaicRail img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+
+.mosaicRail button:hover {
+  border-color: var(--gold);
+  box-shadow: 0 5px 18px color-mix(in srgb,var(--ornament),transparent 80%);
+}
+
+.mosaicControls {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 27px;
+}
+
+.mosaicControls button {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  background: var(--paper);
+  color: var(--primary-text);
+  border: 1px solid var(--line);
+  border-radius: 50%;
+}
+
+/* Rising seed lights and silk illumination are unique to Aureline. */
+.atmosphere {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.spiralRain {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.spiralRain>i {
+  position: absolute;
+  left: 50%;
+  top: var(--y);
+  width: 13px;
+  height: 13px;
+  border: 1.5px solid var(--ring-colour);
+  border-radius: 50%;
+  background: color-mix(in srgb,var(--ring-colour),transparent 88%);
+  box-shadow: 0 0 9px color-mix(in srgb,var(--ring-colour),transparent 72%);
+  opacity: 0;
+  animation: spiralFall var(--duration) var(--delay) linear infinite;
+}
+
+/* Alternate sides as each ring gently circles its way down. */
+@keyframes spiralFall {
+  0% { opacity: 0; transform: translate(-70px,-100px) scale(.7); }
+  20% { opacity: .5; transform: translate(65px,10px) scale(1); }
+  45% { opacity: .55; transform: translate(-80px,140px) scale(.75); }
+  70% { opacity: .45; transform: translate(75px,280px) scale(1); }
+  100% { opacity: 0; transform: translate(-55px,420px) scale(.7); }
+}
+
+.lightBeams {
+  position: absolute;
+  inset: 0;
+  opacity: .32;
+}
+
+.lightBeams>i {
+  position: absolute;
+  width: 15%;
+  height: 120%;
+  top: -10%;
+  left: 15%;
+  background: linear-gradient(90deg,transparent,color-mix(in srgb,#087fb4,transparent 70%),transparent);
+  transform: rotate(-18deg);
+  animation: beamDrift 28s ease-in-out infinite alternate;
+}
+
+.lightBeams>i:nth-child(2) {
+  left: 55%;
+  animation-delay: -14s;
+  width: 8%;
+  background: linear-gradient(90deg,transparent,color-mix(in srgb,#9748d6,transparent 72%),transparent);
+}
+
+.lightBeams>i:nth-child(3) {
+  left: 85%;
+  animation-delay: -7s;
+  width: 5%;
+  background: linear-gradient(90deg,transparent,color-mix(in srgb,#8aab28,transparent 75%),transparent);
+}
+
+.seed {
+  --peak-opacity: .68;
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--seed-size);
+  height: calc(var(--seed-size) * 1.8);
+  opacity: 0;
+  animation: seedFall var(--duration) var(--delay) linear infinite;
+}
+
+.seed>i {
+  display: block;
+  position: relative;
+  width: var(--seed-size);
+  height: var(--seed-size);
+  border: 1.5px solid var(--seed-colour);
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 25%,#fff9,color-mix(in srgb,var(--seed-colour),transparent 74%));
+  box-shadow: 0 0 10px color-mix(in srgb,var(--seed-colour),transparent 65%),inset 0 0 3px #fff9;
+}
+
+.seed>i:before,.seed>i:after {
+  content: "";
+  position: absolute;
+  background: var(--seed-colour);
+  width: 1.5px;
+  height: 20px;
+  top: calc(var(--seed-size) * .7);
+  left: calc(var(--seed-size) * .45);
+  transform: rotate(-25deg);
+}
+
+.seed>i:after {
+  width: calc(var(--seed-size) * .65);
+  height: 1.5px;
+  top: calc(var(--seed-size) * .4);
+  left: calc(var(--seed-size) * .12);
+  transform: rotate(0);
+}
+
+/* Slow glints stay at the edges, leaving the couple's faces and body unobstructed. */
+.glint {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: 10px;
+  height: 10px;
+  color: var(--seed-colour);
+  background: radial-gradient(circle,#fff 0 12%,currentColor 30%,transparent 75%);
+  clip-path: polygon(50% 0,60% 38%,100% 50%,60% 62%,50% 100%,40% 62%,0 50%,40% 38%);
+  opacity: 0;
+  animation: edgeGlint 8s var(--delay) ease-in-out infinite;
+}
+
+@keyframes edgeGlint {
+  0%,100% { opacity: .12; transform: translateY(0) scale(.65) rotate(0); }
+  50% { opacity: .65; transform: translateY(-25px) scale(1.2) rotate(35deg); }
+}
+
+@keyframes mandalaArrive {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) rotate(-15deg) scale(.92);
+  }
+  to {
+    opacity: .58;
+    transform: translateX(-50%) rotate(0) scale(1);
+  }
+}
+
+@keyframes silkDrift {
+  to {
+    transform: rotate(-15deg) translateX(25px);
+  }
+}
+
+@keyframes sceneReveal {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes journeyDrive {
+  from {
+    transform: scale(1.035);
+  }
+  to {
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes openingBloom {
+  0% {
+    opacity: 0;
+    transform: rotate(var(--angle)) translateX(0) scale(.5);
+  }
+  35% {
+    opacity: .95;
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(var(--angle)) translateX(70cqw) scale(4);
+  }
+}
+
+@keyframes irisReveal {
+  from {
+    clip-path: circle(0 at 50% 50%);
+  }
+  to {
+    clip-path: circle(100% at 50% 50%);
+  }
+}
+
+@keyframes parchmentReveal {
+  from {
+    clip-path: inset(0 50%);
+  }
+  to {
+    clip-path: inset(0);
+  }
+}
+
+@keyframes coupleReveal {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes mosaicUnveil {
+  from {
+    opacity: .3;
+    clip-path: inset(0 0 100%);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0);
+  }
+}
+
+@keyframes beamDrift {
+  to {
+    transform: rotate(-10deg) translateX(40px);
+    opacity: .45;
+  }
+}
+
+@keyframes seedFall {
+  0% {
+    opacity: 0;
+    transform: translate(0,-160px) rotate(-15deg);
+  }
+  20%,70% {
+    opacity: var(--peak-opacity);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(55px,440px) rotate(25deg);
+  }
+}
+
+.invitation[data-animation=romantic] .seed {
+  animation-duration: 24s;
+}
+
+.invitation[data-animation=romantic] .seed:nth-child(2n) {
+  display: none;
+}
+
+.invitation[data-animation=enchanted] .lightBeams>i {
+  animation-duration: 16s;
+}
+
+.invitation[data-animation=enchanted] .heroMandala {
+  animation: mandalaBreathe 12s ease-in-out infinite;
+}
+
+@keyframes mandalaBreathe {
+  0%,100% {
+    transform: rotate(-5deg);
+    opacity: .1;
+  }
+  50% {
+    transform: rotate(5deg);
+    opacity: .2;
+  }
+}
+
+@container(max-width:700px) {
+  .hero {
+    padding: 55px 7% 120px;
+  }
+  .coupleStage {
+    height: 550px;
+  }
+  .heroCopy h1 {
+    font-size: calc(53px * var(--heading-scale));
+  }
+  .dateRibbon {
+    gap: 20px;
+  }
+  .mosaicLead {
+    height: 460px;
+  }
+  .mosaicRail button {
+    height: 195px;
+  }
+}
+
+@container(max-width:480px) {
+  .welcome {
+    min-height: 850px;
+    padding: 265px 8% 130px;
+  }
+  .mandala {
+    width: 510px;
+    max-width: none;
+    top: -260px;
+  }
+  .welcomeLetter h1 {
+    flex-direction: column;
+    gap: 0;
+    font-size: calc(46px * var(--heading-scale));
+    margin-top: 22px!important;
+  }
+  .welcomeLetter h1 i {
+    font-size: 24px;
+    line-height: 1.4;
+  }
+  .welcomeDate {
+    font-size: 20px;
+  }
+  .welcomeLetter>p {
+    font-size: 9px;
+    max-width: 280px;
+  }
+  .recipient {
+    margin-top: 30px;
+  }
+  .recipient strong {
+    font-size: 25px;
+  }
+  .procession {
+    width: 180%;
+    max-width: none;
+    left: -40%;
+    height: 75px;
+    bottom: 13px;
+  }
+  .sceneTitle {
+    top: 13%;
+    padding: 0;
+  }
+  .welcome[data-opening=true] {
+    height: calc(100svh - 107px);
+  }
+  .sceneTitle>strong {
+    font-size: 35px;
+  }
+  .hero {
+    grid-template-columns: 1fr;
+    padding: 45px 8% 110px;
+    gap: 25px;
+  }
+  .heroCopy h1 {
+    font-size: calc(58px * var(--heading-scale));
+  }
+  .heroCopy>p {
+    font-size: 21px;
+  }
+  .dateRibbon {
+    margin: 24px 0;
+    padding: 15px 0;
+  }
+  .dateRibbon strong {
+    font-size: 51px;
+  }
+  .heroCopy .venue {
+    font-size: 24px;
+  }
+  .coupleStage {
+    height: 470px;
+  }
+  .invitation[data-layout=portrait] .heroCopy {
+    order: 0;
+  }
+  .invitation[data-layout=portrait] .coupleStage {
+    order: 1;
+  }
+  .invitation[data-layout=letter] .coupleStage {
+    height: 450px;
+  }
+  .heroProcession {
+    width: 180%;
+    left: -40%;
+    height: 70px;
+  }
+  .interior .story {
+    padding: 35px 9%;
+  }
+  .interior .story>p {
+    font-size: 20px;
+  }
+  .interior .countdown {
+    margin: 20px 6%;
+    padding: 30px 6%;
+  }
+  .clock {
+    gap: 7px;
+  }
+  .clock>div {
+    padding: 16px 3px;
+  }
+  .clock strong {
+    font-size: 37px;
+  }
+  .clock span {
+    font-size: 4px;
+    letter-spacing: .05em;
+  }
+  .interior .events {
+    padding: 40px 9%;
+  }
+  .interior .eventCard {
+    grid-template-columns: 43px 1fr;
+    gap: 15px;
+    padding-left: 18px;
+  }
+  .eventCard>svg {
+    width: 42px;
+    height: 42px;
+    padding: 11px;
+  }
+  .eventCard h3 {
+    font-size: 27px;
+  }
+  .eventNumber {
+    left: -12px;
+    top: 2px;
+  }
+  .mosaicSection {
+    padding: 40px 7%;
+  }
+  .mosaic {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .mosaicLead {
+    height: 440px;
+    padding: 12px;
+  }
+  .mosaicRail {
+    grid-template-columns: repeat(4,minmax(0,1fr));
+    gap: 7px;
+  }
+  .mosaicRail button {
+    height: 100px;
+    padding: 4px;
+    border-radius: 6px;
+  }
+  .mosaicRail button:nth-child(2n) {
+    margin-top: 10px;
+  }
+  .interior .filmSection {
+    padding: 40px 9%;
+  }
+  .interior .rsvp {
+    padding: 45px 7%;
+  }
+  .rsvpForm {
+    padding: 27px 23px;
+  }
+  .seed:nth-child(3n) {
+    display: none;
+  }
+  .seed {
+    --peak-opacity: .6;
+  }
+}
+
+@media(prefers-reduced-motion:reduce) {
+  .atmosphere,.spiralRain {
+    display: none;
+  }
+  .welcome *,.hero *,.mosaicSection * {
+    animation: none!important;
+    transition: none!important;
+  }
+}
+

@@ -1,4 +1,4 @@
-﻿# Forever Free Studio
+﻿# Liora Free Studio
 
 Free Studio includes template selection, account-saved drafts, preview,
 publishing, personal guest links and a central Yes / No RSVP inbox.
@@ -30,7 +30,7 @@ implemented in this change.
 - One invitation per account, enforced by a database uniqueness constraint.
 - Ten guest places, including named personal links and replies to the general link.
 - Yes / No responses saved to the server and shown in the owner's dashboard.
-- A Forever watermark on every Free template.
+- A Liora watermark on every Free template.
 - Saved drafts and a stable published link. Saving does not update the live
   invitation; publishing explicitly copies the draft to the public version.
 - Unpublish and republish without changing the link.

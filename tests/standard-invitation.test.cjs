@@ -1,9 +1,53 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const load = require("./load-typescript.cjs");
-const { STANDARD_SAMPLE, readStandardDetails, readStandardReply } = load("src/lib/standard-invitation.ts");
+const { STANDARD_SAMPLE, SOLSTICE_SAMPLE, MOONLIT_SAMPLE, SAFFRON_SAMPLE, standardSample, readStandardDetails, readStandardReply } = load("src/lib/standard-invitation.ts");
 const { standardGuestListCsv } = load("src/lib/standard-guest-export.ts");
-const { standardAppearance, colorLuminance } = load("src/lib/standard-appearance.ts");
+const { standardAppearance, standardPalettes, colorLuminance } = load("src/lib/standard-appearance.ts");
+
+test("Saffron saves its own appearance, events and safe custom settings", () => {
+  const details = readStandardDetails(SAFFRON_SAMPLE);
+  assert.equal(details.standardLayout, "saffron");
+  assert.equal(standardSample("saffron").brideName, "Maya");
+  assert.equal(details.events[1].id, "homecoming");
+  for (const palette of standardPalettes("saffron")) {
+    const appearance = standardAppearance({ ...details, design: palette.code });
+    for (const other of [STANDARD_SAMPLE, SOLSTICE_SAMPLE, MOONLIT_SAMPLE]) {
+      assert.notEqual(appearance.primary, standardAppearance({ ...other, design: palette.code }).primary);
+    }
+    const a = colorLuminance(appearance.ink), b = colorLuminance(appearance.paper);
+    assert.ok((Math.max(a,b)+.05)/(Math.min(a,b)+.05) >= 4.5);
+  }
+  const custom = readStandardDetails({ ...details, font: "script", motionEnabled: false, customColors: { primary: "#bba344", accent: "#823344", background: "#fffbed" } });
+  assert.equal(custom.font, "script"); assert.equal(custom.motionEnabled, false);
+  assert.equal(standardAppearance(custom).primary, "#bba344");
+});
+
+test("Moonlit keeps its own demo, palettes and saved settings within the Standard contract", () => {
+  const saved = readStandardDetails(MOONLIT_SAMPLE);
+  assert.equal(saved.standardLayout, "moonlit"); assert.equal(saved.events[1].id, "homecoming");
+  assert.equal(standardSample("moonlit").brideName, "Elena");
+  for (const palette of standardPalettes("moonlit")) {
+    const appearance = standardAppearance({ ...saved, design: palette.code });
+    assert.notEqual(appearance.primary, standardAppearance({ ...STANDARD_SAMPLE, design: palette.code }).primary);
+    assert.notEqual(appearance.background, standardAppearance({ ...SOLSTICE_SAMPLE, design: palette.code }).background);
+    const a = colorLuminance(appearance.ink), b = colorLuminance(appearance.paper);
+    assert.ok((Math.max(a,b)+.05)/(Math.min(a,b)+.05) >= 4.5);
+  }
+  assert.equal(readStandardDetails({ ...MOONLIT_SAMPLE, font: "modern", motionEnabled: false }).motionEnabled, false);
+});
+
+test("Solstice is a valid Standard layout with its own palettes and safe saved customization", () => {
+  const details = readStandardDetails(SOLSTICE_SAMPLE);
+  assert.equal(details.standardLayout, "solstice");
+  assert.equal(details.events[1].id, "homecoming");
+  const solstice = standardAppearance(details);
+  const vow = standardAppearance(STANDARD_SAMPLE);
+  assert.notEqual(solstice.primary, vow.primary); assert.notEqual(solstice.background, vow.background);
+  assert.equal(standardPalettes("solstice")[0].name, "Lagoon & Papaya");
+  const custom = readStandardDetails({ ...SOLSTICE_SAMPLE, font: "modern", customColors: { primary: "#135357", accent: "#cc6633", background: "#f4efe4" } });
+  assert.equal(standardAppearance(custom).primary, "#135357");
+});
 
 test("Appearance upgrades old invitations, preserves new choices and rejects unsafe customization", () => {
   const old = readStandardDetails(STANDARD_SAMPLE);

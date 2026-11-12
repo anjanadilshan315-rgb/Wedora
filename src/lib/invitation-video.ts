@@ -1,8 +1,15 @@
 import type { StandardInvitationDetails } from "./standard-invitation";
 import { standardAppearance } from "./standard-appearance";
+import { drawSolsticeVideoFrame } from "./solstice-video";
+import { drawSaffronVideoFrame } from "./saffron-video";
+import { drawPremiumVideoFrame } from "./premium-video";
+import { drawEvermoreVideoFrame } from "./evermore-video";
+import { drawWalawwaVideoFrame } from "./walawwa-video";
+import { drawAurelineVideoFrame } from "./aureline-video";
+import { drawMoonlitVideoFrame } from "./moonlit-video";
 
 /** Render a shareable, silent 12-second invitation film entirely in the browser. */
-export async function downloadInvitationVideo(details: StandardInvitationDetails, onProgress: (value: number) => void) {
+export async function downloadInvitationVideo(details: StandardInvitationDetails & { premiumFilm?: boolean; aurelineFilm?: boolean; walawwaFilm?: boolean; evermoreFilm?: boolean }, onProgress: (value: number) => void) {
   if (typeof MediaRecorder === "undefined" || !HTMLCanvasElement.prototype.captureStream) throw new Error("Video export is unavailable in this browser. Please use a current desktop Chrome or Edge.");
   const mimeType = ["video/webm;codecs=vp9", "video/webm;codecs=vp8", "video/mp4", "video/webm"].find((type) => MediaRecorder.isTypeSupported(type));
   if (!mimeType) throw new Error("This browser cannot export invitation videos.");
@@ -30,6 +37,21 @@ export async function downloadInvitationVideo(details: StandardInvitationDetails
         const elapsed = performance.now() - started;
         context!.fillStyle = appearance.primary; context!.fillRect(0, 0, 720, 1080);
         const photo = photos.length ? photos[Math.min(photos.length - 1, Math.floor(elapsed / (12000 / photos.length)))] : null;
+        if (details.evermoreFilm) {
+          drawEvermoreVideoFrame(context!, details, appearance, font, photo, elapsed);
+        } else if (details.walawwaFilm) {
+          drawWalawwaVideoFrame(context!, details, appearance, font, photo, elapsed);
+        } else if (details.aurelineFilm) {
+          drawAurelineVideoFrame(context!, details, appearance, font, photo, elapsed);
+        } else if (details.premiumFilm) {
+          drawPremiumVideoFrame(context!, details, appearance, font, photo, elapsed);
+        } else if (details.standardLayout === "saffron") {
+          drawSaffronVideoFrame(context!, details, appearance, font, photo, elapsed);
+        } else if (details.standardLayout === "moonlit") {
+          drawMoonlitVideoFrame(context!, details, appearance, font, photo, elapsed);
+        } else if (details.standardLayout === "solstice") {
+          drawSolsticeVideoFrame(context!, details, appearance, font, photo, elapsed);
+        } else {
         if (photo) {
           const scale = Math.max(720 / photo.width, 1080 / photo.height) * (1 + (elapsed % 4000) / 80000);
           context!.drawImage(photo, (720 - photo.width * scale) / 2, (1080 - photo.height * scale) / 2, photo.width * scale, photo.height * scale);
@@ -48,6 +70,7 @@ export async function downloadInvitationVideo(details: StandardInvitationDetails
         context!.font = `38px ${font}`; context!.fillText(details.weddingDate, 360, 774);
         context!.font = `28px ${font}`; context!.fillText(details.venueName, 360, 830, 590);
         context!.fillStyle = textColor; context!.font = "14px sans-serif"; context!.fillText("THE BEGINNING OF OUR FOREVER", 360, 980);
+        }
         onProgress(Math.min(100, Math.round(elapsed / 120)));
         if (elapsed >= 12000) recorder.stop(); else frame = requestAnimationFrame(draw);
       }

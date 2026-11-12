@@ -336,7 +336,7 @@ export default function RoyalTemplate({ data, actions, freePlan = false, localRe
             <button type="button" onClick={copyLink} className="mb-3 rounded border border-[#A67C00]/40 px-5 py-3 text-[#806000]">Copy invitation link</button>
             <p role="status" className="mb-4">{shareMessage}</p>
           </>}
-          <Link href="/packages" className="text-[#806000]">Made with Forever · Free Plan</Link>
+          <Link href="/packages" className="text-[#806000]">Made with Liora · Free Plan</Link>
         </footer>}
       </div>
     </div>

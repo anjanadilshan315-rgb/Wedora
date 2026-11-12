@@ -65,7 +65,7 @@ export default function FreeArchTemplate({ data, actions, theme = "lotus", whats
         <BotanicalSprig className={styles.botanicalLeft} />
         <BotanicalSprig className={styles.botanicalRight} />
         <div className={styles.arch}>
-          <div className={styles.seal} aria-hidden="true"><Heart size={22} strokeWidth={1} /><span>forever</span></div>
+          <div className={styles.seal} aria-hidden="true"><Heart size={22} strokeWidth={1} /><span>Liora</span></div>
           <p className={styles.eyebrow}>A celebration of love</p>
           {data.guestName && <p className={styles.guest}>Dear {data.guestName},</p>}
           <h1 className={styles.names}>
@@ -182,7 +182,7 @@ export default function FreeArchTemplate({ data, actions, theme = "lotus", whats
         <p className={styles.eyebrow}>And so our forever begins</p>
         <p className={styles.footerNames}>{data.brideName} &amp; {data.groomName}</p>
         <p>Thank you for celebrating with us.</p>
-        <Link href="/packages" className={styles.watermark}>Made with Forever · Free Plan</Link>
+        <Link href="/packages" className={styles.watermark}>Made with Liora · Free Plan</Link>
       </footer>
     </main>
   );

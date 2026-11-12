@@ -1,0 +1,453 @@
+/* AFTERGLOW: one cinematic photograph with a floating glass photo selector. */
+.gallery {
+  position: relative;
+  max-width: 1050px;
+  margin: auto;
+}
+
+.galleryNote {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 0 0 30px;
+  font-size: 7px;
+  letter-spacing: .2em;
+  color: var(--gold);
+}
+
+.photoStage {
+  position: relative;
+  margin: 0 25px;
+  padding-bottom: 35px;
+  isolation: isolate;
+}
+
+.glow {
+  position: absolute;
+  inset: -25px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse,color-mix(in srgb,var(--ornament),transparent 77%),transparent 68%);
+  filter: blur(20px);
+  z-index: -1;
+  animation: glowBreathe 8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.orbitLine {
+  position: absolute;
+  inset: -15px 20px 25px;
+  border: 1px solid color-mix(in srgb,var(--ornament),transparent 60%);
+  border-radius: 30px;
+  transform: rotate(-2deg);
+  z-index: -1;
+  animation: frameDrift 11s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.photograph {
+  aspect-ratio: 1.85;
+  min-height: 300px;
+  max-height: 540px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb,var(--ornament),transparent 50%);
+  border-radius: 90px 12px 12px 12px;
+  background: var(--background);
+  box-shadow: 0 25px 65px #03051645;
+}
+
+.photograph>img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 40%;
+  opacity: 0;
+  transform: scale(1.07);
+  transition: opacity 1.1s ease,transform 5.5s ease;
+}
+
+.photograph>img.activePhoto {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.photoShade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg,#080d26e6,transparent 75%),linear-gradient(90deg,#0d10263b,transparent);
+  pointer-events: none;
+}
+
+.edition {
+  position: absolute;
+  top: 26px;
+  left: 30px;
+  font-size: 7px;
+  letter-spacing: .2em;
+  color: #fff9ed;
+}
+
+.photoIndex {
+  position: absolute;
+  top: 20px;
+  right: 27px;
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  font-family: var(--font-cormorant),serif;
+  color: white;
+  font-size: 33px;
+}
+
+.photoIndex i {
+  font-family: var(--font-montserrat),sans-serif;
+  font-size: 8px;
+  font-style: normal;
+  opacity: .7;
+}
+
+.caption {
+  position: absolute;
+  bottom: 77px;
+  left: 35px;
+  right: 35px;
+  color: #fff9ed;
+  animation: captionReveal .8s both;
+}
+
+.caption>span {
+  font-size: 6px;
+  letter-spacing: .25em;
+  color: #dfd9ee;
+}
+
+.caption p {
+  font-family: var(--font-cormorant),serif;
+  font-size: clamp(26px,3.8cqw,46px);
+  font-style: italic;
+  line-height: 1.16;
+  max-width: 550px;
+  margin-top: 13px!important;
+}
+
+.thumbnailTray {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: calc(100% - 25px);
+  display: flex;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid color-mix(in srgb,var(--ornament),transparent 55%);
+  background: color-mix(in srgb,var(--paper),transparent 12%);
+  backdrop-filter: blur(18px);
+  border-radius: 12px;
+  box-shadow: 0 12px 35px #05061940;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.thumbnailTray button {
+  position: relative;
+  flex: 0 0 85px;
+  height: 62px;
+  padding: 3px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  background: transparent;
+  cursor: pointer;
+  transition: transform .25s,border-color .25s;
+}
+
+.thumbnailTray button[aria-pressed=true] {
+  border-color: var(--ornament);
+  background: color-mix(in srgb,var(--ornament),transparent 85%);
+}
+
+.thumbnailTray button:hover {
+  transform: translateY(-4px);
+}
+
+.thumbnailTray button img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 5px;
+  opacity: .65;
+  transition: opacity .3s;
+}
+
+.thumbnailTray button[aria-pressed=true] img,.thumbnailTray button:hover img {
+  opacity: 1;
+}
+
+.thumbnailTray button span {
+  position: absolute;
+  bottom: 6px;
+  right: 7px;
+  font-size: 6px;
+  background: #0a102a99;
+  padding: 2px 4px;
+  border-radius: 3px;
+  color: white;
+}
+
+.floatingStar {
+  position: absolute;
+  top: 18%;
+  right: -21px;
+  color: var(--ornament);
+  font-size: 31px;
+  animation: opalSparkle 5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.floatingStar:last-child {
+  top: auto;
+  bottom: 24%;
+  right: auto;
+  left: -21px;
+  font-size: 21px;
+  animation-delay: -2s;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin: 25px 25px 0;
+  padding-top: 15px;
+}
+
+.controls button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 40px;
+  padding: 8px 0;
+  color: var(--gold);
+  background: transparent;
+  border: 0;
+  font-size: 8px;
+  cursor: pointer;
+}
+
+.controls button:nth-child(2) {
+  border: 1px solid var(--line);
+  border-radius: 30px;
+  padding: 10px 17px;
+  color: var(--ink);
+}
+
+.controls button:hover {
+  color: var(--ink);
+}
+
+.gallery button:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 4px;
+}
+
+.sample {
+  text-align: center;
+  font-size: 7px;
+  line-height: 1.8;
+  color: var(--muted);
+  margin: 14px 0 0!important;
+}
+
+@keyframes frameDrift {
+  0%,100% {
+    transform: rotate(-2deg) translateY(0);
+  }
+  50% {
+    transform: rotate(1deg) translateY(-5px);
+  }
+}
+
+@keyframes glowBreathe {
+  0%,100% {
+    opacity: .45;
+    transform: scale(.95);
+  }
+  50% {
+    opacity: .8;
+    transform: scale(1.04);
+  }
+}
+
+@keyframes captionReveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes opalSparkle {
+  0%,100% {
+    opacity: .25;
+    transform: scale(.7) rotate(0);
+  }
+  50% {
+    opacity: .85;
+    transform: scale(1.1) rotate(25deg);
+  }
+}
+
+@container(max-width:700px) {
+  .photoStage {
+    margin: 0 15px;
+  }
+  .photograph {
+    min-height: 310px;
+  }
+  .caption {
+    left: 25px;
+    right: 25px;
+    bottom: 70px;
+  }
+  .caption p {
+    font-size: 32px;
+  }
+  .thumbnailTray {
+    gap: 7px;
+    padding: 9px;
+  }
+  .thumbnailTray button {
+    flex-basis: 64px;
+    height: 52px;
+  }
+  .edition {
+    left: 23px;
+    font-size: 6px;
+  }
+  .photoIndex {
+    right: 22px;
+  }
+  .controls {
+    margin-left: 15px;
+    margin-right: 15px;
+  }
+  .controls button {
+    font-size: 7px;
+    gap: 7px;
+  }
+  .floatingStar {
+    right: -13px;
+  }
+  .floatingStar:last-child {
+    left: -13px;
+  }
+}
+
+@container(max-width:480px) {
+  .galleryNote {
+    font-size: 5px;
+    letter-spacing: .13em;
+    gap: 7px;
+    margin-bottom: 25px;
+  }
+  .photoStage {
+    margin: 0 7px;
+    padding-bottom: 28px;
+  }
+  .photograph {
+    min-height: 350px;
+    aspect-ratio: .92;
+    border-radius: 60px 12px 12px 12px;
+  }
+  .orbitLine {
+    inset: -10px 7px 20px;
+    border-radius: 20px;
+  }
+  .edition {
+    left: 18px;
+    top: 21px;
+    font-size: 5px;
+    letter-spacing: .14em;
+  }
+  .photoIndex {
+    right: 16px;
+    top: 12px;
+    font-size: 29px;
+  }
+  .caption {
+    bottom: 65px;
+    left: 20px;
+    right: 20px;
+  }
+  .caption>span {
+    font-size: 5px;
+    letter-spacing: .15em;
+  }
+  .caption p {
+    font-size: 29px;
+    margin-top: 10px!important;
+  }
+  .thumbnailTray {
+    padding: 8px;
+    gap: 5px;
+    border-radius: 11px;
+    max-width: calc(100% - 10px);
+  }
+  .thumbnailTray button {
+    flex-basis: 53px;
+    height: 45px;
+  }
+  .controls {
+    margin: 20px 7px 0;
+    gap: 8px;
+    padding-top: 8px;
+  }
+  .controls button {
+    font-size: 6px;
+    gap: 5px;
+  }
+  .controls button:nth-child(2) {
+    padding: 9px 12px;
+  }
+  .controls button>svg {
+    width: 14px;
+  }
+  .sample {
+    font-size: 6px;
+  }
+  .floatingStar {
+    font-size: 22px;
+    right: -10px;
+  }
+  .floatingStar:last-child {
+    font-size: 15px;
+    left: -10px;
+  }
+}
+
+.gallery[data-motion=off] *,.gallery[data-motion=off] *:before,.gallery[data-motion=off] *:after {
+  animation: none!important;
+  transition: none!important;
+}
+
+.gallery[data-motion=off] .floatingStar {
+  display: none;
+}
+
+@media(prefers-reduced-motion:reduce) {
+  .gallery *,.gallery *:before,.gallery *:after {
+    animation: none!important;
+    transition: none!important;
+  }
+  .floatingStar {
+    display: none;
+  }
+}
+

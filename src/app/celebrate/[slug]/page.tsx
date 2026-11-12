@@ -25,7 +25,7 @@ function PublishedInvitation() {
     return () => { cancelled = true; };
   }, [slug, query]);
 
-  if (error) return <main className="min-h-screen bg-[#FAF7F2] px-6 py-28 text-center"><h1 className="font-serif-luxury text-4xl">Your invitation</h1><p role="alert" className="mx-auto mt-5 max-w-md text-sm leading-7">{error}</p><Link href="/" className="mt-8 inline-block underline">Visit Forever</Link></main>;
+  if (error) return <main className="min-h-screen bg-[#FAF7F2] px-6 py-28 text-center"><h1 className="font-serif-luxury text-4xl">Your invitation</h1><p role="alert" className="mx-auto mt-5 max-w-md text-sm leading-7">{error}</p><Link href="/" className="mt-8 inline-block underline">Visit Liora</Link></main>;
   if (!invitation) return <p role="status" className="p-20 text-center">Opening your invitation…</p>;
   const actions: InvitationInteractions = {
     mode: "live", wishes: [], guestIdentified: Boolean(invitation.guest),

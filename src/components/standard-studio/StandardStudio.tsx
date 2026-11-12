@@ -6,7 +6,7 @@ import { ArrowRight, Check, Eye, Heart, ImagePlus, Save, Send, Users } from "luc
 import SiteHeader from "@/components/SiteHeader";
 import StandardInvitation from "@/components/invitation/StandardInvitation";
 
-import { STANDARD_PLAN, STANDARD_SAMPLE, STANDARD_LAYOUTS, STANDARD_FONTS, readStandardDetails, type StandardInvitationDetails, type StandardSnapshot } from "@/lib/standard-invitation";
+import { STANDARD_PLAN, STANDARD_SAMPLE, standardSample, STANDARD_LAYOUTS, STANDARD_FONTS, readStandardDetails, type StandardInvitationDetails, type StandardSnapshot } from "@/lib/standard-invitation";
 import AppearanceEditor from "./AppearanceEditor";
 import { standardRequest } from "@/lib/standard-studio-client";
 import { prepareCouplePhoto } from "@/lib/couple-photo";
@@ -58,7 +58,7 @@ export default function StandardStudio({ dashboard = false }: { dashboard?: bool
     let cancelled = false;
     standardRequest<{ user: { email: string } | null }>("session")
       .then(async ({ user }) => {
-        let restored: StandardInvitationDetails = { ...STANDARD_SAMPLE };
+        let restored: StandardInvitationDetails = { ...standardSample(!dashboard ? new URLSearchParams(window.location.search).get("layout") : undefined) };
         if (user) {
           const result = await standardRequest<StandardSnapshot>("studio");
           if (cancelled) return;
@@ -113,7 +113,7 @@ export default function StandardStudio({ dashboard = false }: { dashboard?: bool
     <SiteHeader active="Packages" />
     <header className="border-b border-[#e8e0d3] bg-[#f0ede4] px-5 py-10 sm:px-8">
       <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-6">
-        <div><p className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.24em] text-[#947a4b]"><Heart size={13} />The Standard Collection</p><h1 className="mt-4 font-serif-luxury text-4xl sm:text-5xl">{dashboard ? "Every name. Every lovely reply." : "Your love story. Beautifully in motion."}</h1><p className="mt-4 max-w-xl text-sm leading-7 text-[#807969]">{dashboard ? "Your guest list, personal invitations and RSVP replies, thoughtfully together." : "The Vow — cinematic wedding stationery, a little envelope magic, and every detail your loved ones need."}</p></div>
+        <div><p className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.24em] text-[#947a4b]"><Heart size={13} />The Standard Collection</p><h1 className="mt-4 font-serif-luxury text-4xl sm:text-5xl">{dashboard ? "Every name. Every lovely reply." : "Your love story. Beautifully in motion."}</h1><p className="mt-4 max-w-xl text-sm leading-7 text-[#807969]">{dashboard ? "Your guest list, personal invitations and RSVP replies, thoughtfully together." : details.standardLayout === "moonlit" ? "Moonlit - a cinematic evening, a lunar envelope and a constellation of lovely details." : details.standardLayout === "solstice" ? "Solstice - a sunlit celebration, a folding wedding folio, and a new adventure together." : "The Vow — cinematic wedding stationery, a little envelope magic, and every detail your loved ones need."}</p></div>
         <Link className={secondary} href={dashboard ? "/standard-invitation" : "/standard-invitation/dashboard"}>{dashboard ? <Eye size={15} /> : <Users size={15} />}{dashboard ? "Edit invitation" : "Guest dashboard"}<ArrowRight size={14} /></Link>
       </div>
       <div className="mx-auto mt-6 flex max-w-7xl flex-wrap gap-x-6 gap-y-3 text-[11px] text-[#807969]">{["Cinematic invitation", `${STANDARD_DESIGNS.length} colour themes`, "Envelope, slideshow & music", "500 guests", "Personal RSVP links", "No watermark"].map((feature) => <span key={feature} className="flex items-center gap-2"><Check size={12} />{feature}</span>)}</div>

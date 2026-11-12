@@ -18,7 +18,7 @@ its colour and size are controlled by the CSS file.
 4. Use the studio preview to check your invitation before publishing.
 
 The gallery, studio preview and shared invitation all use the same component.
-Free invitations work without photos and include the Forever Free Plan credit.
+Free invitations work without photos and include the Liora Free Plan credit.
 
 ## Where to make changes
 

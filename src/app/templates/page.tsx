@@ -17,7 +17,7 @@ const ADMIN_WHATSAPP = "94757115645";
 
 function buildWhatsAppLink(templateName: string) {
   const msg = encodeURIComponent(
-    `Hi! I visited Forever and I'm interested in the "${templateName}" template. Could you please provide more details?`,
+    `Hi! I visited Liora and I'm interested in the "${templateName}" template. Could you please provide more details?`,
   );
   return `https://wa.me/${ADMIN_WHATSAPP}?text=${msg}`;
 }

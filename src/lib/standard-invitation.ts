@@ -7,6 +7,9 @@ export const STANDARD_LAYOUTS = [
   { code: "vow", name: "The Vow", description: "An elegant arch, handwritten details and timeless romance." },
   { code: "garden", name: "Secret Garden", description: "Botanical flourishes, a soft portrait and a garden-party feeling." },
   { code: "editorial", name: "Modern Muse", description: "A full photograph, bold typography and a contemporary love story." },
+  { code: "solstice", name: "Solstice", description: "Cinematic couple photographs, a folding wedding folio and editorial memories." },
+  { code: "moonlit", name: "Moonlit", description: "An evening in pearl and midnight: a lunar envelope, cinematic cover and constellation-inspired motion." },
+  { code: "saffron", name: "Saffron", description: "Marigold stationery, a sliding letter, oversized type and an editorial photo journal." },
 ] as const;
 export const STANDARD_FONTS = [
   { code: "classic", name: "Classic Romance", sample: "Amelia & Oliver", family: "var(--font-cormorant), Georgia, serif" },
@@ -52,6 +55,46 @@ export const STANDARD_SAMPLE: StandardInvitationDetails = {
   events: [{ id: "wedding", name: "Wedding ceremony", date: "2027-06-19", time: "16:00", venue: "The Grand Garden", address: "Colombo, Sri Lanka" },
     { id: "homecoming", name: "Homecoming", date: "2027-06-21", time: "18:30", venue: "The Lakeside Terrace", address: "Kandy, Sri Lanka" }],
 };
+
+/** Illustrative Solstice content. Saved customer details always take priority. */
+export const SOLSTICE_SAMPLE: StandardInvitationDetails = {
+  ...STANDARD_SAMPLE, standardLayout: "solstice", design: "champagne", font: "classic",
+  brideName: "Isla", groomName: "Noah", weddingDate: "2027-08-14", weddingTime: "16:30", rsvpDeadline: "2027-08-01",
+  venueName: "The Cove House", venueAddress: "Galle, Sri Lanka",
+  greetingMessage: "Our favourite adventure has always been each other. Now we’re gathering our favourite people for a little sea air, a few happy tears, and a day that feels just like us. We’d love you to be there.",
+  welcomeMessage: "A little sunshine, a little sea air, and the start of everything.",
+  events: [{ id: "wedding", name: "Sunset wedding ceremony", date: "2027-08-14", time: "16:30", venue: "The Cove House", address: "Galle, Sri Lanka" },
+    { id: "homecoming", name: "Homecoming celebration", date: "2027-08-16", time: "18:00", venue: "The Courtyard", address: "Colombo, Sri Lanka" }],
+};
+
+export const MOONLIT_SAMPLE: StandardInvitationDetails = {
+  ...STANDARD_SAMPLE, standardLayout: "moonlit", design: "champagne", font: "classic", animation: "enchanted",
+  brideName: "Elena", groomName: "Adrian", weddingDate: "2027-12-04", weddingTime: "18:00", rsvpDeadline: "2027-11-20",
+  venueName: "The Glass Pavilion", venueAddress: "Colombo, Sri Lanka",
+  welcomeMessage: "Some nights stay with you forever. We hope this will be one of them.",
+  greetingMessage: "Of all the paths we could have taken, ours led to each other. Together with our families, we invite you to an evening of happy tears, beautiful company, and the beginning of our always.",
+  events: [{ id: "wedding", name: "The wedding evening", date: "2027-12-04", time: "18:00", venue: "The Glass Pavilion", address: "Colombo, Sri Lanka" },
+    { id: "homecoming", name: "Homecoming reception", date: "2027-12-06", time: "18:30", venue: "The Lake House", address: "Kandy, Sri Lanka" }],
+};
+
+/** Illustrative Saffron content. Saved customer details always take priority. */
+export const SAFFRON_SAMPLE: StandardInvitationDetails = {
+  ...STANDARD_SAMPLE, standardLayout: "saffron", design: "champagne", font: "modern", animation: "enchanted",
+  brideName: "Maya", groomName: "Ethan", weddingDate: "2027-09-18", weddingTime: "15:30", rsvpDeadline: "2027-09-01",
+  venueName: "The Orchard Estate", venueAddress: "Nuwara Eliya, Sri Lanka",
+  welcomeMessage: "Good company. Happy tears. A whole new chapter. There is a place here just for you.",
+  greetingMessage: "It started with a hello and became our favourite story. Together with our families, we are making it official. Come for the vows, stay for the dancing, and help us fill this day with the people we love most.",
+  events: [{ id: "wedding", name: "The wedding celebration", date: "2027-09-18", time: "15:30", venue: "The Orchard Estate", address: "Nuwara Eliya, Sri Lanka" },
+    { id: "homecoming", name: "Homecoming & happy company", date: "2027-09-20", time: "18:00", venue: "The Assembly House", address: "Colombo, Sri Lanka" }],
+};
+
+/** Demo defaults only. Existing customer drafts always take priority. */
+export function standardSample(layout?: string | null): StandardInvitationDetails {
+  if (layout === "saffron") return SAFFRON_SAMPLE;
+  if (layout === "moonlit") return MOONLIT_SAMPLE;
+  if (layout === "solstice") return SOLSTICE_SAMPLE;
+  return STANDARD_SAMPLE;
+}
 
 function media(value: unknown, image = false): value is string {
   if (typeof value !== "string") return false;

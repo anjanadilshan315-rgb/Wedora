@@ -66,7 +66,7 @@ export default function ModernTemplate({ data, actions, freePlan = false, localR
           <DecoCorner className={styles.cornerBottomRight} />
         </div>
         <div className={styles.halo} aria-hidden="true" />
-        <div className={styles.edition}><span>A celebration of love</span><span>Modern Luxe / Forever</span></div>
+        <div className={styles.edition}><span>A celebration of love</span><span>Modern Luxe / Liora</span></div>
         <div className={styles.heroContent}>
           <div className={styles.monogram} aria-hidden="true"><span>{initials}</span></div>
           <p className={styles.eyebrow}>Together with our families</p>
@@ -248,7 +248,7 @@ export default function ModernTemplate({ data, actions, freePlan = false, localR
         <p>With love, always.</p>
         {freePlan && <>
           {actions.mode === "live" && <><button type="button" onClick={copyLink} className={styles.shareButton}>Copy invitation link <ArrowUpRight size={14} /></button><p role="status">{shareMessage}</p></>}
-          <Link href="/packages" className={styles.brand}>Made with Forever · Free Plan</Link>
+          <Link href="/packages" className={styles.brand}>Made with Liora · Free Plan</Link>
         </>}
       </footer>
     </div>

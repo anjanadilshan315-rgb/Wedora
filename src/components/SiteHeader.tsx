@@ -54,10 +54,10 @@ export default function SiteHeader({ active, fixed = false }: SiteHeaderProps) {
         <div className="flex items-center justify-between h-16 lg:h-[70px]">
           <Link href="/" className="flex items-center space-x-2.5 shrink-0">
             <div className="relative w-12 h-12 rounded-full overflow-hidden bg-[#FBF3E4] ring-2 ring-[#C59B48]/50 shadow-sm">
-              <Image src="/assets/forever-wedding-logo.svg" alt="Forever Wedding Invitation logo" fill className="object-contain p-1" sizes="48px" />
+              <Image src="/assets/liora-logo-mark.svg" alt="Liora Wedding Invitation logo" fill className="object-contain p-1" sizes="48px" />
             </div>
             <div className="leading-none">
-              <p className="font-serif-luxury text-[17px] font-bold text-[#28211B] tracking-tight">Forever</p>
+              <p className="font-serif-luxury text-[17px] font-bold text-[#28211B] tracking-tight">Liora</p>
               <p className="text-[9px] text-[#B88737] tracking-[0.15em] uppercase font-medium">by ApexRow Solutions</p>
             </div>
           </Link>

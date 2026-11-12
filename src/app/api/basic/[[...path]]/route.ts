@@ -38,7 +38,7 @@ async function handle(request: NextRequest, context: Context) {
       const origin = request.headers.get("origin");
       let sameSite = false;
       try { sameSite = Boolean(origin && new URL(origin).host === request.nextUrl.host); } catch { /* Invalid origins are rejected too. */ }
-      if (!sameSite) throw new StudioError(403, "Please submit this form from the Forever website.");
+      if (!sameSite) throw new StudioError(403, "Please submit this form from the Liora website.");
     }
     const ip = request.headers.get("x-forwarded-for")?.split(",")[0].trim() || "local";
     if (method === "POST" && (route === "auth/login" || route === "auth/register")) {

@@ -220,7 +220,7 @@ export default function FloralTemplate({ data, actions, freePlan = false, localR
             <button type="button" onClick={copyLink} className="mb-3 rounded-2xl border border-[#EBD5DE] bg-white px-5 py-3 text-[#B5577A]">Copy invitation link</button>
             <p role="status" className="mb-4">{shareMessage}</p>
           </>}
-          <Link href="/packages" className="text-[#B5577A]">Made with Forever · Free Plan</Link>
+          <Link href="/packages" className="text-[#B5577A]">Made with Liora · Free Plan</Link>
         </footer>}
       </div>
     </div>

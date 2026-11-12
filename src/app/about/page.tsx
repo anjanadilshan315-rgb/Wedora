@@ -25,11 +25,11 @@ export default function AboutPage() {
           </div>
           <h2 className="font-script-romantic text-3xl sm:text-4xl text-[#C59B48] mb-2">Our Story</h2>
           <h1 className="font-serif-luxury text-4xl sm:text-5xl lg:text-6xl font-bold text-[#29221D] mb-4">
-            About Forever
+            About Liora
           </h1>
           <p className="text-sm sm:text-base text-[#7D736A] max-w-xl mx-auto leading-relaxed">
             We believe that your special day deserves an introduction that is just as memorable. 
-            Forever is dedicated to providing couples with stunning, personalised digital invitations.
+            Liora is dedicated to providing couples with stunning, personalised digital invitations.
           </p>
         </motion.div>
       </section>
@@ -49,7 +49,7 @@ export default function AboutPage() {
             <div>
               <h3 className="font-serif-luxury text-2xl font-bold text-[#29221D] mb-4">Crafting Beautiful Digital Experiences</h3>
               <p className="text-sm text-[#7D736A] leading-relaxed mb-4">
-                Founded by ApexRow Solutions, Forever was born from a desire to modernize how we share our most precious life events. Traditional paper invitations are beautiful, but they often lack the convenience, speed, and interactivity that today&apos;s couples need.
+                Founded by ApexRow Solutions, Liora was born from a desire to modernize how we share our most precious life events. Traditional paper invitations are beautiful, but they often lack the convenience, speed, and interactivity that today&apos;s couples need.
               </p>
               <p className="text-sm text-[#7D736A] leading-relaxed">
                 We combine luxurious designs with cutting-edge web technology to give you a personalized website link for every guest, complete with automated RSVP tracking, location mapping, and easy WhatsApp integration.
