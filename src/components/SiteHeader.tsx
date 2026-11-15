@@ -7,6 +7,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { LayoutDashboard, LogOut, Menu, Sparkles, User, X } from "lucide-react";
 import { logout } from "@/lib/api";
 import { useSession } from "@/lib/use-session";
+import styles from "./SiteHeader.module.css";
 
 const NAV_LINKS = [
   { label: "Home", href: "/" },
@@ -46,8 +47,8 @@ export default function SiteHeader({ active, fixed = false }: SiteHeaderProps) {
 
   return (
     <header
-      className={`${fixed ? "fixed top-0 left-0 right-0" : "sticky top-0"} z-50 bg-white/95 backdrop-blur-md transition-shadow duration-300 ${
-        !fixed || scrolled ? "shadow-[0_2px_20px_rgba(180,140,80,0.10)]" : ""
+      className={`${fixed ? "fixed top-0 left-0 right-0" : "sticky top-0"} z-50 ${styles.glassHeader} ${
+        !fixed || scrolled ? styles.scrolled : ""
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -62,14 +63,13 @@ export default function SiteHeader({ active, fixed = false }: SiteHeaderProps) {
             </div>
           </Link>
 
-          <nav className="hidden lg:flex items-center space-x-1">
+          <nav aria-label="Main navigation" className="hidden lg:flex items-center space-x-1">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.label}
                 href={link.href}
-                className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-                  link.label === active ? "text-[#B88737] bg-[#FBF3E4]" : "text-[#4A3F37] hover:text-[#B88737] hover:bg-[#FBF3E4]"
-                }`}
+                aria-current={link.label === active ? "page" : undefined}
+                className={`${styles.navLink} ${link.label === active ? styles.active : ""}`}
               >
                 {link.label}
               </Link>
@@ -119,8 +119,10 @@ export default function SiteHeader({ active, fixed = false }: SiteHeaderProps) {
 
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden w-9 h-9 flex items-center justify-center rounded-lg text-[#4A3F37]"
+            className={`${styles.menuButton} lg:hidden w-10 h-10 flex items-center justify-center rounded-xl text-[#4A3F37]`}
             aria-label="Toggle menu"
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-navigation"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
@@ -134,17 +136,17 @@ export default function SiteHeader({ active, fixed = false }: SiteHeaderProps) {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.25 }}
-            className="lg:hidden overflow-hidden bg-white border-t border-[#F0E8DC] px-4 pb-4"
+            id="mobile-navigation"
+            className={`${styles.mobilePanel} lg:hidden overflow-hidden px-4 pb-4`}
           >
-            <nav className="flex flex-col space-y-1 pt-3">
+            <nav aria-label="Mobile navigation" className="flex flex-col space-y-1 pt-3">
               {NAV_LINKS.map((link) => (
                 <Link
                   key={link.label}
                   href={link.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`px-4 py-2.5 text-sm font-medium rounded-xl transition-colors ${
-                    link.label === active ? "text-[#B88737] bg-[#FBF3E4]" : "text-[#4A3F37] hover:bg-[#FBF3E4]"
-                  }`}
+                  aria-current={link.label === active ? "page" : undefined}
+                  className={`${styles.navLink} ${link.label === active ? styles.active : ""}`}
                 >
                   {link.label}
                 </Link>

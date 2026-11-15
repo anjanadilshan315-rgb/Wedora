@@ -1,366 +1,121 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
+import { MotionConfig } from "framer-motion";
 import {
-  ChevronLeft,
-  ChevronRight,
-  LayoutTemplate,
-  Wand2,
-  Share2,
-  Users,
-  HeadphonesIcon,
-  Heart,
-  ArrowRight,
+  ArrowRight, ArrowUpRight,
+  Heart, LayoutTemplate, Link2, Plus, Share2, Users, Wand2,
 } from "lucide-react";
-import Footer from "@/components/Footer";
 import SiteHeader from "@/components/SiteHeader";
-import { TEMPLATE_DESIGNS } from "@/components/invitation/registry";
+import HomeBanner from "@/components/HomeBanner";
+import Footer from "@/components/Footer";
+import InvitationTemplateCard from "@/components/InvitationTemplateCard";
+import { PREMIUM_SHOWCASE } from "@/lib/invitation-showcase";
+import { FREE_PLAN } from "@/lib/template-catalog";
+import glass from "./premium-cards.module.css";
+import styles from "./home.module.css";
 
-/* ─────────────────────────────────────────── */
-/*  HERO SLIDES DATA                           */
-/* ─────────────────────────────────────────── */
-const heroSlides = [
-  {
-    image: "/assets/hero-1.jpg",
-    tag: "CREATE YOUR PERFECT DAY",
-    heading1: "Beautiful Wedding Invitations",
-    heading2: "for Your Special Moments",
-    desc: "Design, customize and share your wedding invitations with ease. Make your big day even more special with our elegant templates.",
-  },
-  {
-    image: "/assets/hero-2.jpg",
-    tag: "SHARE THE LOVE",
-    heading1: "Design, Customize & Share",
-    heading2: "with the Ones You Love",
-    desc: "Choose from dozens of premium invitation templates. Add your personal touch and send instantly to all your loved ones.",
-  },
-  {
-    image: "/assets/hero-3.jpg",
-    tag: "CELEBRATE TOGETHER",
-    heading1: "Your Perfect Day Deserves",
-    heading2: "a Perfect Invitation",
-    desc: "Track RSVPs, count your guests, and manage everything in one place. Let us take care of the details so you can focus on love.",
-  },
+const features = [
+  { icon: LayoutTemplate, title: "Thoughtfully designed", text: "From timeless florals to modern romance." },
+  { icon: Wand2, title: "Beautifully personal", text: "Your names, your details, your story." },
+  { icon: Share2, title: "Effortlessly shared", text: "Send a little love with a simple link." },
+  { icon: Users, title: "Guests, all together", text: "Keep your invitations and replies in one place." },
 ];
 
-/* ─────────────────────────────────────────── */
-/*  SITE ATTRIBUTES                            */
-/* ─────────────────────────────────────────── */
-const attributes = [
-  {
-    icon: <LayoutTemplate className="w-7 h-7" />,
-    title: "Elegant Templates",
-    desc: "Modern & traditional designs",
-  },
-  {
-    icon: <Wand2 className="w-7 h-7" />,
-    title: "Easy Customization",
-    desc: "Make it uniquely yours",
-  },
-  {
-    icon: <Share2 className="w-7 h-7" />,
-    title: "Instant Sharing",
-    desc: "Share with loved ones instantly",
-  },
-  {
-    icon: <Users className="w-7 h-7" />,
-    title: "RSVP & Headcount",
-    desc: "Track your guest list effortlessly",
-  },
-  {
-    icon: <HeadphonesIcon className="w-7 h-7" />,
-    title: "24/7 Support",
-    desc: "We're always here to help",
-  },
+const steps = [
+  { icon: LayoutTemplate, title: "Find your invitation", text: "Explore the collection and choose a design that feels like the two of you.", link: "Explore designs", href: "/templates" },
+  { icon: Wand2, title: "Make it your own", text: "Add your wedding details, personal message and the finishing touches you love.", link: "Find your plan", href: "/packages" },
+  { icon: Share2, title: "Send a little joy", text: "Share your invitation link with loved ones and bring everyone into your celebration.", link: "Get started", href: "/register" },
 ];
 
-/* ─────────────────────────────────────────── */
-/*  SLIDE TRANSITION VARIANTS                  */
-/* ─────────────────────────────────────────── */
-const slideVariants = {
-  enter: (dir: number) => ({ opacity: 0, x: dir > 0 ? 60 : -60, scale: 1.04 }),
-  center: { opacity: 1, x: 0, scale: 1 },
-  exit: (dir: number) => ({ opacity: 0, x: dir > 0 ? -60 : 60, scale: 0.97 }),
-};
+const questions = [
+  { question: "How do I create my wedding invitation?", answer: "Choose a template and a plan, then personalize your invitation with your names, wedding details and message. Preview it before sharing the invitation link with your guests." },
+  { question: "Can I try Liora before choosing a paid plan?", answer: `Yes. The Free plan lets you create one invitation, save your draft and share a permanent invitation link with up to ${FREE_PLAN.guestLimit} guests. Visit Packages to compare the features of each plan.` },
+  { question: "Can I use my own photos and music?", answer: "Photo and music options are available on paid plans. Basic includes a couple photo and background music, while Standard and Premium offer additional presentation options. Compare the plans to find the right fit." },
+  { question: "How do guests receive the invitation?", answer: "Share your invitation link directly with your guests. Depending on your plan, you can also use WhatsApp, email sharing and a QR code. Guests can open the invitation in their browser." },
+];
 
-const textContainerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.12,
-      delayChildren: 0.05,
-    },
-  },
-};
-
-const textItemVariants = {
-  hidden: { opacity: 0, y: 26 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94] as const },
-  },
-};
-
-/* ═══════════════════════════════════════════ */
-/*  HOMEPAGE                                   */
-/* ═══════════════════════════════════════════ */
 export default function HomePage() {
-  const [current, setCurrent] = useState(0);
-  const [direction, setDirection] = useState(1);
-
-  /* Auto-play */
-  const next = useCallback(() => {
-    setDirection(1);
-    setCurrent((p) => (p + 1) % heroSlides.length);
-  }, []);
-
-  const prev = () => {
-    setDirection(-1);
-    setCurrent((p) => (p - 1 + heroSlides.length) % heroSlides.length);
-  };
-
-  const goTo = (i: number) => {
-    setDirection(i > current ? 1 : -1);
-    setCurrent(i);
-  };
-
-  useEffect(() => {
-    const id = setInterval(next, 5500);
-    return () => clearInterval(id);
-  }, [next]);
-
-  const slide = heroSlides[current];
-
   return (
-    <div className="min-h-screen bg-[#FAF7F2] font-sans">
-      {/* Preload hero images */}
-      <div className="hidden">
-        {heroSlides.map((slide) => (
-          <Image key={slide.image} src={slide.image} alt="" fill priority />
-        ))}
-      </div>
+    <MotionConfig reducedMotion="user">
+      <div className={styles.page}>
+        <a href="#main-content" className={styles.skipLink}>Skip to content</a>
+        <SiteHeader active="Home" fixed />
 
-      <SiteHeader active="Home" fixed />
+        <main id="main-content">
+          <HomeBanner />
 
-      {/* ══════════════════════════════════════ */}
-      {/* HERO SLIDER                            */}
-      {/* ══════════════════════════════════════ */}
-      <section className="relative w-full h-[520px] sm:h-[600px] lg:h-[680px] overflow-hidden mt-16 lg:mt-[70px]">
-
-        {/* Slide images */}
-        <AnimatePresence custom={direction} mode="popLayout">
-          <motion.div
-            key={`img-${current}`}
-            custom={direction}
-            variants={slideVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="absolute inset-0"
-          >
-            <Image
-              src={slide.image}
-              alt={slide.heading1}
-              fill
-              priority
-              className="object-cover object-center"
-            />
-            {/* Dark + warm gradient overlay for text legibility */}
-            <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
-          </motion.div>
-        </AnimatePresence>
-
-        {/* Slide text content */}
-        <div className="relative z-10 h-full flex items-center">
-          <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 w-full">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={`text-${current}`}
-                variants={textContainerVariants}
-                initial="hidden"
-                animate="visible"
-                exit={{ opacity: 0, y: -10, transition: { duration: 0.25 } }}
-                className="max-w-xl"
-              >
-                {/* Tag line */}
-                <motion.div variants={textItemVariants} className="flex items-center space-x-3 mb-3">
-                  <span className="h-px w-8 bg-[#C59B48]" />
-                  <span className="text-[#E8C97A] text-xs tracking-[0.2em] font-semibold uppercase">
-                    {slide.tag}
-                  </span>
-                  <span className="h-px w-8 bg-[#C59B48]" />
-                </motion.div>
-
-                {/* Heading */}
-                <motion.h1
-                  variants={textItemVariants}
-                  className="font-serif-luxury text-4xl sm:text-5xl lg:text-[56px] font-bold text-white leading-tight"
-                >
-                  {slide.heading1}
-                </motion.h1>
-                <motion.p
-                  variants={textItemVariants}
-                  className="font-script-romantic text-3xl sm:text-4xl lg:text-[44px] text-[#E8C97A] leading-none mt-1"
-                >
-                  {slide.heading2}
-                </motion.p>
-
-                {/* Description */}
-                <motion.p
-                  variants={textItemVariants}
-                  className="mt-4 text-sm sm:text-base text-white/80 leading-relaxed max-w-md"
-                >
-                  {slide.desc}
-                </motion.p>
-
-                {/* CTA Button */}
-                <motion.div variants={textItemVariants} className="mt-7">
-                  <Link href="/templates">
-                    <motion.button
-                      whileHover={{ scale: 1.03, boxShadow: "0 8px 28px rgba(197,155,72,0.5)" }}
-                      whileTap={{ scale: 0.97 }}
-                      className="flex items-center space-x-2 px-7 py-3.5 rounded-full text-white font-semibold text-sm shadow-[0_6px_22px_rgba(197,155,72,0.4)] transition-all"
-                      style={{ background: "linear-gradient(90deg,#C79848,#B88737,#A87428)" }}
-                    >
-                      <LayoutTemplate className="w-4 h-4" />
-                      <span>Browse Templates</span>
-                    </motion.button>
-                  </Link>
-                </motion.div>
-              </motion.div>
-            </AnimatePresence>
-          </div>
-        </div>
-
-        {/* Prev / Next arrows */}
-        <button
-          onClick={prev}
-          aria-label="Previous slide"
-          className="absolute left-4 lg:left-8 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white/20 hover:bg-white/35 backdrop-blur-sm border border-white/30 flex items-center justify-center text-white transition-all"
-        >
-          <ChevronLeft className="w-5 h-5" />
-        </button>
-        <button
-          onClick={() => { setDirection(1); next(); }}
-          aria-label="Next slide"
-          className="absolute right-4 lg:right-8 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white/20 hover:bg-white/35 backdrop-blur-sm border border-white/30 flex items-center justify-center text-white transition-all"
-        >
-          <ChevronRight className="w-5 h-5" />
-        </button>
-
-        {/* Dot indicators */}
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex space-x-2">
-          {heroSlides.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => goTo(i)}
-              aria-label={`Go to slide ${i + 1}`}
-              className={`transition-all duration-300 rounded-full ${
-                i === current ? "w-6 h-2.5 bg-[#C59B48]" : "w-2.5 h-2.5 bg-white/50 hover:bg-white/80"
-              }`}
-            />
-          ))}
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════ */}
-      {/* SITE ATTRIBUTES STRIP                 */}
-      {/* ══════════════════════════════════════ */}
-      <section className="bg-white border-y border-[#EDE3D6] py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 lg:gap-0 lg:divide-x lg:divide-[#EDE3D6]">
-            {attributes.map((attr, i) => (
-              <motion.div
-                key={attr.title}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.08, duration: 0.5 }}
-                className="flex flex-col items-center text-center px-4 py-2"
-              >
-                <div className="w-12 h-12 rounded-full bg-[#FBF3E4] flex items-center justify-center text-[#B88737] mb-3 shadow-sm">
-                  {attr.icon}
-                </div>
-                <p className="font-semibold text-sm text-[#29221D] leading-snug">{attr.title}</p>
-                <p className="text-xs text-[#7D736A] mt-0.5">{attr.desc}</p>
-              </motion.div>
+          <section className={styles.featureStrip} aria-label="The Liora experience">
+            {features.map(({ icon: Icon, title, text }) => (
+              <div key={title} className={styles.feature}>
+                <Icon size={22} strokeWidth={1.3} />
+                <div><h2>{title}</h2><p>{text}</p></div>
+              </div>
             ))}
-          </div>
-        </div>
-      </section>
+          </section>
 
-      {/* ══════════════════════════════════════ */}
-      {/* POPULAR TEMPLATES SECTION             */}
-      {/* ══════════════════════════════════════ */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        {/* Section header */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-10">
-          <div className="text-center sm:text-left">
-            <div className="flex items-center justify-center sm:justify-start space-x-3 mb-1">
-              <span className="h-px w-8 bg-gradient-to-r from-transparent to-[#C59B48]" />
-              <Heart className="w-3 h-3 fill-[#C59B48] text-[#C59B48]" />
-              <span className="h-px w-8 bg-gradient-to-l from-transparent to-[#C59B48]" />
+          {/* Keep the Premium collection and the gold glass treatment. */}
+          <section id="signature-collection" className={glass.collection} aria-labelledby="popular-templates-heading">
+            <div className={styles.sectionHeader}>
+              <div><p className={styles.eyebrow}>THE SIGNATURE COLLECTION</p><h2 id="popular-templates-heading">Popular Invitation Templates</h2><p className={styles.sectionDescription}>Choose from our most loved designs. Make every detail your own.</p></div>
+              <Link href="/templates" className={glass.allTemplates}>View all templates <ArrowUpRight size={16} /></Link>
             </div>
-            <h2 className="font-serif-luxury text-3xl sm:text-4xl font-semibold text-[#29221D]">
-              Popular Invitation Templates
-            </h2>
-            <p className="text-sm text-[#7D736A] mt-1">Choose from our most loved designs</p>
-          </div>
-          <Link href="/templates">
-            <button className="flex items-center space-x-1.5 px-5 py-2.5 rounded-full border border-[#C59B48] text-[#9A6F24] text-sm font-semibold hover:bg-[#FBF3E4] transition-colors whitespace-nowrap">
-              <span>View All Templates</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-          </Link>
-        </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              {PREMIUM_SHOWCASE.map((template) => <InvitationTemplateCard key={template.id} template={template} />)}
+            </div>
+            <p className={styles.collectionFootnote}><Heart size={13} /> Different styles. The same beautiful beginning.</p>
+          </section>
 
-        {/* Template cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {TEMPLATE_DESIGNS.filter((tpl, index) => index < 3 || tpl.code === "tpl_golden_hour").map((tpl, i) => (
-            <Link key={tpl.code} href={`/invite/${tpl.demoSlug}`}>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.08, duration: 0.5 }}
-                className={`relative group rounded-3xl overflow-hidden bg-gradient-to-br ${tpl.gradient} aspect-[4/3] sm:aspect-square md:aspect-[4/5] cursor-pointer border border-[#EADBCA] shadow-sm transition-all md:hover:shadow-md md:hover:-translate-y-1`}
-              >
-                <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
-                  <div
-                    className="w-16 h-16 rounded-full border-4 flex items-center justify-center mb-4 bg-white/40 backdrop-blur-sm"
-                    style={{ borderColor: tpl.accent }}
-                  >
-                    <Heart className="w-7 h-7" style={{ fill: tpl.accent, color: tpl.accent }} />
-                  </div>
-                  <p className="font-serif-luxury text-2xl font-bold" style={{ color: tpl.accent }}>
-                    {tpl.name}
-                  </p>
-                  <p className="text-xs mt-2 font-semibold tracking-widest uppercase opacity-70" style={{ color: tpl.accent }}>
-                    {tpl.style}
-                  </p>
+          <section className={styles.howItWorks} aria-labelledby="steps-heading">
+            <div className={styles.centerHeading}><p className={styles.eyebrow}>FROM YES TO YOU&apos;RE INVITED</p><h2 id="steps-heading">Something beautiful.<br /><em>Something wonderfully simple.</em></h2><p>Your invitation comes together in three thoughtful steps.</p></div>
+            <div className={styles.stepsGrid}>
+              {steps.map(({ icon: Icon, title, text, link, href }, index) => (
+                <article key={title} className={styles.step}>
+                  <div className={styles.stepTop}><span>0{index + 1}</span><Icon size={25} strokeWidth={1.2} /></div>
+                  <h3>{title}</h3><p>{text}</p><Link href={href} className={styles.textLink}>{link} <ArrowRight size={14} /></Link>
+                </article>
+              ))}
+            </div>
+          </section>
 
-                  <div className="mt-8 px-6 py-2.5 rounded-full bg-white/80 text-sm font-semibold border border-[#C59B48]/30 shadow-sm" style={{ color: tpl.accent }}>
-                    View Live Preview
-                  </div>
-                </div>
-              </motion.div>
-            </Link>
-          ))}
-        </div>
-      </section>
+          <section className={styles.story} aria-labelledby="story-heading">
+            <div className={styles.storyVisual}>
+              <Image src="/assets/evermore/quiet-romance.jpg" alt="A couple sharing a quiet moment on their wedding day" fill sizes="(min-width: 900px) 45vw, 100vw" className="object-cover" />
+              <div className={styles.storyNote}><Heart size={18} strokeWidth={1.2} /><span>More moments.<br /><em>Less to worry about.</em></span></div>
+            </div>
+            <div className={styles.storyCopy}>
+              <p className={styles.eyebrow}>BEYOND A BEAUTIFUL INVITATION</p>
+              <h2>A little less planning.<br /><em>A lot more celebrating.</em></h2>
+              <p>Let your invitation do more than share a date. Give your guests the details they need, collect their replies, and keep your celebration together in one place.</p>
+              <ul className={styles.storyFeatures}>
+                <li><Link2 size={18} /><div><h3>One link. Every lovely detail.</h3><p>A personal place for your wedding date, venue and message.</p></div></li>
+                <li><Users size={18} /><div><h3>Keep your people close.</h3><p>Manage your guests and RSVP replies from your dashboard.</p></div></li>
+                <li><Wand2 size={18} /><div><h3>A plan for your celebration.</h3><p>Start simple or explore more with Basic, Standard and Premium.</p></div></li>
+              </ul>
+              <Link href="/packages" className={styles.textLink}>Explore the possibilities <ArrowUpRight size={16} /></Link>
+            </div>
+          </section>
 
-      {/* ══════════════════════════════════════ */}
-      {/* FOOTER                                 */}
-      {/* ══════════════════════════════════════ */}
-      <Footer />
-    </div>
+          <section className={styles.faq} aria-labelledby="faq-heading">
+            <div><p className={styles.eyebrow}>A FEW LITTLE DETAILS</p><h2 id="faq-heading">Before you<br /><em>say hello.</em></h2><p>Everything you need to get started.<br />A little guidance, whenever you need it.</p><Link href="/contact" className={styles.textLink}>Let&apos;s talk <ArrowUpRight size={15} /></Link></div>
+            <div className={styles.questions}>
+              {questions.map(({ question, answer }) => <details key={question}><summary>{question}<Plus size={17} aria-hidden="true" /></summary><p>{answer}</p></details>)}
+            </div>
+          </section>
+
+          <section className={styles.finalCta} aria-labelledby="cta-heading">
+            <Heart size={25} strokeWidth={1} />
+            <p className={styles.eyebrow}>YOUR FOREVER STARTS WITH A HELLO</p>
+            <h2 id="cta-heading">Let&apos;s make your first impression<br /><em>one to remember.</em></h2>
+            <p>Find an invitation that feels like your love story.</p>
+            <Link href="/register" className={styles.primaryButton}>Create your invitation <ArrowRight size={16} /></Link>
+            <span className={styles.ctaNote}>A free plan to begin. Room to make it yours.</span>
+          </section>
+        </main>
+
+        <Footer />
+      </div>
+    </MotionConfig>
   );
 }
-

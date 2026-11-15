@@ -1,251 +1,109 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { AnimatePresence, motion } from "framer-motion";
-import { AlertCircle, Heart, Loader2, MessageCircle, Search, Wand2 } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Crown, Heart, MessageCircle, Search, Sparkles, X } from "lucide-react";
 import Footer from "@/components/Footer";
 import SiteHeader from "@/components/SiteHeader";
-import { TEMPLATE_DESIGNS } from "@/components/invitation/registry";
-import { api, ApiError, errorMessage, getSession } from "@/lib/api";
-import { createInvitationDraft } from "@/lib/invitations";
-import type { Template } from "@/lib/types";
+import InvitationTemplateCard from "@/components/InvitationTemplateCard";
+import { PREMIUM_SHOWCASE, STANDARD_SHOWCASE } from "@/lib/invitation-showcase";
+import glass from "@/app/premium-cards.module.css";
+import styles from "./templates.module.css";
 
-/* Update this to your real WhatsApp number */
-const ADMIN_WHATSAPP = "94757115645";
+const collections = [
+  { plan: "Standard", subtitle: "Bring your invitation to life", description: "Animated beginnings, personal details and a little wedding-day magic.", templates: STANDARD_SHOWCASE, icon: Sparkles },
+  { plan: "Premium", subtitle: "A celebration, designed around you", description: "Distinctive stories and thoughtful details for a celebration entirely your own.", templates: PREMIUM_SHOWCASE, icon: Crown },
+] as const;
 
-function buildWhatsAppLink(templateName: string) {
-  const msg = encodeURIComponent(
-    `Hi! I visited Liora and I'm interested in the "${templateName}" template. Could you please provide more details?`,
-  );
-  return `https://wa.me/${ADMIN_WHATSAPP}?text=${msg}`;
-}
-
-interface TemplateCard {
-  code: string;
-  name: string;
-  style: string;
-  description: string | null;
-  price: number | null;
-  gradient: string;
-  accent: string;
-  previewUrl: string;
-  free: boolean;
-}
+const planFilters = ["All", "Standard", "Premium"] as const;
+type PlanFilter = typeof planFilters[number];
 
 export default function TemplatesPage() {
-  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
-  const [planFilter, setPlanFilter] = useState<"all" | "free" | "paid">("all");
-  const [apiTemplates, setApiTemplates] = useState<Template[] | null>(null);
-  const [loadError, setLoadError] = useState("");
-  const [startingCode, setStartingCode] = useState<string | null>(null);
-  const [startError, setStartError] = useState("");
+  const [planFilter, setPlanFilter] = useState<PlanFilter>("All");
+  const search = searchQuery.trim().toLowerCase();
 
-  useEffect(() => {
-    api<Template[]>("/public/templates", { auth: false })
-      .then(({ data }) => setApiTemplates(data))
-      .catch((error) => setLoadError(errorMessage(error, "Could not load templates.")));
-  }, []);
+  // Search the plan catalogs directly; the retired invitation registry is not used.
+  const visibleCollections = collections
+    .filter((collection) => planFilter === "All" || collection.plan === planFilter)
+    .map((collection) => ({
+      ...collection,
+      templates: collection.templates.filter((template) =>
+        `${template.name} ${template.description} ${template.plan}`.toLowerCase().includes(search),
+      ),
+    }))
+    .filter((collection) => collection.templates.length > 0);
 
-  /** Active templates from the API, styled with the local design registry. */
-  const templates: TemplateCard[] = useMemo(() => {
-    const source = apiTemplates
-      ? [
-          ...apiTemplates.filter((t) => TEMPLATE_DESIGNS.some((d) => d.code === t.code)),
-          ...TEMPLATE_DESIGNS
-            .filter((design) => !apiTemplates.some((template) => template.code === design.code))
-            .map((design) => ({
-              code: design.code,
-              name: design.name,
-              description: null,
-              price: null,
-              demoSlug: design.demoSlug,
-            })),
-        ]
-      : TEMPLATE_DESIGNS.map((d) => ({ code: d.code, name: d.name, description: null, price: null, demoSlug: d.demoSlug }));
-    return source.map((t) => {
-      const design = TEMPLATE_DESIGNS.find((d) => d.code === t.code)!;
-      return {
-        code: t.code,
-        name: design.plan === "free" || t.code === "tpl_golden_hour" ? design.name : t.name,
-        style: design.style,
-        description: design.plan === "free" || t.code === "tpl_golden_hour" ? design.description : t.description ?? design.description,
-        price: design.plan === "free" ? 0 : t.price,
-        gradient: design.gradient,
-        accent: design.accent,
-        previewUrl: `/invite/${design.plan === "free" || t.code === "tpl_golden_hour" ? design.demoSlug : t.demoSlug ?? design.demoSlug}`,
-        free: design.plan === "free",
-      };
-    });
-  }, [apiTemplates]);
-
-  const filtered = templates.filter((t) =>
-    (planFilter === "all" || (planFilter === "free" ? t.free : !t.free)) &&
-    [t.name, t.style, t.description ?? ""].some((v) => v.toLowerCase().includes(searchQuery.toLowerCase())),
-  );
-
-  const startWithTemplate = async (code: string) => {
-    setStartError("");
-    if (TEMPLATE_DESIGNS.find((design) => design.code === code)?.plan === "free") {
-      router.push(`/free-invitation?template=${encodeURIComponent(code)}`);
-      return;
-    }
-    if (!getSession()) {
-      router.push(`/register?template=${encodeURIComponent(code)}`);
-      return;
-    }
-    setStartingCode(code);
-    try {
-      const id = await createInvitationDraft(code);
-      router.push(`/dashboard/invitations/${id}/edit`);
-    } catch (error) {
-      setStartError(error instanceof ApiError ? errorMessage(error) : (error as Error).message);
-      setStartingCode(null);
-    }
-  };
+  const resultCount = visibleCollections.reduce((count, collection) => count + collection.templates.length, 0);
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2] font-sans">
+    <div className={styles.page}>
       <SiteHeader active="Templates" />
+      <main>
+        <section className={styles.intro} aria-labelledby="templates-heading">
+          <Link href="/" className={styles.backLink}><ArrowLeft size={13} /> Back to home</Link>
+          <p className={styles.eyebrow}><span /><Heart size={13} /><span /></p>
+          <p className={styles.kicker}>THE LIORA COLLECTION</p>
+          <h1 id="templates-heading">Invitation Templates</h1>
+          <p>Find a beautiful beginning in our Standard and Premium collections.<br className="hidden sm:block" /> Preview your favourite, then make every detail yours.</p>
+          <Link href="/packages" className={styles.planLink}>Compare the plans <ArrowUpRight size={15} /></Link>
+        </section>
 
-      {/* PAGE HEADER */}
-      <section className="py-12 px-4 text-center">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-          <div className="flex flex-col items-center justify-center mb-6">
-            <Link href="/" className="inline-flex items-center gap-1 text-[#A69B90] hover:text-[#C59B48] text-xs font-semibold uppercase tracking-wider transition-colors">
-              <Heart className="w-3.5 h-3.5 opacity-50" /> Back to Home
-            </Link>
+        <section className={styles.toolbar} aria-label="Find an invitation template">
+          <div className={styles.toolbarInner}>
+            <div className={styles.filters} role="group" aria-label="Filter templates by plan">
+              {planFilters.map((plan) => (
+                <button key={plan} type="button" onClick={() => setPlanFilter(plan)} aria-pressed={planFilter === plan} className={planFilter === plan ? styles.selected : ""}>
+                  {plan === "All" ? "All designs" : `${plan} Plan`}
+                </button>
+              ))}
+            </div>
+            <div className={styles.search}>
+              <label htmlFor="template-search" className="sr-only">Search invitation templates</label>
+              <Search size={16} aria-hidden="true" />
+              <input id="template-search" type="search" placeholder="Find your favourite design…" value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} />
+              {searchQuery && <button type="button" onClick={() => setSearchQuery("")} aria-label="Clear search"><X size={14} /></button>}
+            </div>
           </div>
-          <div className="flex items-center justify-center space-x-3 mb-3">
-            <span className="h-px w-12 bg-gradient-to-r from-transparent to-[#C59B48]" />
-            <Heart className="w-3.5 h-3.5 fill-[#C59B48] text-[#C59B48]" />
-            <span className="h-px w-12 bg-gradient-to-l from-transparent to-[#C59B48]" />
-          </div>
-          <h1 className="font-serif-luxury text-4xl sm:text-5xl font-bold text-[#29221D] mb-3">Invitation Templates</h1>
-          <p className="text-sm text-[#7D736A] max-w-md mx-auto">
-            Explore the live previews, pick your favourite and fill in your wedding details — we&apos;ll take it from there.
-          </p>
-        </motion.div>
-      </section>
+        </section>
 
-      {/* FILTERS */}
-      <section className="sticky top-16 lg:top-[70px] z-40 bg-[#FAF7F2]/95 backdrop-blur-sm border-b border-[#EDE3D6] px-4 py-3">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-end gap-3">
-          <div className="relative w-full sm:w-56 ml-auto">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#A69B90]" />
-            <input
-              type="text"
-              placeholder="Search templates…"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-8 pr-4 py-2 rounded-full border border-[#E0D8CC] bg-white text-xs text-[#29221D] placeholder:text-[#A69B90] focus:outline-none focus:ring-2 focus:ring-[#C59B48]/40 focus:border-[#C59B48]"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* GRID */}
-      <section className="py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="mb-6 flex flex-wrap gap-2" role="group" aria-label="Filter templates by plan">
-          {(["all", "free", "paid"] as const).map((plan) => <button key={plan} type="button" onClick={() => setPlanFilter(plan)} aria-pressed={planFilter === plan} className={`rounded-full border px-5 py-2.5 text-xs font-semibold ${planFilter === plan ? "border-[#B88737] bg-[#B88737] text-white" : "border-[#EADBCA] bg-white text-[#7D736A]"}`}>{plan === "all" ? "All designs" : plan === "free" ? "Free Plan" : "Paid designs"}</button>)}
-          <Link href="/free-invitation/dashboard" className="ml-auto self-center text-xs font-semibold text-[#9A6F24] hover:underline">My Free Studio →</Link>
-        </div>
-        <div className="flex items-center justify-between mb-6">
-          <p className="text-sm text-[#7D736A]">
-            Showing <span className="font-semibold text-[#29221D]">{filtered.length}</span> template{filtered.length !== 1 ? "s" : ""}
-          </p>
-          <a
-            href={buildWhatsAppLink("a template")}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-xs font-semibold text-[#B88737] hover:text-[#9A6F24] transition-colors hover:underline"
-          >
-            <MessageCircle className="w-3.5 h-3.5" /> Chat with us
-          </a>
+        <div className={styles.resultsBar}>
+          <p role="status" aria-live="polite">Showing <strong>{resultCount}</strong> invitation {resultCount === 1 ? "design" : "designs"}</p>
+          <a href="https://wa.me/94757115645?text=Hi%20Liora!%20Could%20you%20help%20me%20choose%20an%20invitation%20template%3F" target="_blank" rel="noopener noreferrer"><MessageCircle size={14} /> A little help choosing?</a>
         </div>
 
-        {(loadError || startError) && (
-          <div className="mb-6 p-3 rounded-xl bg-red-50 border border-red-100 text-sm text-red-600 flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 shrink-0" /> {startError || "Some paid designs could not be loaded. Free designs are ready to use."}
-          </div>
+        {visibleCollections.map(({ plan, subtitle, description, templates, icon: Icon }) => (
+          <section key={plan} className={`${glass.collection} ${styles.collection}`} aria-labelledby={`${plan.toLowerCase()}-heading`}>
+            <div className={styles.collectionHeader}>
+              <div>
+                <p className={styles.collectionKicker}><Icon size={14} /> {subtitle}</p>
+                <h2 id={`${plan.toLowerCase()}-heading`}>{plan} Plan</h2>
+                <p className={styles.collectionDescription}>{description}</p>
+              </div>
+              <span className={styles.designCount}>{templates.length} {templates.length === 1 ? "design" : "designs"} to make your own</span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              {templates.map((template) => <InvitationTemplateCard key={template.id} template={template} />)}
+            </div>
+          </section>
+        ))}
+
+        {resultCount === 0 && (
+          <section className={styles.empty} aria-labelledby="empty-heading">
+            <Search size={30} strokeWidth={1.2} />
+            <h2 id="empty-heading">A different kind of beautiful?</h2>
+            <p>No designs match your search. Try another name or explore both collections.</p>
+            <button type="button" onClick={() => { setSearchQuery(""); setPlanFilter("All"); }}>Show all designs <ArrowUpRight size={15} /></button>
+          </section>
         )}
 
-        <AnimatePresence mode="wait">
-          {filtered.length > 0 ? (
-            <motion.div
-              key={`${searchQuery}:${planFilter}`}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
-            >
-              {filtered.map((tpl, i) => (
-                <motion.div
-                  key={tpl.code}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.06, duration: 0.4 }}
-                  className="group relative rounded-3xl overflow-hidden bg-white shadow-sm border border-[#EADBCA] transition-all flex flex-col hover:shadow-md"
-                >
-                  <div className={`relative aspect-[4/3] sm:aspect-square md:aspect-[4/5] bg-gradient-to-br ${tpl.gradient} flex-shrink-0 border-b border-[#F0E8DC]`}>
-                    {tpl.free && <span className="absolute right-4 top-4 z-10 rounded-full border border-white/70 bg-white/90 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-[#715537]">Free Plan</span>}
-                    <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
-                      <div className="w-14 h-14 rounded-full border-[3px] flex items-center justify-center mb-3 bg-white/40 backdrop-blur-sm" style={{ borderColor: tpl.accent }}>
-                        <Heart className="w-6 h-6" style={{ fill: tpl.accent, color: tpl.accent }} />
-                      </div>
-                      <p className="text-xl font-serif-luxury font-bold" style={{ color: tpl.accent }}>{tpl.name}</p>
-                      <p className="text-xs mt-1 font-semibold opacity-70 tracking-widest uppercase" style={{ color: tpl.accent }}>{tpl.style}</p>
-                      {tpl.description && <p className="text-[11px] mt-3 text-[#5D534A] line-clamp-3">{tpl.description}</p>}
-                      {tpl.price !== null && (
-                        <p className="mt-3 text-sm font-bold" style={{ color: tpl.accent }}>
-                          {tpl.free ? "Free Plan · No payment needed" : `LKR ${tpl.price.toLocaleString()}`}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="p-5 flex flex-col gap-3 bg-white">
-                    <Link
-                      href={tpl.previewUrl}
-                      target="_blank"
-                      className="flex items-center justify-center w-full py-3 rounded-xl border border-[#C59B48] text-[#9A6F24] text-sm font-semibold hover:bg-[#FBF3E4] active:bg-[#F0E8DC] transition-colors"
-                    >
-                      View Live Preview
-                    </Link>
-                    <button
-                      onClick={() => startWithTemplate(tpl.code)}
-                      disabled={startingCode !== null || (!tpl.free && !apiTemplates && !loadError)}
-                      className="flex items-center justify-center gap-2 w-full py-3 rounded-xl text-white text-sm font-bold shadow-sm md:hover:shadow-md transition-all active:scale-[0.98] md:hover:scale-[1.02] disabled:opacity-70 disabled:hover:scale-100"
-                      style={{ background: "linear-gradient(90deg,#C79848,#9A6F24)" }}
-                    >
-                      {startingCode === tpl.code ? <Loader2 className="w-4 h-4 animate-spin" /> : <Wand2 className="w-4 h-4" />}
-                      {tpl.free ? "Create Free Invitation" : "Use This Template"}
-                    </button>
-                    <a
-                      href={buildWhatsAppLink(tpl.name)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-1.5 text-xs font-semibold text-[#9A6F24] hover:underline"
-                    >
-                      <MessageCircle className="w-3.5 h-3.5" /> Ask on WhatsApp
-                    </a>
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
-          ) : (
-            <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-24 text-center">
-              <Heart className="w-10 h-10 mx-auto mb-4 text-[#E0D8CC]" />
-              <p className="text-[#9E9E9E] font-medium">No templates found</p>
-              <p className="text-xs text-[#C0B8B0] mt-1">Try a different search term</p>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </section>
-
+        <section className={styles.help}>
+          <Heart size={19} strokeWidth={1.2} />
+          <h2>Found the one?</h2>
+          <p>Open a live preview to explore the invitation, or choose “Make it yours” to start personalizing.</p>
+          <Link href="/packages" className={styles.planLink}>Find your perfect plan <ArrowUpRight size={15} /></Link>
+        </section>
+      </main>
       <Footer />
     </div>
   );

@@ -1,0 +1,87 @@
+/* Cream glass, a fine gold edge and soft reflections match the Liora palette. */
+.glassHeader {
+  border-bottom: 1px solid rgba(185, 139, 53, 0.4);
+  /* Readable fallback for browsers that do not support background blur. */
+  background: #fcf8ef;
+  box-shadow:
+    0 4px 24px rgba(108, 75, 26, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -1px 0 rgba(255, 246, 221, 0.65);
+  transition: background 250ms ease, box-shadow 250ms ease;
+}
+
+.scrolled {
+  background: #faf5e9;
+  box-shadow:
+    0 8px 30px rgba(108, 75, 26, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 -1px 0 rgba(255, 246, 221, 0.7);
+}
+
+/* Active links look like small glass insets with an antique-gold outline. */
+.navLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 9px 16px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  color: #4a3f37;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 180ms ease, border-color 180ms ease, color 180ms ease;
+}
+
+.navLink:hover {
+  border-color: rgba(185, 139, 53, 0.22);
+  background: rgba(255, 255, 255, 0.45);
+  color: #795723;
+}
+
+.navLink.active {
+  border-color: rgba(185, 139, 53, 0.42);
+  background: linear-gradient(125deg, rgba(255, 255, 255, 0.8), rgba(236, 214, 166, 0.35));
+  color: #795723;
+  box-shadow: 0 3px 12px rgba(145, 103, 36, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+.menuButton {
+  border: 1px solid rgba(185, 139, 53, 0.3);
+  background: rgba(255, 255, 255, 0.45);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.mobilePanel {
+  border-top: 1px solid rgba(185, 139, 53, 0.2);
+  background: #fcf8ef;
+}
+
+.glassHeader a:focus-visible,
+.glassHeader button:focus-visible {
+  outline: 2px solid #9a702e;
+  outline-offset: 3px;
+}
+
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glassHeader {
+    /* The page behind the navigation stays visible through this light tint. */
+    background: linear-gradient(115deg, rgba(255, 253, 247, 0.76), rgba(248, 235, 207, 0.48), rgba(255, 253, 247, 0.68));
+    -webkit-backdrop-filter: blur(24px) saturate(145%);
+    backdrop-filter: blur(24px) saturate(145%);
+  }
+
+  .scrolled {
+    background: linear-gradient(115deg, rgba(255, 253, 247, 0.88), rgba(248, 235, 207, 0.7), rgba(255, 253, 247, 0.8));
+  }
+
+  .mobilePanel {
+    background: linear-gradient(135deg, rgba(255, 253, 247, 0.94), rgba(250, 240, 218, 0.88));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glassHeader,
+  .navLink {
+    transition: none;
+  }
+}
