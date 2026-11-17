@@ -76,7 +76,7 @@ function RegisterContent() {
   const loginQuery = template ? `?template=${encodeURIComponent(template)}` : next ? `?next=${encodeURIComponent(next)}` : "";
 
   return (
-    <AuthShell badge="Create Account">
+    <AuthShell>
       <div className="text-center space-y-1 mb-5">
         <h1 className="font-serif-luxury text-[28px] lg:text-[32px] font-semibold text-[#29221D] tracking-tight">Create Your Account</h1>
         <p className="text-xs text-[#7D736A]">

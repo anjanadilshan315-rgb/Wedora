@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { Heart, User } from "lucide-react";
 
 /** Split-screen artwork layout shared by the login and registration pages. */
-export default function AuthShell({ badge, children }: { badge: string; children: React.ReactNode }) {
+export default function AuthShell({ badge, children }: { badge?: string; children: React.ReactNode }) {
   return (
     <div className="relative min-h-screen lg:h-screen w-full overflow-x-hidden lg:overflow-hidden bg-[#FAF7F2] flex flex-col lg:flex-row">
       {/* LEFT — artwork (desktop) */}
@@ -94,14 +94,16 @@ export default function AuthShell({ badge, children }: { badge: string; children
           <Image src="/assets/flower-corner.png" alt="" width={280} height={280} className="w-full h-auto object-contain translate-x-2 translate-y-2" />
         </div>
 
-        <div className="relative z-10 flex justify-end px-4 pt-3 lg:px-8 lg:pt-5 shrink-0">
-          <div className="flex items-center space-x-2 text-xs font-medium text-[#8F6626]">
-            <span className="w-6 h-6 rounded-full bg-[#F3E5CD] flex items-center justify-center text-[#B88737] shadow-sm">
-              <User className="w-3.5 h-3.5" />
-            </span>
-            <span className="tracking-wide">{badge}</span>
+        {badge && (
+          <div className="relative z-10 flex justify-end px-4 pt-3 lg:px-8 lg:pt-5 shrink-0">
+            <div className="flex items-center space-x-2 text-xs font-medium text-[#8F6626]">
+              <span className="w-6 h-6 rounded-full bg-[#F3E5CD] flex items-center justify-center text-[#B88737] shadow-sm">
+                <User className="w-3.5 h-3.5" />
+              </span>
+              <span className="tracking-wide">{badge}</span>
+            </div>
           </div>
-        </div>
+        )}
 
         <div className="relative z-10 flex-1 flex items-center justify-center px-4 py-4 lg:px-10 lg:overflow-y-auto">
           <motion.div

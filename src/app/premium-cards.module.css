@@ -67,51 +67,61 @@
   flex-direction: column;
   justify-content: flex-end;
   min-height: 530px;
-  padding: 224px 10px 10px;
+  padding: 260px 10px 10px;
   overflow: hidden;
   border: 1px solid rgba(185, 139, 53, 0.8);
   border-radius: 28px;
-  background: rgba(255, 247, 225, 0.45);
+  background: rgba(255, 253, 247, 0.75);
   color: #4d351b;
   box-shadow:
-    0 16px 40px rgba(108, 75, 26, 0.18),
+    0 16px 40px rgba(73, 69, 58, 0.1),
     inset 0 2px 0 rgba(255, 255, 255, 0.95),
     inset 1px 0 0 rgba(255, 255, 255, 0.6);
   isolation: isolate;
   transition: box-shadow 250ms ease, border-color 250ms ease;
 }
 
-/* Place a gold detail behind the panel so its blur is visible. */
+.artwork {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 280px;
+  z-index: -3;
+  transition: transform 600ms ease;
+}
+
+/* A separate, pale photo layer gives the glass something to refract. */
+.glassBackdrop {
+  position: absolute;
+  inset: 260px 0 0;
+  z-index: -3;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* Reflections behind the details panel add depth without covering the photo. */
 .card::before {
   content: "";
   position: absolute;
-  top: 195px;
+  top: 300px;
   right: -20px;
   z-index: -1;
   width: 136px;
   height: 136px;
   border-radius: 50%;
-  background: radial-gradient(circle at 30% 25%, #fff3cc, #d6ae5f 30%, #9a6b23 67%, #ebce8a 95%);
-  box-shadow: inset 2px 2px 5px rgba(255, 244, 212, 0.8), 0 12px 28px rgba(119, 80, 23, 0.2);
+  background: radial-gradient(circle at 30% 25%, #ffffff, #fff9e9 30%, #ead8ad 67%, #fff7e2 95%);
+  box-shadow: inset 2px 2px 8px rgba(255, 255, 255, 0.95), 0 12px 28px rgba(182, 164, 122, 0.1);
   pointer-events: none;
-}
-
-.artwork {
-  position: absolute;
-  inset: 0;
-  z-index: -3;
-  opacity: 0.85;
-  transition: transform 600ms ease;
 }
 
 .imageShade {
   position: absolute;
-  inset: 0;
+  inset: 240px 0 auto;
+  height: 40px;
   z-index: -2;
-  background: linear-gradient(180deg, rgba(255, 244, 214, 0.08), transparent 30%, rgba(239, 217, 172, 0.35) 70%, rgba(236, 216, 174, 0.65));
+  background: linear-gradient(180deg, transparent, #fffbf2);
 }
 
-/* A small frosted label leaves the invitation artwork in focus. */
+/* Frosting is limited to the label and details panel. */
 .planBadge {
   position: absolute;
   top: 18px;
@@ -131,7 +141,6 @@
   text-transform: uppercase;
 }
 
-/* Glass effect: a translucent fill, background blur and a bright inner edge. */
 .glassPanel {
   position: relative;
   isolation: isolate;
@@ -140,16 +149,29 @@
   flex: 1;
   flex-direction: column;
   padding: 24px 20px 18px;
-  border: 1.5px solid #b98b35;
+  border: 1.5px solid #d6b466;
   border-radius: 20px;
-  /* Solid fallback keeps the text readable when blur is unsupported. */
-  background: #fff5df;
+  background: #fffbf2;
   color: #4d351b;
   box-shadow:
-    0 18px 44px rgba(108, 75, 26, 0.18),
+    0 20px 48px rgba(80, 77, 66, 0.1),
+    0 0 0 1px rgba(245, 222, 163, 0.6),
+    0 0 18px rgba(232, 204, 135, 0.16),
     inset 0 2px 0 #ffffff,
+    inset 1px 0 0 rgba(255, 255, 255, 0.8),
     inset 0 -1px 0 rgba(255, 255, 255, 0.75),
-    inset 0 0 22px rgba(255, 255, 255, 0.06);
+    inset 0 0 28px rgba(255, 255, 255, 0.32);
+}
+
+/* A second fine edge catches the light inside the gold frame. */
+.glassPanel::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 15px;
+  box-shadow: inset 0 -1px 0 rgba(221, 187, 110, 0.25);
+  pointer-events: none;
 }
 
 /* A broad diagonal reflection gives the panel a polished glass surface. */
@@ -159,25 +181,26 @@
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  background: linear-gradient(120deg, transparent 20%, rgba(255, 255, 255, 0.2) 42%, transparent 61%);
-  opacity: 0.3;
+  background:
+    linear-gradient(120deg, transparent 8%, rgba(255, 255, 255, 0.85) 30%, rgba(255, 255, 255, 0.18) 39%, transparent 53%),
+    linear-gradient(145deg, transparent 62%, rgba(255, 255, 255, 0.5) 76%, transparent 90%);
+  opacity: 0.8;
   transition: opacity 250ms ease;
 }
 
 @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .glassPanel {
-    /* Lower opacity and a lighter blur let the artwork show through the text panel. */
     background:
-      linear-gradient(125deg, rgba(255, 255, 255, 0.1), transparent 38%, rgba(255, 255, 255, 0.03) 75%),
-      linear-gradient(145deg, rgba(255, 250, 235, 0.24), rgba(247, 231, 193, 0.14));
-    -webkit-backdrop-filter: blur(10px) saturate(125%);
-    backdrop-filter: blur(10px) saturate(125%);
+      linear-gradient(125deg, rgba(255, 255, 255, 0.45), transparent 38%, rgba(255, 255, 255, 0.18) 75%),
+      linear-gradient(145deg, rgba(255, 255, 255, 0.2), rgba(255, 253, 246, 0.12));
+    -webkit-backdrop-filter: blur(18px) saturate(110%);
+    backdrop-filter: blur(18px) saturate(110%);
   }
 
   .planBadge {
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.85), rgba(255, 244, 215, 0.65));
-    -webkit-backdrop-filter: blur(28px);
-    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
   }
 }
 
@@ -205,7 +228,7 @@
   padding: 12px 10px;
   border: 1px solid #efd6a1;
   border-radius: 999px;
-  background: linear-gradient(115deg, #f9e6b9, #d9b367 70%, #e9cb8f);
+  background: linear-gradient(115deg, #fff2d6, #e8cd96 70%, #f3e2be);
   color: #302313;
   font-size: 11px;
   font-weight: 600;
@@ -243,8 +266,8 @@
 
 @media (hover: hover) {
   .card:hover {
-    border-color: #a77928;
-    box-shadow: 0 20px 48px rgba(108, 75, 26, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    border-color: #d6b466;
+    box-shadow: 0 20px 48px rgba(92, 85, 65, 0.13), 0 0 22px rgba(232, 204, 135, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.9);
   }
 
   .card:hover .artwork {
@@ -252,7 +275,7 @@
   }
 
   .card:hover .glassPanel::before {
-    opacity: 0.5;
+    opacity: 1;
   }
 
   .previewButton:hover {
