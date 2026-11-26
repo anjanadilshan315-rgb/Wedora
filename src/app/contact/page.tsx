@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import { Heart, Mail, Phone, MapPin, Send, MessageCircle } from "lucide-react";
 import Footer from "@/components/Footer";
 import SiteHeader from "@/components/SiteHeader";
-import { api, errorMessage } from "@/lib/api";
 
 export default function ContactPage() {
   
@@ -14,28 +13,23 @@ export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     setErrorMsg("");
-    try {
-      await api("/public/contact", {
-        method: "POST",
-        auth: false,
-        body: {
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          subject: formData.subject,
-          message: formData.message,
-        },
-      });
-      setSubmitted(true);
-    } catch (error) {
-      setErrorMsg(errorMessage(error, "Failed to send your message. Please try again."));
-    } finally {
-      setIsSubmitting(false);
-    }
+
+    const whatsappMessage = [
+      "Hi! I have a question about my wedding invitation.",
+      `Name: ${formData.name}`,
+      `Email: ${formData.email}`,
+      formData.phone ? `Phone: ${formData.phone}` : "",
+      formData.subject ? `Subject: ${formData.subject}` : "",
+      `Message: ${formData.message}`,
+    ].filter(Boolean).join("\n");
+
+    window.open(`https://wa.me/94768560229?text=${encodeURIComponent(whatsappMessage)}`, "_blank", "noopener,noreferrer");
+    setSubmitted(true);
+    setIsSubmitting(false);
   };
 
   return (
@@ -81,7 +75,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <p className="text-[10px] uppercase tracking-wider text-[#A69B90] font-semibold mb-1">WhatsApp / Call</p>
-                    <p className="text-sm font-semibold text-[#29221D]">+94 77 123 4567</p>
+                    <p className="text-sm font-semibold text-[#29221D]">076 856 0229</p>
                   </div>
                 </div>
 
@@ -91,7 +85,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <p className="text-[10px] uppercase tracking-wider text-[#A69B90] font-semibold mb-1">Email</p>
-                    <p className="text-sm font-semibold text-[#29221D]">hello@wedora.lk</p>
+                    <p className="text-sm font-semibold text-[#29221D]">lioralk3@gmail.com</p>
                   </div>
                 </div>
 
@@ -111,7 +105,7 @@ export default function ContactPage() {
               <div className="mt-8 pt-6 border-t border-[#F0E8DC]">
                 <p className="text-xs text-[#7D736A] mb-3">Prefer an instant reply?</p>
                 <a
-                  href="https://wa.me/94XXXXXXXXX?text=Hi!+I+have+a+question+about+Open+Invitation."
+                  href="https://wa.me/94768560229?text=Hi!+I+have+a+question+about+Open+Invitation."
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-2 w-full py-3 rounded-xl text-white text-sm font-semibold shadow-md transition-all hover:scale-[1.02]"

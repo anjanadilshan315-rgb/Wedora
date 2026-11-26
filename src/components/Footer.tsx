@@ -78,19 +78,19 @@ export default function Footer() {
                   <p className="mt-0.5 text-xs text-gray-400">Let&apos;s plan something beautiful</p>
                 </div>
               </div>
-              <a href="https://wa.me/94771234567" target="_blank" rel="noopener noreferrer" className="mt-4 flex items-center justify-between rounded-xl bg-[#2BC68B] px-4 py-3 text-sm font-semibold text-[#102019] transition-colors hover:bg-[#55D9A4] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
-                <span>+94 77 123 4567</span><ArrowUpRight className="h-4 w-4" />
+              <a href="https://wa.me/94768560229" target="_blank" rel="noopener noreferrer" className="mt-4 flex items-center justify-between rounded-xl bg-[#2BC68B] px-4 py-3 text-sm font-semibold text-[#102019] transition-colors hover:bg-[#55D9A4] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
+                <span>+94 76 856 0229</span><ArrowUpRight className="h-4 w-4" />
               </a>
             </div>
 
             <div className="mt-3 grid grid-cols-3 gap-2">
-              <a aria-label="Instagram: @apexrowsolutions" href="https://instagram.com/apexrowsolutions" target="_blank" rel="noopener noreferrer" className="group flex min-h-20 flex-col items-center justify-center gap-2 rounded-xl border border-white/10 bg-[#0C1210]/55 px-2 py-3 text-gray-300 transition-all hover:border-[#C59B48]/60 hover:bg-white/[.08] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C59B48]">
+              <a aria-label="Instagram: @liora_wedding.studio" href="https://www.instagram.com/liora_wedding.studio?dlrf=MXQwMzRpNTU5NWMycw==&amp;utm_source=ig_contact_invite" target="_blank" rel="noopener noreferrer" className="group flex min-h-20 flex-col items-center justify-center gap-2 rounded-xl border border-white/10 bg-[#0C1210]/55 px-2 py-3 text-gray-300 transition-all hover:border-[#C59B48]/60 hover:bg-white/[.08] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C59B48]">
                 <Camera className="h-5 w-5 text-[#D7B96E] transition-transform group-hover:-translate-y-0.5" /><span className="text-[10px] font-medium">Instagram</span>
               </a>
-              <a aria-label="Facebook: ApexRow Solutions" href="https://facebook.com/apexrowsolutions" target="_blank" rel="noopener noreferrer" className="group flex min-h-20 flex-col items-center justify-center gap-2 rounded-xl border border-white/10 bg-[#0C1210]/55 px-2 py-3 text-gray-300 transition-all hover:border-[#C59B48]/60 hover:bg-white/[.08] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C59B48]">
+              <a aria-label="Facebook: Liora Wedding Studio" href="https://www.facebook.com/share/1GCX7HkRhY/" target="_blank" rel="noopener noreferrer" className="group flex min-h-20 flex-col items-center justify-center gap-2 rounded-xl border border-white/10 bg-[#0C1210]/55 px-2 py-3 text-gray-300 transition-all hover:border-[#C59B48]/60 hover:bg-white/[.08] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C59B48]">
                 <UsersRound className="h-5 w-5 text-[#D7B96E] transition-transform group-hover:-translate-y-0.5" /><span className="text-[10px] font-medium">Facebook</span>
               </a>
-              <a aria-label="TikTok: @apexrowsolutions" href="https://tiktok.com/@apexrowsolutions" target="_blank" rel="noopener noreferrer" className="group flex min-h-20 flex-col items-center justify-center gap-2 rounded-xl border border-white/10 bg-[#0C1210]/55 px-2 py-3 text-gray-300 transition-all hover:border-[#C59B48]/60 hover:bg-white/[.08] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C59B48]">
+              <a aria-label="TikTok: @liora.lk34567" href="https://www.tiktok.com/@liora.lk34567?_r=1&amp;_t=ZS-9BTvLT9Qado" target="_blank" rel="noopener noreferrer" className="group flex min-h-20 flex-col items-center justify-center gap-2 rounded-xl border border-white/10 bg-[#0C1210]/55 px-2 py-3 text-gray-300 transition-all hover:border-[#C59B48]/60 hover:bg-white/[.08] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C59B48]">
                 <Music2 className="h-5 w-5 text-[#D7B96E] transition-transform group-hover:-translate-y-0.5" /><span className="text-[10px] font-medium">TikTok</span>
               </a>
             </div>
